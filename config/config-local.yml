@@ -1,0 +1,28 @@
+app:
+  Version: 1.0.0
+  Mode: development
+  Port: 4000
+  Secret: go01-airbnb-secret
+  MigrationURL: file://migrations
+
+#vì các service trong cùng 1 network, thì chỉ có thể gọi tới nhau bằng tên của chúng nên Host:local được hay bằng Host:mysql
+#và chỉ sử dụng private port để các container giao tiếp với nhau nên port=3307 cũng phải được thay bằng port=3306
+mysql:
+  Host: 127.0.0.1
+  Port: 3306
+  User: root
+  Password: 1234
+  DBName: food_delivery
+
+aws:
+  Region: ap-southeast-1
+  APIKey: AKIAQQMFSZOXTXZMI46G
+  SecretKey: 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
+  S3Domain: https://d2yhpu1ogsm212.cloudfront.net
+  S3Bucket: go01-airbnb
+
+redis:
+  Host: localhost
+  Port: 6379
+  Password: ""
+  DBName: 0

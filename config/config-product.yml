@@ -1,0 +1,16 @@
+app:
+  Version: 1.0.0
+  Mode: production
+  Port: 4000
+  Secret: go01-airbnb-secret
+  MigrationURL: file://migrations
+
+#vì các service trong cùng 1 network, thì chỉ có thể gọi tới nhau bằng tên của chúng nên Host:local được hay bằng Host:mysql
+#và chỉ sử dụng private port để các container giao tiếp với nhau nên port=3307 cũng phải được thay bằng port=3306
+mysql:
+  Host: 127.0.0.1
+  Port: 3307
+  User: root
+  Password: 1234
+  DBName: go01-airbnb
+
