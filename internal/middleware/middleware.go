@@ -10,13 +10,13 @@ type UserRepository interface {
 	FindDataWithCondition(context.Context, map[string]any) (*usermodel.User, error)
 }
 
-type middlewareManager struct {
+type MiddlewareManager struct {
 	configuration *config.Config
 	userRepo      UserRepository
 }
 
-func NewMiddlewareManager(configuration *config.Config, userRepo UserRepository) *middlewareManager {
-	return &middlewareManager{
+func NewMiddlewareManager(configuration *config.Config, userRepo UserRepository) *MiddlewareManager {
+	return &MiddlewareManager{
 		configuration: configuration,
 		userRepo:      userRepo,
 	}

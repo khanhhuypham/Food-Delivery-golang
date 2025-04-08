@@ -5,8 +5,10 @@ import (
 	categorymodule "Food-Delivery/internal/category"
 	"Food-Delivery/internal/middleware"
 	restaurant_module "Food-Delivery/internal/restaurant"
+	user_module "Food-Delivery/internal/user"
 	user_repository "Food-Delivery/internal/user/repository"
 	"Food-Delivery/pkg/db/mysql"
+	"Food-Delivery/pkg/utils"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -36,11 +38,15 @@ func main() {
 	}
 
 	middleware := middleware.NewMiddlewareManager(cfg, user_repository.NewUserRepository(db))
+	hasher := utils.NewHashIds(cfg.App.Secret, 10)
+
 	r := gin.Default()
 	r.Use(middleware.Recover())
 	v1 := r.Group("/api/v1")
 
 	categorymodule.SetupCategoryModule(db, v1)
 	restaurant_module.SetupRestaurantModule(db, v1)
+	user_module.SetupUserModule(db, v1, cfg, hasher, middleware)
+
 	r.Run(fmt.Sprintf(":%s", cfg.App.Port)) // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }

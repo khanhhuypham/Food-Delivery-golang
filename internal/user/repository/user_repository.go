@@ -3,21 +3,23 @@ package user_repository
 import (
 	usermodel "Food-Delivery/internal/user/model"
 	"context"
+	"github.com/pkg/errors"
 	"gorm.io/gorm"
 )
 
 type userRepository struct {
-	db *gorm.DB
+	db        *gorm.DB
+	tableName string
 }
 
 func NewUserRepository(db *gorm.DB) *userRepository {
-	return &userRepository{db: db}
+	return &userRepository{db: db, tableName: usermodel.User{}.TableName()}
 }
 
 func (userRepo *userRepository) Create(ctx context.Context, dto *usermodel.UserCreate) error {
 	db := userRepo.db.Begin()
-	table_name := usermodel.User{}.TableName()
-	if err := db.Take(table_name).Create(dto).Error; err != nil {
+
+	if err := db.Table(userRepo.tableName).Create(dto).Error; err != nil {
 		db.Rollback()
 		return err
 	}
@@ -31,19 +33,18 @@ func (userRepo *userRepository) Create(ctx context.Context, dto *usermodel.UserC
 
 func (userRepo *userRepository) FindDataWithCondition(ctx context.Context, condition map[string]any) (*usermodel.User, error) {
 	var user usermodel.User
-	tableName := usermodel.User{}.TableName()
-	if err := userRepo.db.Table(tableName).Where(condition).First(&user).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return nil, err
-		}
-		return nil, err
+	//
+	//log.Fatal(userRepo.tableName)
+
+	if err := userRepo.db.Table(userRepo.tableName).Where(condition).First(&user).Error; err != nil {
+		return nil, errors.WithStack(err)
 	}
 	return &user, nil
 }
 
 func (userRepo *userRepository) DeleteUserWithCondition(ctx context.Context, condition map[string]any) error {
-	tableName := usermodel.User{}.TableName()
-	if err := userRepo.db.Table(tableName).Where(condition).Delete(&usermodel.User{}).Error; err != nil {
+
+	if err := userRepo.db.Table(userRepo.tableName).Where(condition).Delete(&usermodel.User{}).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return err
 		}

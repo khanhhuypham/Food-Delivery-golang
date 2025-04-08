@@ -1,4 +1,4 @@
-package http
+package user_http
 
 import (
 	usermodel "Food-Delivery/internal/user/model"
@@ -10,8 +10,8 @@ import (
 )
 
 type UserService interface {
-	Register(ctx context.Context, userCreate *usermodel.UserCreate) error
-	Login(ctx context.Context, credentials *usermodel.UserLogin) (*utils.Token, error)
+	Signup(ctx context.Context, dto *usermodel.UserCreate) error
+	SignIn(ctx context.Context, dto *usermodel.UserLogin) (*utils.Token, error)
 	DeleteUserById(ctx context.Context, id int) error
 }
 
@@ -30,34 +30,41 @@ func (handler *userHandler) Signup() gin.HandlerFunc {
 		var dto usermodel.UserCreate
 
 		if err := ctx.ShouldBind(&dto); err != nil {
-			panic(common.ErrBadRequest(err))
+			panic(common.ErrBadRequest(err).WithDebug(err.Error()))
 		}
 
-		if err := handler.userService.Register(ctx, &dto); err != nil {
+		if err := handler.userService.Signup(ctx, &dto); err != nil {
 			panic(err)
 		}
-		ctx.JSON(http.StatusCreated, gin.H{
-			"user": dto,
-		})
+
+		ctx.JSON(http.StatusCreated, common.Response(dto.Id))
 	}
 }
 
-func (handler *userHandler) Login() gin.HandlerFunc {
+func (handler *userHandler) SignIn() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var dto usermodel.UserLogin
+
 		if err := ctx.ShouldBind(&dto); err != nil {
 			panic(common.ErrBadRequest(err))
 		}
 
-		token, err := handler.userService.Login(ctx, &dto)
+		token, err := handler.userService.SignIn(ctx, &dto)
 
 		if err != nil {
 			panic(common.ErrBadRequest(err))
 		}
 
-		ctx.JSON(http.StatusOK, gin.H{
-			"token": token,
-		})
+		ctx.JSON(http.StatusOK, common.Response(token))
+	}
+}
+func (handler *userHandler) GetProfileAPI() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		// lấy thông tin Requester
+		requester := ctx.MustGet(common.KeyRequester).(common.Requester)
+		ctx.JSON(http.StatusOK, common.Response(requester))
+
 	}
 }
 

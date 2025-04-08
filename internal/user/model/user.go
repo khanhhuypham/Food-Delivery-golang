@@ -2,22 +2,41 @@ package usermodel
 
 import (
 	"Food-Delivery/pkg/common"
-	"Food-Delivery/pkg/utils"
-	"errors"
 )
 
 const EntityName = "user"
 
 type User struct {
 	common.SQLModel
+	Avatar    *common.Image `json:"avatar" gorm:"column:avatar"`
 	Email     string        `json:"email" gorm:"column:email"`
 	Password  string        `json:"-" gorm:"column:password"`
 	FirstName string        `json:"firstName" gorm:"column:first_name"`
 	LastName  string        `json:"lastName" gorm:"column:last_name"`
 	Phone     string        `json:"phone" gorm:"column:phone"`
-	Role      string        `json:"role" gorm:"column:role"`
-	Avatar    *common.Image `json:"avatar" gorm:"column:avatar"`
+	Role      UserRole      `json:"role" gorm:"column:role"`
+	Status    UserStatus    `json:"status" gorm:"column:status;"`
 }
+
+type UserType string
+type UserRole string
+type UserStatus string
+
+const (
+	TypeEmailPassword UserType = "email_password"
+	TypeFacebook      UserType = "facebook"
+	TypeGmail         UserType = "gmail"
+
+	RoleUser    UserRole = "user"
+	RoleAdmin   UserRole = "admin"
+	RoleShipper UserRole = "shipper"
+
+	StatusPending  UserStatus = "pending"
+	StatusActive   UserStatus = "active"
+	StatusInactive UserStatus = "inactive"
+	StatusBanned   UserStatus = "banned"
+	StatusDeleted  UserStatus = "deleted"
+)
 
 func (User) TableName() string {
 	return "user"
@@ -27,43 +46,10 @@ func (user *User) GetUserEmail() string {
 	return user.Email
 }
 
+func (user *User) GetFullName() string {
+	return user.FirstName + " " + user.LastName
+}
+
 func (user *User) GetUserRole() string {
-	return user.Role
-}
-
-type UserLogin struct {
-	Email    string `json:"email" gorm:"column:email"`
-	Password string `json:"password" gorm:"column:password"`
-}
-
-type UserCreate struct {
-	common.SQLModel
-	Email     string        `json:"email" gorm:"column:email"`
-	Password  string        `json:"password" gorm:"column:password"`
-	FirstName string        `json:"firstName" gorm:"column:first_name"`
-	LastName  string        `json:"lastName" gorm:"column:last_name"`
-	Role      string        `json:"-" form:"column:role"` /*???????? why form*/
-	Avatar    *common.Image `json:"avatar" gorm:"column:avatar"`
-}
-
-func (userCreate *UserCreate) PrepareCreate() error {
-	//HashPassword
-	hashedPwd, err := utils.HashPassword(userCreate.Password)
-	if err != nil {
-		return err
-	}
-	userCreate.Password = hashedPwd
-
-	//set Default role
-	userCreate.Role = "guest"
-	return nil
-}
-
-func (userCreate *UserCreate) Validate() error {
-	if userCreate.Email == "" {
-		return errors.New("email can't be blank")
-	}
-	//another validation for password will need to write below
-
-	return nil
+	return string(user.Role)
 }

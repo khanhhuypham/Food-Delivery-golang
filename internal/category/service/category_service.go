@@ -48,11 +48,11 @@ func (service *categoryService) FindAll(ctx context.Context, paging *common.Pagi
 func (service *categoryService) FindOneById(ctx context.Context, id int) (*categorymodel.Category, error) {
 	//there will have business logic before getting specific data with condition
 
-	place, err := service.cateRepo.FindDataWithCondition(ctx, map[string]any{"id": id})
+	category, err := service.cateRepo.FindDataWithCondition(ctx, map[string]any{"id": id})
 	if err != nil {
 		return nil, common.ErrInternal(err).WithDebug(err.Error())
 	}
-	return place, nil
+	return category, nil
 }
 
 func (service *categoryService) Update(ctx context.Context, id int, dto *categorymodel.CategoryCreateDto) error {
@@ -61,11 +61,14 @@ func (service *categoryService) Update(ctx context.Context, id int, dto *categor
 		return err
 	}
 	//check the eixstence of data in database
-	_, err := service.cateRepo.FindDataWithCondition(ctx, map[string]any{"id": id})
-
-	if err != nil {
-		return common.ErrEntityNotFound(categorymodel.EntityName, err)
+	if _, err := service.FindOneById(ctx, id); err != nil {
+		return err
 	}
+	//_, err := service.cateRepo.FindDataWithCondition(ctx, map[string]any{"id": id})
+	//
+	//if err != nil {
+	//	return common.ErrEntityNotFound(categorymodel.EntityName, err)
+	//}
 
 	if err := service.cateRepo.UpdateDataWithCondition(ctx, map[string]any{"id": id}, dto); err != nil {
 		return common.ErrInternal(err).WithDebug(err.Error())
@@ -78,7 +81,7 @@ func (service *categoryService) Delete(ctx context.Context, id int) error {
 	if _, err := service.FindOneById(ctx, id); err != nil {
 		return err
 	}
-	
+
 	//if there is no returned error, we call the method DeleteDataByCondition of placeRepo interface
 	if err := service.cateRepo.DeleteDataWithCondition(ctx, map[string]any{"id": id}); err != nil {
 		return common.ErrInternal(err).WithDebug(err.Error())

@@ -5,16 +5,16 @@ import (
 	"Food-Delivery/pkg/common"
 	"context"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"net/http"
+	"strconv"
 )
 
 type RestaurantService interface {
 	Create(ctx context.Context, cate *restaurant_model.RestaurantCreateDTO) error
 	FindAll(ctx context.Context, paging *common.Paging, filter *restaurant_model.QueryDTO) ([]restaurant_model.Restaurant, error)
-	FindOneById(ctx context.Context, id uuid.UUID) (*restaurant_model.Restaurant, error)
-	Update(ctx context.Context, id uuid.UUID, dto *restaurant_model.RestaurantCreateDTO) error
-	Delete(ctx context.Context, id uuid.UUID) error
+	FindOneById(ctx context.Context, id int) (*restaurant_model.Restaurant, error)
+	Update(ctx context.Context, id int, dto *restaurant_model.RestaurantCreateDTO) error
+	Delete(ctx context.Context, id int) error
 }
 
 type restaurantHandler struct {
@@ -70,13 +70,14 @@ func (handler *restaurantHandler) GetAll() gin.HandlerFunc {
 
 func (handler *restaurantHandler) GetOneByID() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		id, err := uuid.Parse(ctx.Param("id"))
+		id, err := strconv.Atoi(ctx.Param("id"))
 
 		if err != nil {
 			panic(common.ErrBadRequest(err))
 		}
 
 		cate, err := handler.restaurantService.FindOneById(ctx.Request.Context(), id)
+
 		if err != nil {
 			panic(err)
 		}
@@ -88,7 +89,7 @@ func (handler *restaurantHandler) GetOneByID() gin.HandlerFunc {
 func (handler *restaurantHandler) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		id, err := uuid.Parse(ctx.Param("id"))
+		id, err := strconv.Atoi(ctx.Param("id"))
 		if err != nil {
 			panic(common.ErrBadRequest(err))
 		}
@@ -109,7 +110,7 @@ func (handler *restaurantHandler) Update() gin.HandlerFunc {
 func (handler *restaurantHandler) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		id, err := uuid.Parse(ctx.Param("id"))
+		id, err := strconv.Atoi(ctx.Param("id"))
 		if err != nil {
 			panic(common.ErrBadRequest(err))
 		}

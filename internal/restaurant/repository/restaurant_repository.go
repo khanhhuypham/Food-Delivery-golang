@@ -86,9 +86,7 @@ func (repo *restaurantRepository) FindDataWithCondition(ctx context.Context, con
 	}
 
 	if err := db.Where(condition).First(&data).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return nil, common.ErrEntityNotFound(data.TableName(), err)
-		}
+
 		return nil, errors.WithStack(err)
 	}
 	return &data, nil

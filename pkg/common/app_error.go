@@ -51,7 +51,7 @@ func ErrDB(cause error) *AppError {
 }
 
 func ErrInternal(cause error) *AppError {
-	return &AppError{Causes: cause, Status: http.StatusInternalServerError, Message: "something went wrong in the server"}
+	return &AppError{Causes: cause, Status: http.StatusInternalServerError, Message: "Internal server error"}
 }
 
 func ErrEntityNotFound(entity string, cause error) *AppError {

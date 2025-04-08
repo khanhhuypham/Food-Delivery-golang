@@ -3,7 +3,6 @@ package restaurant_model
 import (
 	"Food-Delivery/pkg/common"
 	"errors"
-	"github.com/google/uuid"
 	"strings"
 )
 
@@ -15,18 +14,18 @@ type QueryDTO struct {
 
 type Restaurant struct {
 	common.SQLModel
-	OwnerId uuid.UUID `json:"ownerId" gorm:"column:owner_id;"`
-	Name    string    `json:"name" gorm:"column:name;"`
-	Address string    `json:"address" gorm:"column:address;"`
-	CityId  *int      `json:"cityId" gorm:"column:city_id;"`
-	Lat     float64   `json:"lat" gorm:"column:lat;"`
-	Lng     float64   `json:"lng" gorm:"column:lng;"`
+	OwnerId int     `json:"ownerId" gorm:"column:owner_id;"`
+	Name    string  `json:"name" gorm:"column:name;"`
+	Address string  `json:"address" gorm:"column:address;"`
+	CityId  *int    `json:"cityId" gorm:"column:city_id;"`
+	Lat     float64 `json:"lat" gorm:"column:lat;"`
+	Lng     float64 `json:"lng" gorm:"column:lng;"`
 	// Cover            json.RawMessage `json:"cover" gorm:"column:cover;"`
 	// Logo             json.RawMessage `json:"logo" gorm:"column:logo;"`
 	ShippingFeePerKm float64   `json:"shippingFeePerKm" gorm:"column:shipping_fee_per_km;"`
 	Status           string    `json:"status" gorm:"column:status;"`
-	CategoryId       uuid.UUID `json:"category_id" gorm:"column:category_id;type:char(36)"`
-	//Category         *Category `json:"category" gorm:"foreignKey:CategoryId;references:Id;"`
+	CategoryId       int       `json:"category_id" gorm:"column:category_id"`
+	Category         *Category `json:"category" gorm:"foreignKey:CategoryId;references:Id;"`
 }
 
 func (Restaurant) TableName() string {

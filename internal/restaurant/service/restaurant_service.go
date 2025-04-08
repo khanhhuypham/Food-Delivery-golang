@@ -1,11 +1,11 @@
 package restaurant_service
 
 import (
-	categorymodel "Food-Delivery/internal/category/model"
 	restaurant_model "Food-Delivery/internal/restaurant/model"
 	"Food-Delivery/pkg/common"
 	"context"
-	"github.com/google/uuid"
+	"errors"
+	"gorm.io/gorm"
 )
 
 type RestaurantRepository interface {
@@ -31,7 +31,7 @@ func NewRestaurantService(restaurantRepo RestaurantRepository) *restaurantServic
 func (service *restaurantService) Create(ctx context.Context, cate *restaurant_model.RestaurantCreateDTO) error {
 	//------perform business operation such as validate data
 	if err := cate.Validate(); err != nil {
-		return common.ErrBadRequest(err)
+		return err
 	}
 	//------
 	if err := service.restaurantRepo.Create(ctx, cate); err != nil {
@@ -42,7 +42,7 @@ func (service *restaurantService) Create(ctx context.Context, cate *restaurant_m
 
 func (service *restaurantService) FindAll(ctx context.Context, paging *common.Paging, filter *restaurant_model.QueryDTO) ([]restaurant_model.Restaurant, error) {
 	//there will have business logic before getting data list with condition
-	restaurants, err := service.restaurantRepo.ListDataWithCondition(ctx, paging, filter, "category")
+	restaurants, err := service.restaurantRepo.ListDataWithCondition(ctx, paging, filter, "Category")
 
 	if err != nil {
 		return nil, common.ErrInternal(err).WithDebug(err.Error())
@@ -51,26 +51,27 @@ func (service *restaurantService) FindAll(ctx context.Context, paging *common.Pa
 	return restaurants, nil
 }
 
-func (service *restaurantService) FindOneById(ctx context.Context, id uuid.UUID) (*restaurant_model.Restaurant, error) {
+func (service *restaurantService) FindOneById(ctx context.Context, id int) (*restaurant_model.Restaurant, error) {
 	//there will have business logic before getting specific data with condition
 
-	restaurant, err := service.restaurantRepo.FindDataWithCondition(ctx, map[string]any{"id": id})
+	restaurant, err := service.restaurantRepo.FindDataWithCondition(ctx, map[string]any{"id": id}, "Category")
 	if err != nil {
-		return nil, err
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, common.ErrEntityNotFound(restaurant.TableName(), err).WithDebug(err.Error())
+		}
+		return nil, common.ErrInternal(err).WithDebug(err.Error())
 	}
 	return restaurant, nil
 }
 
-func (service *restaurantService) Update(ctx context.Context, id uuid.UUID, dto *restaurant_model.RestaurantCreateDTO) error {
+func (service *restaurantService) Update(ctx context.Context, id int, dto *restaurant_model.RestaurantCreateDTO) error {
 	//validate the data first under this usecase layer
 	if err := dto.Validate(); err != nil {
 		return err
 	}
 	//check the eixstence of data in database
-	_, err := service.restaurantRepo.FindDataWithCondition(ctx, map[string]any{"id": id})
-
-	if err != nil {
-		return common.ErrEntityNotFound(categorymodel.EntityName, err)
+	if _, err := service.restaurantRepo.FindDataWithCondition(ctx, map[string]any{"id": id}); err != nil {
+		return err
 	}
 
 	if err := service.restaurantRepo.UpdateDataWithCondition(ctx, map[string]any{"id": id}, dto); err != nil {
@@ -79,12 +80,10 @@ func (service *restaurantService) Update(ctx context.Context, id uuid.UUID, dto 
 	return nil
 }
 
-func (service *restaurantService) Delete(ctx context.Context, id uuid.UUID) error {
-	//check the existence of data in database
-	_, err := service.restaurantRepo.FindDataWithCondition(ctx, map[string]any{"id": id})
-
-	if err != nil {
-		return common.ErrEntityNotFound(categorymodel.EntityName, err)
+func (service *restaurantService) Delete(ctx context.Context, id int) error {
+	//check the eixstence of data in database
+	if _, err := service.restaurantRepo.FindDataWithCondition(ctx, map[string]any{"id": id}); err != nil {
+		return err
 	}
 
 	//if there is no returned error, we call the method DeleteDataByCondition of placeRepo interface

@@ -9,4 +9,13 @@ const (
 	DBTypeBooking       = 6
 	DBTypeReview        = 7
 	DBTypeCity          = 8
+
+	KeyRequester = "requester"
 )
+
+type Requester interface {
+	//GetUserId() int
+	GetUserEmail() string
+	GetFullName() string
+	GetUserRole() string
+}
