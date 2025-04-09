@@ -110,3 +110,16 @@ func (userService *userService) DeleteUserById(ctx context.Context, id int) erro
 
 	return nil
 }
+
+func (userService *userService) FindById(ctx context.Context, id int) (*usermodel.User, error) {
+	userRepo := userService.userRepo
+
+	user, err := userRepo.FindDataWithCondition(ctx, map[string]any{
+		"id": id,
+	})
+	if err != nil {
+		return nil, common.ErrEntityNotFound(usermodel.EntityName, err)
+	}
+
+	return user, nil
+}

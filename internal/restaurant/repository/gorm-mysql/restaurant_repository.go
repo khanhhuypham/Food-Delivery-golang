@@ -1,4 +1,4 @@
-package restaurant_repository
+package gorm_mysql
 
 import (
 	restaurant_model "Food-Delivery/internal/restaurant/model"
