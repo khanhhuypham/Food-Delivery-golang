@@ -1,6 +1,7 @@
 package restaurant_model
 
 import (
+	"Food-Delivery/internal/restaurant/model/relationship"
 	"Food-Delivery/pkg/common"
 	"errors"
 	"strings"
@@ -22,10 +23,11 @@ type Restaurant struct {
 	Lng     float64 `json:"lng" gorm:"column:lng;"`
 	// Cover            json.RawMessage `json:"cover" gorm:"column:cover;"`
 	// Logo             json.RawMessage `json:"logo" gorm:"column:logo;"`
-	ShippingFeePerKm float64   `json:"shippingFeePerKm" gorm:"column:shipping_fee_per_km;"`
-	Status           string    `json:"status" gorm:"column:status;"`
-	CategoryId       int       `json:"category_id" gorm:"column:category_id"`
-	Category         *Category `json:"category" gorm:"foreignKey:CategoryId;references:Id;"`
+	ShippingFeePerKm float64                `json:"shippingFeePerKm" gorm:"column:shipping_fee_per_km;"`
+	Status           string                 `json:"status" gorm:"column:status;"`
+	CategoryId       int                    `json:"category_id" gorm:"column:category_id"`
+	Category         *relationship.Category `json:"category" gorm:"foreignKey:CategoryId;references:Id;"`
+	Order            []relationship.Order   `json:"orders" gorm:"foreignKey:RestaurantId;references:Id;"`
 }
 
 func (Restaurant) TableName() string {

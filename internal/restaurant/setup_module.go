@@ -10,7 +10,7 @@ import (
 	"log"
 )
 
-func SetupRestaurantModule(db *gorm.DB, r *gin.RouterGroup) {
+func Setup(db *gorm.DB, r *gin.RouterGroup) {
 	if err := db.AutoMigrate(&restaurant_model.Restaurant{}); err != nil {
 		log.Fatalf("could not migrate schema: %v", err)
 	}

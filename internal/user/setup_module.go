@@ -14,7 +14,7 @@ import (
 	"log"
 )
 
-func SetupUserModule(db *gorm.DB, r *gin.RouterGroup, cfg *config.Config, hasher *utils.Hasher, middleWare *middleware.MiddlewareManager) {
+func Setup(db *gorm.DB, r *gin.RouterGroup, cfg *config.Config, hasher *utils.Hasher, middleWare *middleware.MiddlewareManager) {
 	if err := db.AutoMigrate(&usermodel.User{}); err != nil {
 		log.Fatalf("could not migrate schema: %v", err)
 	}

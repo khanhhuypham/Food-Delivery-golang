@@ -4,18 +4,17 @@ import (
 	"Food-Delivery/pkg/common"
 	"errors"
 	"strings"
-	"time"
 )
 
 const EntityName = "category"
 
 type Category struct {
 	common.SQLModel
-	Name        string     `json:"name" gorm:"column:name;"`
-	Description string     `json:"description" gorm:"column:description;"`
-	Status      Status     `json:"status" gorm:"column:status;"`
-	CreatedAt   *time.Time `json:"createdAt" gorm:"column:created_at;"`
-	UpdatedAt   *time.Time `json:"updatedAt" gorm:"column:updated_at;"`
+	Name        string `json:"name" gorm:"column:name;"`
+	Description string `json:"description" gorm:"column:description;"`
+	Status      Status `json:"status" gorm:"column:status;"`
+	//CreatedAt   *time.Time `json:"createdAt" gorm:"column:created_at;"`
+	//UpdatedAt   *time.Time `json:"updatedAt" gorm:"column:updated_at;"`
 }
 
 func (Category) TableName() string {

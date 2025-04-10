@@ -1,4 +1,4 @@
-package categorymodule
+package category_module
 
 import (
 	category_http "Food-Delivery/internal/category/controller/http"
@@ -11,7 +11,7 @@ import (
 	"log"
 )
 
-func SetupCategoryModule(db *gorm.DB, r *gin.RouterGroup) {
+func Setup(db *gorm.DB, r *gin.RouterGroup) {
 
 	// Automatically migrate the schema, this will sync the struct to the DB
 

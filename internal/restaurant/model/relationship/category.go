@@ -1,4 +1,4 @@
-package restaurant_model
+package relationship
 
 type Category struct {
 	Id     int    `json:"id" gorm:"column:id;"`
