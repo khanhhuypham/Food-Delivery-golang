@@ -79,7 +79,7 @@ func (repo *categoryRepository) FindAllWithCondition(
 func (repo *categoryRepository) FindAllByIds(ctx context.Context, ids []int, keys ...string) ([]categorymodel.Category, error) {
 
 	var data []categorymodel.Category
-	// Start with the correct table and model
+	// Start with the correct table and entity
 	db := repo.db.Model(&data).Table(repo.tableName)
 
 	// Apply preloading for relationships if provided

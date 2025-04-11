@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"Food-Delivery/config"
-	usermodel "Food-Delivery/internal/user/model"
+	usermodel "Food-Delivery/internal/user/entity/model"
 	"context"
 )
 

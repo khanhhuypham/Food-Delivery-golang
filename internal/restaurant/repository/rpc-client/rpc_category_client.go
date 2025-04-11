@@ -1,7 +1,7 @@
 package rpc_category_client
 
 import (
-	restaurant_model "Food-Delivery/internal/restaurant/model/relationship"
+	restaurant_model "Food-Delivery/internal/restaurant/entity/relationship"
 	"context"
 	"fmt"
 

@@ -1,4 +1,4 @@
-package order_item_model
+package dto
 
 import (
 	"Food-Delivery/pkg/common"

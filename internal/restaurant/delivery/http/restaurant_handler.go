@@ -1,7 +1,8 @@
 package restaurant_http
 
 import (
-	restaurant_model "Food-Delivery/internal/restaurant/model"
+	"Food-Delivery/internal/restaurant/entity/dto"
+	restaurant_model "Food-Delivery/internal/restaurant/entity/model"
 	"Food-Delivery/pkg/common"
 	"context"
 	"github.com/gin-gonic/gin"
@@ -10,10 +11,10 @@ import (
 )
 
 type RestaurantService interface {
-	Create(ctx context.Context, cate *restaurant_model.RestaurantCreateDTO) error
+	Create(ctx context.Context, cate *dto.RestaurantCreateDTO) error
 	FindAll(ctx context.Context, paging *common.Paging, filter *restaurant_model.QueryDTO) ([]restaurant_model.Restaurant, error)
 	FindOneById(ctx context.Context, id int) (*restaurant_model.Restaurant, error)
-	Update(ctx context.Context, id int, dto *restaurant_model.RestaurantCreateDTO) error
+	Update(ctx context.Context, id int, dto *dto.RestaurantCreateDTO) error
 	Delete(ctx context.Context, id int) error
 }
 
@@ -28,7 +29,7 @@ func NewRestaurantHandler(restaurantService RestaurantService) *restaurantHandle
 func (handler *restaurantHandler) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		var restaurant restaurant_model.RestaurantCreateDTO
+		var restaurant dto.RestaurantCreateDTO
 		//error occurs from binding json data into struct data
 		if err := ctx.ShouldBind(&restaurant); err != nil {
 			panic(common.ErrBadRequest(err))
@@ -94,7 +95,7 @@ func (handler *restaurantHandler) Update() gin.HandlerFunc {
 			panic(common.ErrBadRequest(err))
 		}
 
-		var dto restaurant_model.RestaurantCreateDTO
+		var dto dto.RestaurantCreateDTO
 		if err := ctx.ShouldBind(&dto); err != nil {
 			panic(common.ErrBadRequest(err))
 		}

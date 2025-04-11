@@ -1,4 +1,4 @@
-package order_item_model
+package dto
 
 type QueryDTO struct {
 	SearchKey *string `json:"search_key"`

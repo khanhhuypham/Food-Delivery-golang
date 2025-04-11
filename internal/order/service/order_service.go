@@ -1,8 +1,9 @@
 package order_service
 
 import (
-	menu_item_model "Food-Delivery/internal/menu_item/model"
-	order_model "Food-Delivery/internal/order/model"
+	menu_item_model "Food-Delivery/internal/menu_item/entity/model"
+	"Food-Delivery/internal/order/entity/dto"
+	order_model "Food-Delivery/internal/order/entity/order_model"
 	"Food-Delivery/pkg/common"
 	"context"
 	"errors"
@@ -10,14 +11,14 @@ import (
 )
 
 type OrderRepository interface {
-	Create(ctx context.Context, dto *order_model.OrderCreateDTO) error
+	Create(ctx context.Context, dto *dto.OrderCreateDTO) error
 	FindAllWithCondition(
 		ctx context.Context,
 		paging *common.Paging,
-		query *order_model.QueryDTO,
+		query *dto.QueryDTO,
 		keys ...string) ([]order_model.Order, error)
 	FindOneWithCondition(ctx context.Context, condition map[string]any, keys ...string) (*order_model.Order, error)
-	UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *order_model.OrderUpdateDTO) (*order_model.Order, error)
+	UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *dto.OrderUpdateDTO) (*order_model.Order, error)
 }
 
 type orderService struct {
@@ -28,7 +29,7 @@ func NewOrderService(orderRepo OrderRepository) *orderService {
 	return &orderService{orderRepo}
 }
 
-func (service *orderService) Create(ctx context.Context, data *order_model.OrderCreateDTO) error {
+func (service *orderService) Create(ctx context.Context, data *dto.OrderCreateDTO) error {
 	//------perform business operation such as validate data
 	if err := data.Validate(); err != nil {
 		return err
@@ -40,7 +41,7 @@ func (service *orderService) Create(ctx context.Context, data *order_model.Order
 	return nil
 }
 
-func (service *orderService) FindAll(ctx context.Context, paging *common.Paging, query *order_model.QueryDTO) ([]order_model.Order, error) {
+func (service *orderService) FindAll(ctx context.Context, paging *common.Paging, query *dto.QueryDTO) ([]order_model.Order, error) {
 	//there will have business logic before getting data list with condition
 	items, err := service.orderRepo.FindAllWithCondition(ctx, paging, query)
 
@@ -64,7 +65,7 @@ func (service *orderService) FindOneById(ctx context.Context, id int) (*order_mo
 	return data, nil
 }
 
-func (service *orderService) ChangeStatus(ctx context.Context, id int, dto *order_model.OrderUpdateDTO) (*order_model.Order, error) {
+func (service *orderService) ChangeStatus(ctx context.Context, id int, dto *dto.OrderUpdateDTO) (*order_model.Order, error) {
 	//validate the data first under this usecase layer
 	if err := dto.Validate(); err != nil {
 		return nil, err

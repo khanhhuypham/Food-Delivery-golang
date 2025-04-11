@@ -2,7 +2,7 @@ package order_item_module
 
 import (
 	order_item_http_handler "Food-Delivery/internal/order_item/controller/http"
-	order_item_model "Food-Delivery/internal/order_item/model"
+	"Food-Delivery/internal/order_item/entity/order_item_model"
 	order_item_repository "Food-Delivery/internal/order_item/repository"
 	order_item_service "Food-Delivery/internal/order_item/service"
 	"github.com/gin-gonic/gin"

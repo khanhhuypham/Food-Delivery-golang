@@ -1,7 +1,8 @@
 package order_item_service
 
 import (
-	order_item_model "Food-Delivery/internal/order_item/model"
+	"Food-Delivery/internal/order_item/entity/dto"
+	"Food-Delivery/internal/order_item/entity/order_item_model"
 	"Food-Delivery/pkg/common"
 	"context"
 	"errors"
@@ -9,14 +10,14 @@ import (
 )
 
 type OrderItemRepository interface {
-	Create(ctx context.Context, dto *order_item_model.OrderItemCreateDTO) error
+	Create(ctx context.Context, dto *dto.OrderItemCreateDTO) error
 	FindAllWithCondition(
 		ctx context.Context,
 		paging *common.Paging,
-		query *order_item_model.QueryDTO,
+		query *dto.QueryDTO,
 		keys ...string) ([]order_item_model.OrderItem, error)
 	FindOneWithCondition(ctx context.Context, condition map[string]any, keys ...string) (*order_item_model.OrderItem, error)
-	UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *order_item_model.OrderItemCreateDTO) error
+	UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *dto.OrderItemCreateDTO) error
 	DeleteDataWithCondition(ctx context.Context, condition map[string]any) error
 }
 
@@ -28,7 +29,7 @@ func NewOrderItemService(orderItemRepo OrderItemRepository) *orderItemService {
 	return &orderItemService{orderItemRepo}
 }
 
-func (service *orderItemService) Create(ctx context.Context, dto *order_item_model.OrderItemCreateDTO) error {
+func (service *orderItemService) Create(ctx context.Context, dto *dto.OrderItemCreateDTO) error {
 	//------perform business operation such as validate data
 	if err := dto.Validate(); err != nil {
 		return err
@@ -40,7 +41,7 @@ func (service *orderItemService) Create(ctx context.Context, dto *order_item_mod
 	return nil
 }
 
-func (service *orderItemService) FindAll(ctx context.Context, paging *common.Paging, query *order_item_model.QueryDTO) ([]order_item_model.OrderItem, error) {
+func (service *orderItemService) FindAll(ctx context.Context, paging *common.Paging, query *dto.QueryDTO) ([]order_item_model.OrderItem, error) {
 	//there will have business logic before getting data list with condition
 	data, err := service.orderItemRepo.FindAllWithCondition(ctx, paging, query)
 
@@ -54,7 +55,7 @@ func (service *orderItemService) FindAll(ctx context.Context, paging *common.Pag
 func (service *orderItemService) FindOneById(ctx context.Context, id int) (*order_item_model.OrderItem, error) {
 	//there will have business logic before getting specific data with condition
 
-	data, err := service.orderItemRepo.FindOneWithCondition(ctx, map[string]any{"id": id})
+	data, err := service.orderItemRepo.FindOneWithCondition(ctx, map[string]any{"id": id}, "Order")
 
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -66,7 +67,7 @@ func (service *orderItemService) FindOneById(ctx context.Context, id int) (*orde
 
 }
 
-func (service *orderItemService) Update(ctx context.Context, id int, dto *order_item_model.OrderItemCreateDTO) error {
+func (service *orderItemService) Update(ctx context.Context, id int, dto *dto.OrderItemCreateDTO) error {
 
 	if err := dto.Validate(); err != nil {
 		return err

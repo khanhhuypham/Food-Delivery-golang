@@ -1,7 +1,8 @@
 package order_http_handler
 
 import (
-	order_model "Food-Delivery/internal/order/model"
+	"Food-Delivery/internal/order/entity/dto"
+	order_model "Food-Delivery/internal/order/entity/order_model"
 	"Food-Delivery/pkg/common"
 	"context"
 	"github.com/gin-gonic/gin"
@@ -10,10 +11,10 @@ import (
 )
 
 type OrderService interface {
-	Create(ctx context.Context, data *order_model.OrderCreateDTO) error
-	FindAll(ctx context.Context, paging *common.Paging, query *order_model.QueryDTO) ([]order_model.Order, error)
+	Create(ctx context.Context, data *dto.OrderCreateDTO) error
+	FindAll(ctx context.Context, paging *common.Paging, query *dto.QueryDTO) ([]order_model.Order, error)
 	FindOneById(ctx context.Context, id int) (*order_model.Order, error)
-	ChangeStatus(ctx context.Context, id int, dto *order_model.OrderUpdateDTO) (*order_model.Order, error)
+	ChangeStatus(ctx context.Context, id int, dto *dto.OrderUpdateDTO) (*order_model.Order, error)
 }
 
 type orderHandler struct {
@@ -27,7 +28,7 @@ func NewOrderHandler(orderService OrderService) *orderHandler {
 func (handler *orderHandler) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		var dto order_model.OrderCreateDTO
+		var dto dto.OrderCreateDTO
 		//error occurs from binding json data into struct data
 		if err := ctx.ShouldBind(&dto); err != nil {
 			panic(common.ErrBadRequest(err))
@@ -52,7 +53,7 @@ func (handler *orderHandler) GetAll() gin.HandlerFunc {
 		}
 		paging.Fulfill()
 		//filter
-		var query order_model.QueryDTO
+		var query dto.QueryDTO
 		if err := ctx.ShouldBind(&query); err != nil {
 			panic(common.ErrBadRequest(err))
 		}
@@ -94,7 +95,7 @@ func (handler *orderHandler) ChangeStatus() gin.HandlerFunc {
 			panic(common.ErrBadRequest(err))
 		}
 
-		var dto order_model.OrderUpdateDTO
+		var dto dto.OrderUpdateDTO
 
 		if err := ctx.ShouldBind(&dto); err != nil {
 			panic(common.ErrBadRequest(err))

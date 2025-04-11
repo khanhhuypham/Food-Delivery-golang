@@ -1,7 +1,8 @@
 package menu_item_service
 
 import (
-	menu_item_model "Food-Delivery/internal/menu_item/model"
+	"Food-Delivery/internal/menu_item/entity/dto"
+	menu_item_model "Food-Delivery/internal/menu_item/entity/model"
 	"Food-Delivery/pkg/common"
 	"context"
 	"errors"
@@ -9,14 +10,14 @@ import (
 )
 
 type MenuItemRepository interface {
-	Create(ctx context.Context, dto *menu_item_model.MenuItemCreateDTO) (*menu_item_model.MenuItem, error)
+	Create(ctx context.Context, dto *dto.MenuItemCreateDTO) (*menu_item_model.MenuItem, error)
 	FindAllWithCondition(
 		ctx context.Context,
 		paging *common.Paging,
-		query *menu_item_model.QueryDTO,
+		query *dto.QueryDTO,
 		keys ...string) ([]menu_item_model.MenuItem, error)
 	FindOneWithCondition(ctx context.Context, condition map[string]any, keys ...string) (*menu_item_model.MenuItem, error)
-	UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *menu_item_model.MenuItemCreateDTO) (*menu_item_model.MenuItem, error)
+	UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *dto.MenuItemCreateDTO) (*menu_item_model.MenuItem, error)
 	DeleteDataWithCondition(ctx context.Context, condition map[string]any) error
 }
 
@@ -28,7 +29,7 @@ func NewRestaurantService(menuItemRepo MenuItemRepository) *menuItemService {
 	return &menuItemService{menuItemRepo}
 }
 
-func (service *menuItemService) Create(ctx context.Context, menuItem *menu_item_model.MenuItemCreateDTO) (*menu_item_model.MenuItem, error) {
+func (service *menuItemService) Create(ctx context.Context, menuItem *dto.MenuItemCreateDTO) (*menu_item_model.MenuItem, error) {
 	//------perform business operation such as validate data
 	if err := menuItem.Validate(); err != nil {
 		return nil, err
@@ -42,7 +43,7 @@ func (service *menuItemService) Create(ctx context.Context, menuItem *menu_item_
 	return newItem, nil
 }
 
-func (service *menuItemService) FindAll(ctx context.Context, paging *common.Paging, query *menu_item_model.QueryDTO) ([]menu_item_model.MenuItem, error) {
+func (service *menuItemService) FindAll(ctx context.Context, paging *common.Paging, query *dto.QueryDTO) ([]menu_item_model.MenuItem, error) {
 	//there will have business logic before getting data list with condition
 	items, err := service.menuItemRepo.FindAllWithCondition(ctx, paging, query)
 
@@ -66,7 +67,7 @@ func (service *menuItemService) FindOneById(ctx context.Context, id int) (*menu_
 	return item, nil
 }
 
-func (service *menuItemService) Update(ctx context.Context, id int, dto *menu_item_model.MenuItemCreateDTO) (*menu_item_model.MenuItem, error) {
+func (service *menuItemService) Update(ctx context.Context, id int, dto *dto.MenuItemCreateDTO) (*menu_item_model.MenuItem, error) {
 	//validate the data first under this usecase layer
 	if err := dto.Validate(); err != nil {
 		return nil, err

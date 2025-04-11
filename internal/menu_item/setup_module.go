@@ -2,7 +2,8 @@ package menu_item_module
 
 import (
 	menu_item_http_handler "Food-Delivery/internal/menu_item/controller/http"
-	menu_item_model "Food-Delivery/internal/menu_item/model"
+	menu_item_model "Food-Delivery/internal/menu_item/entity/model"
+
 	menu_item_repository "Food-Delivery/internal/menu_item/repository"
 	menu_item_service "Food-Delivery/internal/menu_item/service"
 	"github.com/gin-gonic/gin"

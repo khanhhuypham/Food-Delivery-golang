@@ -1,7 +1,8 @@
 package order_repository
 
 import (
-	order_model "Food-Delivery/internal/order/model"
+	"Food-Delivery/internal/order/entity/dto"
+	order_model "Food-Delivery/internal/order/entity/order_model"
 
 	"Food-Delivery/pkg/common"
 	"context"
@@ -25,7 +26,7 @@ func NewOrderRepository(db *gorm.DB) *orderRepository {
 }
 
 // create place
-func (repo *orderRepository) Create(ctx context.Context, dto *order_model.OrderCreateDTO) error {
+func (repo *orderRepository) Create(ctx context.Context, dto *dto.OrderCreateDTO) error {
 
 	//apply transaction technique
 	db := repo.db.Begin()
@@ -53,15 +54,12 @@ func (repo *orderRepository) Create(ctx context.Context, dto *order_model.OrderC
 func (repo *orderRepository) FindAllWithCondition(
 	ctx context.Context,
 	paging *common.Paging,
-	query *order_model.QueryDTO,
+	query *dto.QueryDTO,
 	keys ...string) ([]order_model.Order, error) {
 
 	var data []order_model.Order
 
 	db := repo.db.Model(&order_model.Order{}).Table(repo.tableName)
-
-	////Để không count những record bị  soft delete ta cần dùng Model
-	//db = repo.db.Model(&data)
 
 	if query.SearchKey != nil {
 		db.Where("name LIKE ?", "%"+*query.SearchKey+"%")
@@ -113,7 +111,7 @@ func (repo *orderRepository) DeleteDataWithCondition(ctx context.Context, condit
 }
 
 // update place by condition
-func (repo *orderRepository) UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *order_model.OrderUpdateDTO) (*order_model.Order, error) {
+func (repo *orderRepository) UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *dto.OrderUpdateDTO) (*order_model.Order, error) {
 	var updatedData order_model.Order
 
 	err := repo.db.WithContext(ctx).

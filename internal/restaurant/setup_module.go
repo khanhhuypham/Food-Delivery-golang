@@ -2,7 +2,7 @@ package restaurant_module
 
 import (
 	restaurant_http "Food-Delivery/internal/restaurant/delivery/http"
-	restaurant_model "Food-Delivery/internal/restaurant/model"
+	restaurant_model "Food-Delivery/internal/restaurant/entity/model"
 	restaurant_repository "Food-Delivery/internal/restaurant/repository/gorm-mysql"
 	restaurant_service "Food-Delivery/internal/restaurant/service"
 	"github.com/gin-gonic/gin"
@@ -11,7 +11,7 @@ import (
 )
 
 func Setup(db *gorm.DB, r *gin.RouterGroup) {
-	if err := db.AutoMigrate(&restaurant_model.Restaurant{}); err != nil {
+	if err := db.AutoMigrate(&restaurant_model.Restaurant{}, &restaurant_model.Order{}, &restaurant_model.MenuItem{}); err != nil {
 		log.Fatalf("could not migrate schema: %v", err)
 	}
 	//dependency of place module

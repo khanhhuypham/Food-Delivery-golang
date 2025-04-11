@@ -5,7 +5,7 @@ import (
 	"Food-Delivery/internal/middleware"
 	user_http "Food-Delivery/internal/user/controller/http"
 	user_rpc "Food-Delivery/internal/user/controller/rpc"
-	usermodel "Food-Delivery/internal/user/model"
+	usermodel "Food-Delivery/internal/user/entity/model"
 	user_repository "Food-Delivery/internal/user/repository"
 	user_service "Food-Delivery/internal/user/service"
 	"Food-Delivery/pkg/utils"

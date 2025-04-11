@@ -1,4 +1,4 @@
-package usermodel
+package user_model
 
 import (
 	"Food-Delivery/pkg/common"
@@ -16,6 +16,7 @@ type User struct {
 	Phone     string        `json:"phone" gorm:"column:phone"`
 	Role      UserRole      `json:"role" gorm:"column:role"`
 	Status    UserStatus    `json:"status" gorm:"column:status;"`
+	Orders    []Order       `gorm:"foreignKey:UserId"`
 }
 
 type UserType string

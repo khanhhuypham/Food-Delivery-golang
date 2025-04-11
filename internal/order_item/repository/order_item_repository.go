@@ -1,7 +1,8 @@
 package order_item_repository
 
 import (
-	order_item_model "Food-Delivery/internal/order_item/model"
+	"Food-Delivery/internal/order_item/entity/dto"
+	"Food-Delivery/internal/order_item/entity/order_item_model"
 	"Food-Delivery/pkg/common"
 	"context"
 	"github.com/pkg/errors"
@@ -22,7 +23,7 @@ func NewOrderItemRepository(db *gorm.DB) *orderItemRepository {
 }
 
 // create place
-func (repo *orderItemRepository) Create(ctx context.Context, dto *order_item_model.OrderItemCreateDTO) error {
+func (repo *orderItemRepository) Create(ctx context.Context, dto *dto.OrderItemCreateDTO) error {
 	//apply transaction technique
 	db := repo.db.Begin()
 	if err := repo.db.Table(repo.tableName).Create(dto).Error; err != nil {
@@ -41,7 +42,7 @@ func (repo *orderItemRepository) Create(ctx context.Context, dto *order_item_mod
 func (repo *orderItemRepository) FindAllWithCondition(
 	ctx context.Context,
 	paging *common.Paging,
-	query *order_item_model.QueryDTO,
+	query *dto.QueryDTO,
 	keys ...string) ([]order_item_model.OrderItem, error) {
 
 	var data []order_item_model.OrderItem
@@ -97,7 +98,7 @@ func (repo *orderItemRepository) DeleteDataWithCondition(ctx context.Context, co
 }
 
 // update place by condition
-func (repo *orderItemRepository) UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *order_item_model.OrderItemCreateDTO) error {
+func (repo *orderItemRepository) UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *dto.OrderItemCreateDTO) error {
 
 	if err := repo.db.Table(repo.tableName).Clauses(clause.Returning{}).Where(condition).Updates(dto).Error; err != nil {
 		return errors.WithStack(err)

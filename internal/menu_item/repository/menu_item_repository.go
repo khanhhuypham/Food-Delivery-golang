@@ -1,7 +1,8 @@
 package menu_item_repository
 
 import (
-	menu_item_model "Food-Delivery/internal/menu_item/model"
+	"Food-Delivery/internal/menu_item/entity/dto"
+	menu_item_model "Food-Delivery/internal/menu_item/entity/model"
 	"Food-Delivery/pkg/common"
 	"context"
 	"github.com/go-sql-driver/mysql"
@@ -24,7 +25,7 @@ func NewMenuItemRepository(db *gorm.DB) *menuItemRepository {
 }
 
 // create place
-func (repo *menuItemRepository) Create(ctx context.Context, dto *menu_item_model.MenuItemCreateDTO) (*menu_item_model.MenuItem, error) {
+func (repo *menuItemRepository) Create(ctx context.Context, dto *dto.MenuItemCreateDTO) (*menu_item_model.MenuItem, error) {
 	var newItem menu_item_model.MenuItem
 
 	// Start the transaction
@@ -70,7 +71,7 @@ func (repo *menuItemRepository) Create(ctx context.Context, dto *menu_item_model
 func (repo *menuItemRepository) FindAllWithCondition(
 	ctx context.Context,
 	paging *common.Paging,
-	query *menu_item_model.QueryDTO,
+	query *dto.QueryDTO,
 	keys ...string) ([]menu_item_model.MenuItem, error) {
 
 	var data []menu_item_model.MenuItem
@@ -130,7 +131,7 @@ func (repo *menuItemRepository) DeleteDataWithCondition(ctx context.Context, con
 }
 
 // update place by condition
-func (repo *menuItemRepository) UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *menu_item_model.MenuItemCreateDTO) (*menu_item_model.MenuItem, error) {
+func (repo *menuItemRepository) UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *dto.MenuItemCreateDTO) (*menu_item_model.MenuItem, error) {
 	var updatedMenuItem menu_item_model.MenuItem
 
 	err := repo.db.WithContext(ctx).

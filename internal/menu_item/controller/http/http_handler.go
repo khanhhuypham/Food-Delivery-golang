@@ -1,7 +1,8 @@
 package menu_item_http_handler
 
 import (
-	menu_item_model "Food-Delivery/internal/menu_item/model"
+	"Food-Delivery/internal/menu_item/entity/dto"
+	menu_item_model "Food-Delivery/internal/menu_item/entity/model"
 	"Food-Delivery/pkg/common"
 	"context"
 	"github.com/gin-gonic/gin"
@@ -10,10 +11,10 @@ import (
 )
 
 type MenuItemService interface {
-	Create(ctx context.Context, menuItem *menu_item_model.MenuItemCreateDTO) (*menu_item_model.MenuItem, error)
-	FindAll(ctx context.Context, paging *common.Paging, query *menu_item_model.QueryDTO) ([]menu_item_model.MenuItem, error)
+	Create(ctx context.Context, menuItem *dto.MenuItemCreateDTO) (*menu_item_model.MenuItem, error)
+	FindAll(ctx context.Context, paging *common.Paging, query *dto.QueryDTO) ([]menu_item_model.MenuItem, error)
 	FindOneById(ctx context.Context, id int) (*menu_item_model.MenuItem, error)
-	Update(ctx context.Context, id int, dto *menu_item_model.MenuItemCreateDTO) (*menu_item_model.MenuItem, error)
+	Update(ctx context.Context, id int, dto *dto.MenuItemCreateDTO) (*menu_item_model.MenuItem, error)
 	Delete(ctx context.Context, id int) error
 }
 
@@ -28,7 +29,7 @@ func NewRestaurantHandler(menuItemService MenuItemService) *menuItemHandler {
 func (handler *menuItemHandler) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		var item menu_item_model.MenuItemCreateDTO
+		var item dto.MenuItemCreateDTO
 		//error occurs from binding json data into struct data
 		if err := ctx.ShouldBind(&item); err != nil {
 			panic(common.ErrBadRequest(err))
@@ -55,7 +56,7 @@ func (handler *menuItemHandler) FindAll() gin.HandlerFunc {
 		}
 		paging.Fulfill()
 		//filter
-		var query menu_item_model.QueryDTO
+		var query dto.QueryDTO
 		if err := ctx.ShouldBind(&query); err != nil {
 			panic(common.ErrBadRequest(err))
 		}
@@ -97,7 +98,7 @@ func (handler *menuItemHandler) Update() gin.HandlerFunc {
 			panic(common.ErrBadRequest(err))
 		}
 
-		var dto menu_item_model.MenuItemCreateDTO
+		var dto dto.MenuItemCreateDTO
 		if err := ctx.ShouldBind(&dto); err != nil {
 			panic(common.ErrBadRequest(err))
 		}
