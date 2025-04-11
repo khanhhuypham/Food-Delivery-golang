@@ -1,7 +1,8 @@
 package restaurant_service
 
 import (
-	restaurant_model "Food-Delivery/internal/restaurant/model"
+	"Food-Delivery/internal/restaurant/entity/dto"
+	restaurant_model "Food-Delivery/internal/restaurant/entity/model"
 	"Food-Delivery/pkg/common"
 	"context"
 	"errors"
@@ -9,14 +10,14 @@ import (
 )
 
 type RestaurantRepository interface {
-	Create(ctx context.Context, dto *restaurant_model.RestaurantCreateDTO) error
+	Create(ctx context.Context, dto *dto.RestaurantCreateDTO) error
 	ListDataWithCondition(
 		ctx context.Context,
 		paging *common.Paging,
 		query *restaurant_model.QueryDTO,
 		keys ...string) ([]restaurant_model.Restaurant, error)
 	FindDataWithCondition(ctx context.Context, condition map[string]any, keys ...string) (*restaurant_model.Restaurant, error)
-	UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *restaurant_model.RestaurantCreateDTO) error
+	UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *dto.RestaurantCreateDTO) error
 	DeleteDataWithCondition(ctx context.Context, condition map[string]any) error
 }
 
@@ -28,7 +29,7 @@ func NewRestaurantService(restaurantRepo RestaurantRepository) *restaurantServic
 	return &restaurantService{restaurantRepo}
 }
 
-func (service *restaurantService) Create(ctx context.Context, cate *restaurant_model.RestaurantCreateDTO) error {
+func (service *restaurantService) Create(ctx context.Context, cate *dto.RestaurantCreateDTO) error {
 	//------perform business operation such as validate data
 	if err := cate.Validate(); err != nil {
 		return err
@@ -54,7 +55,7 @@ func (service *restaurantService) FindAll(ctx context.Context, paging *common.Pa
 func (service *restaurantService) FindOneById(ctx context.Context, id int) (*restaurant_model.Restaurant, error) {
 	//there will have business logic before getting specific data with condition
 
-	restaurant, err := service.restaurantRepo.FindDataWithCondition(ctx, map[string]any{"id": id}, "Category")
+	restaurant, err := service.restaurantRepo.FindDataWithCondition(ctx, map[string]any{"id": id}, "Category", "Orders", "MenuItems")
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, common.ErrEntityNotFound(restaurant.TableName(), err).WithDebug(err.Error())
@@ -64,7 +65,7 @@ func (service *restaurantService) FindOneById(ctx context.Context, id int) (*res
 	return restaurant, nil
 }
 
-func (service *restaurantService) Update(ctx context.Context, id int, dto *restaurant_model.RestaurantCreateDTO) error {
+func (service *restaurantService) Update(ctx context.Context, id int, dto *dto.RestaurantCreateDTO) error {
 	//validate the data first under this usecase layer
 	if err := dto.Validate(); err != nil {
 		return err

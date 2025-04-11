@@ -1,7 +1,8 @@
-package restaurant_repository
+package gorm_mysql
 
 import (
-	restaurant_model "Food-Delivery/internal/restaurant/model"
+	"Food-Delivery/internal/restaurant/entity/dto"
+	restaurant_model "Food-Delivery/internal/restaurant/entity/model"
 	"Food-Delivery/pkg/common"
 	"context"
 	"github.com/pkg/errors"
@@ -18,7 +19,7 @@ func NewRestaurantRepository(db *gorm.DB) *restaurantRepository {
 }
 
 // create place
-func (repo *restaurantRepository) Create(ctx context.Context, dto *restaurant_model.RestaurantCreateDTO) error {
+func (repo *restaurantRepository) Create(ctx context.Context, dto *dto.RestaurantCreateDTO) error {
 	tableName := restaurant_model.Restaurant{}.TableName()
 	//apply transaction technique
 	db := repo.db.Begin()
@@ -102,7 +103,7 @@ func (repo *restaurantRepository) DeleteDataWithCondition(ctx context.Context, c
 }
 
 // update place by condition
-func (repo *restaurantRepository) UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *restaurant_model.RestaurantCreateDTO) error {
+func (repo *restaurantRepository) UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *dto.RestaurantCreateDTO) error {
 	tableName := restaurant_model.Restaurant{}.TableName()
 	if err := repo.db.Table(tableName).Clauses(clause.Returning{}).Where(condition).Updates(dto).Error; err != nil {
 		return errors.WithStack(err)

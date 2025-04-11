@@ -6,9 +6,17 @@ import (
 	"strings"
 )
 
+// ======================================= query dto ========================================
 type QueryDTO struct {
 	Status string `json:"status"`
 }
+
+// ======================================= query dto ========================================
+type RPCRequestDTO struct {
+	Ids []int `json:"ids"`
+}
+
+// ======================================= create dto ========================================
 type CategoryCreateDto struct {
 	Name        *string `json:"name"`
 	Description *string `json:"description"`

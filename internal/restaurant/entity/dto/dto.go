@@ -1,6 +1,7 @@
-package restaurant_model
+package dto
 
 import (
+	restaurant_model "Food-Delivery/internal/restaurant/entity/model"
 	"Food-Delivery/pkg/common"
 	"errors"
 	"strings"
@@ -21,8 +22,8 @@ type RestaurantCreateDTO struct {
 
 func (r *RestaurantCreateDTO) Validate() error {
 	if st := r.Status; st != nil &&
-		*st != StatusActive && *st != StatusInactive &&
-		*st != StatusPending && *st != StatusDeleted {
+		*st != restaurant_model.StatusActive && *st != restaurant_model.StatusInactive &&
+		*st != restaurant_model.StatusPending && *st != restaurant_model.StatusDeleted {
 		return common.ErrBadRequest(errors.New("status must be in (active, inactive, pending, deleted)"))
 	}
 
@@ -43,8 +44,4 @@ func (r *RestaurantCreateDTO) Validate() error {
 	}
 
 	return nil
-}
-
-func (RestaurantCreateDTO) TableName() string {
-	return Restaurant{}.TableName()
 }

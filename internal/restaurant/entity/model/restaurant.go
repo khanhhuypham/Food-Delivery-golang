@@ -1,4 +1,4 @@
-package restaurant_model
+package model
 
 import (
 	"Food-Delivery/pkg/common"
@@ -14,18 +14,17 @@ type QueryDTO struct {
 
 type Restaurant struct {
 	common.SQLModel
-	OwnerId int     `json:"ownerId" gorm:"column:owner_id;"`
-	Name    string  `json:"name" gorm:"column:name;"`
-	Address string  `json:"address" gorm:"column:address;"`
-	CityId  *int    `json:"cityId" gorm:"column:city_id;"`
-	Lat     float64 `json:"lat" gorm:"column:lat;"`
-	Lng     float64 `json:"lng" gorm:"column:lng;"`
-	// Cover            json.RawMessage `json:"cover" gorm:"column:cover;"`
-	// Logo             json.RawMessage `json:"logo" gorm:"column:logo;"`
-	ShippingFeePerKm float64   `json:"shippingFeePerKm" gorm:"column:shipping_fee_per_km;"`
-	Status           string    `json:"status" gorm:"column:status;"`
-	CategoryId       int       `json:"category_id" gorm:"column:category_id"`
-	Category         *Category `json:"category" gorm:"foreignKey:CategoryId;references:Id;"`
+	OwnerId          int        `json:"ownerId" gorm:"column:owner_id;"`
+	Name             string     `json:"name" gorm:"column:name;"`
+	Address          string     `json:"address" gorm:"column:address;"`
+	CityId           *int       `json:"cityId" gorm:"column:city_id;"`
+	Lat              float64    `json:"lat" gorm:"column:lat;"`
+	Lng              float64    `json:"lng" gorm:"column:lng;"`
+	ShippingFeePerKm float64    `json:"shippingFeePerKm" gorm:"column:shipping_fee_per_km;"`
+	Status           string     `json:"status" gorm:"column:status;"`
+	MenuItems        []MenuItem `json:"menu_items" gorm:"foreignKey:RestaurantId;references:Id;"`
+	Orders           []Order    `json:"orders" gorm:"foreignKey:RestaurantId;references:Id;"`
+	//Category         *Category  `json:"category" gorm:"foreignKey:CategoryId;references:Id;"`
 }
 
 func (Restaurant) TableName() string {

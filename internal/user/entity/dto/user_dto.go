@@ -1,6 +1,7 @@
-package usermodel
+package dto
 
 import (
+	user_model "Food-Delivery/internal/user/entity/model"
 	"Food-Delivery/pkg/common"
 	"Food-Delivery/pkg/utils"
 	"errors"
@@ -17,7 +18,7 @@ func (dto *UserLogin) Validate() error {
 	dto.Password = strings.TrimSpace(dto.Password)
 
 	if !utils.CheckValidEmailFormat(dto.Email) {
-		return ErrInvalidEmail
+		return user_model.ErrInvalidEmail
 	}
 
 	//if len(dto.Password) < 6 {
@@ -62,19 +63,19 @@ func (dto *UserCreate) Validate() error {
 	}
 
 	if !utils.CheckValidEmailFormat(dto.Email) {
-		return ErrInvalidEmail
+		return user_model.ErrInvalidEmail
 	}
 
 	if len(dto.Password) < 6 {
-		return ErrInvalidPassword
+		return user_model.ErrInvalidPassword
 	}
 
 	if dto.FirstName == "" {
-		return ErrInvalidFirstName
+		return user_model.ErrInvalidFirstName
 	}
 
 	if dto.LastName == "" {
-		return ErrInvalidLastName
+		return user_model.ErrInvalidLastName
 	}
 
 	//another validation for password will need to write below

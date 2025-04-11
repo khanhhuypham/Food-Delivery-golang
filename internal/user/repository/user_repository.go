@@ -1,7 +1,8 @@
 package user_repository
 
 import (
-	usermodel "Food-Delivery/internal/user/model"
+	"Food-Delivery/internal/user/entity/dto"
+	usermodel "Food-Delivery/internal/user/entity/model"
 	"context"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
@@ -16,7 +17,7 @@ func NewUserRepository(db *gorm.DB) *userRepository {
 	return &userRepository{db: db, tableName: usermodel.User{}.TableName()}
 }
 
-func (userRepo *userRepository) Create(ctx context.Context, dto *usermodel.UserCreate) error {
+func (userRepo *userRepository) Create(ctx context.Context, dto *dto.UserCreate) error {
 	db := userRepo.db.Begin()
 
 	if err := db.Table(userRepo.tableName).Create(dto).Error; err != nil {
@@ -28,6 +29,7 @@ func (userRepo *userRepository) Create(ctx context.Context, dto *usermodel.UserC
 		db.Rollback()
 		return err
 	}
+
 	return nil
 }
 

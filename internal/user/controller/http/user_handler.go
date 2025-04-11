@@ -1,7 +1,7 @@
 package user_http
 
 import (
-	usermodel "Food-Delivery/internal/user/model"
+	usermodel "Food-Delivery/internal/user/entity/dto"
 	"Food-Delivery/pkg/common"
 	"Food-Delivery/pkg/utils"
 	"context"

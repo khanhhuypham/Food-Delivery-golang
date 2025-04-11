@@ -8,8 +8,9 @@ import (
 
 type CategoryRepository interface {
 	Create(ctx context.Context, dto *categorymodel.CategoryCreateDto) error
-	ListDataWithCondition(ctx context.Context, paging *common.Paging, query *categorymodel.QueryDTO, keys ...string) ([]categorymodel.Category, error)
-	FindDataWithCondition(ctx context.Context, condition map[string]any, keys ...string) (*categorymodel.Category, error)
+	FindAllWithCondition(ctx context.Context, paging *common.Paging, query *categorymodel.QueryDTO, keys ...string) ([]categorymodel.Category, error)
+	FindAllByIds(ctx context.Context, ids []int, keys ...string) ([]categorymodel.Category, error)
+	FindOneWithCondition(ctx context.Context, condition map[string]any, keys ...string) (*categorymodel.Category, error)
 	UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *categorymodel.CategoryCreateDto) error
 	DeleteDataWithCondition(ctx context.Context, condition map[string]any) error
 }
@@ -34,9 +35,20 @@ func (service *categoryService) Create(ctx context.Context, cate *categorymodel.
 	return nil
 }
 
+func (service *categoryService) FindAllByIds(ctx context.Context, ids []int) ([]categorymodel.Category, error) {
+	//there will have business logic before getting data list with condition
+	categories, err := service.cateRepo.FindAllByIds(ctx, ids)
+
+	if err != nil {
+		return nil, common.ErrInternal(err).WithDebug(err.Error())
+	}
+
+	return categories, nil
+}
+
 func (service *categoryService) FindAll(ctx context.Context, paging *common.Paging, filter *categorymodel.QueryDTO) ([]categorymodel.Category, error) {
 	//there will have business logic before getting data list with condition
-	categories, err := service.cateRepo.ListDataWithCondition(ctx, paging, filter)
+	categories, err := service.cateRepo.FindAllWithCondition(ctx, paging, filter)
 
 	if err != nil {
 		return nil, common.ErrInternal(err).WithDebug(err.Error())
@@ -48,7 +60,7 @@ func (service *categoryService) FindAll(ctx context.Context, paging *common.Pagi
 func (service *categoryService) FindOneById(ctx context.Context, id int) (*categorymodel.Category, error) {
 	//there will have business logic before getting specific data with condition
 
-	category, err := service.cateRepo.FindDataWithCondition(ctx, map[string]any{"id": id})
+	category, err := service.cateRepo.FindOneWithCondition(ctx, map[string]any{"id": id})
 	if err != nil {
 		return nil, common.ErrInternal(err).WithDebug(err.Error())
 	}

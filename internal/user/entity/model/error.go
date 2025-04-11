@@ -1,4 +1,4 @@
-package usermodel
+package user_model
 
 import "errors"
 

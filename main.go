@@ -2,8 +2,12 @@ package main
 
 import (
 	"Food-Delivery/config"
-	categorymodule "Food-Delivery/internal/category"
+	category_module "Food-Delivery/internal/category"
+	order_item_module "Food-Delivery/internal/order_item"
+
+	menu_item_module "Food-Delivery/internal/menu_item"
 	"Food-Delivery/internal/middleware"
+	order_module "Food-Delivery/internal/order"
 	restaurant_module "Food-Delivery/internal/restaurant"
 	user_module "Food-Delivery/internal/user"
 	user_repository "Food-Delivery/internal/user/repository"
@@ -16,7 +20,7 @@ import (
 )
 
 //TIP <p>To run your code, right-click the code and select <b>Run</b>.</p> <p>Alternatively, click
-// the <icon src="AllIcons.Actions.Execute"/> icon in the gutter and select the <b>Run</b> menu item from here.</p>
+// the <icon src="AllIcons.Actions.Execute"/> icon in the gutter and select the <b>Run</b> menu_item item from here.</p>
 
 func main() {
 	env := os.Getenv("ENV")
@@ -37,16 +41,19 @@ func main() {
 		return
 	}
 
-	middleware := middleware.NewMiddlewareManager(cfg, user_repository.NewUserRepository(db))
+	middlewareManager := middleware.NewMiddlewareManager(cfg, user_repository.NewUserRepository(db))
 	hasher := utils.NewHashIds(cfg.App.Secret, 10)
 
 	r := gin.Default()
-	r.Use(middleware.Recover())
+	r.Use(middlewareManager.Recover())
 	v1 := r.Group("/api/v1")
 
-	categorymodule.SetupCategoryModule(db, v1)
-	restaurant_module.SetupRestaurantModule(db, v1)
-	user_module.SetupUserModule(db, v1, cfg, hasher, middleware)
+	category_module.Setup(db, v1)
+	restaurant_module.Setup(db, v1)
+	menu_item_module.Setup(db, v1)
+	order_module.Setup(db, v1)
+	order_item_module.Setup(db, v1)
+	user_module.Setup(db, v1, cfg, hasher, middlewareManager)
 
 	r.Run(fmt.Sprintf(":%s", cfg.App.Port)) // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
