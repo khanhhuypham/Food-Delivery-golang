@@ -1,7 +1,7 @@
 package rpc_category_client
 
 import (
-	restaurant_model "Food-Delivery/internal/restaurant/entity/relationship"
+	"Food-Delivery/entity/model"
 	"context"
 	"fmt"
 
@@ -16,11 +16,11 @@ func NewCategoryRPCClient(catServiceURL string) *CategoryRPCClient {
 	return &CategoryRPCClient{catServiceURL: catServiceURL}
 }
 
-func (c *CategoryRPCClient) FindByIds(ctx context.Context, ids []int) ([]restaurant_model.Category, error) {
+func (c *CategoryRPCClient) FindByIds(ctx context.Context, ids []int) ([]model.Category, error) {
 	client := resty.New()
 
 	type ResponseDTO struct {
-		Data []restaurant_model.Category `json:"data"`
+		Data []model.Category `json:"data"`
 	}
 
 	var response ResponseDTO

@@ -1,13 +1,13 @@
 package restaurant_service
 
 import (
-	restaurant_model "Food-Delivery/internal/restaurant/entity/dto"
+	restaurant_dto "Food-Delivery/entity/dto/restaurant"
 	"context"
 	"testing"
 )
 
 type mockRepository interface {
-	Create(ctx context.Context, dto *restaurant_model.RestaurantCreateDTO) error
+	Create(ctx context.Context, dto *restaurant_dto.CreateDTO) error
 }
 
 func TestCreateRestaurant(t *testing.T) {

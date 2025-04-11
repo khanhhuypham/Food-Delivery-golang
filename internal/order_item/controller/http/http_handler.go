@@ -1,8 +1,8 @@
 package order_item_http_handler
 
 import (
-	"Food-Delivery/internal/order_item/entity/dto"
-	"Food-Delivery/internal/order_item/entity/order_item_model"
+	order_item_dto "Food-Delivery/entity/dto/order-item"
+	"Food-Delivery/entity/model"
 	"Food-Delivery/pkg/common"
 	"context"
 	"github.com/gin-gonic/gin"
@@ -11,10 +11,10 @@ import (
 )
 
 type OrderItemService interface {
-	Create(ctx context.Context, dto *dto.OrderItemCreateDTO) error
-	FindAll(ctx context.Context, paging *common.Paging, query *dto.QueryDTO) ([]order_item_model.OrderItem, error)
-	FindOneById(ctx context.Context, id int) (*order_item_model.OrderItem, error)
-	Update(ctx context.Context, id int, dto *dto.OrderItemCreateDTO) error
+	Create(ctx context.Context, dto *order_item_dto.CreateDTO) error
+	FindAll(ctx context.Context, paging *common.Paging, query *order_item_dto.QueryDTO) ([]model.OrderItem, error)
+	FindOneById(ctx context.Context, id int) (*model.OrderItem, error)
+	Update(ctx context.Context, id int, dto *order_item_dto.CreateDTO) error
 	Delete(ctx context.Context, id int) error
 }
 
@@ -29,7 +29,7 @@ func NewOrderItemHandler(service OrderItemService) *orderItemHandler {
 func (handler *orderItemHandler) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		var dto dto.OrderItemCreateDTO
+		var dto order_item_dto.CreateDTO
 		//error occurs from binding json data into struct data
 		if err := ctx.ShouldBind(&dto); err != nil {
 			panic(common.ErrBadRequest(err))
@@ -54,7 +54,7 @@ func (handler *orderItemHandler) GetAll() gin.HandlerFunc {
 		}
 		paging.Fulfill()
 		//filter
-		var query dto.QueryDTO
+		var query order_item_dto.QueryDTO
 		if err := ctx.ShouldBind(&query); err != nil {
 			panic(common.ErrBadRequest(err))
 		}
@@ -95,7 +95,7 @@ func (handler *orderItemHandler) Update() gin.HandlerFunc {
 			panic(common.ErrBadRequest(err))
 		}
 
-		var dto dto.OrderItemCreateDTO
+		var dto order_item_dto.CreateDTO
 		if err := ctx.ShouldBind(&dto); err != nil {
 			panic(common.ErrBadRequest(err))
 		}

@@ -1,8 +1,8 @@
 package order_http_handler
 
 import (
-	"Food-Delivery/internal/order/entity/dto"
-	order_model "Food-Delivery/internal/order/entity/order_model"
+	order_dto "Food-Delivery/entity/dto/order"
+	"Food-Delivery/entity/model"
 	"Food-Delivery/pkg/common"
 	"context"
 	"github.com/gin-gonic/gin"
@@ -11,10 +11,10 @@ import (
 )
 
 type OrderService interface {
-	Create(ctx context.Context, data *dto.OrderCreateDTO) error
-	FindAll(ctx context.Context, paging *common.Paging, query *dto.QueryDTO) ([]order_model.Order, error)
-	FindOneById(ctx context.Context, id int) (*order_model.Order, error)
-	ChangeStatus(ctx context.Context, id int, dto *dto.OrderUpdateDTO) (*order_model.Order, error)
+	Create(ctx context.Context, data *order_dto.CreateDTO) error
+	FindAll(ctx context.Context, paging *common.Paging, query *order_dto.QueryDTO) ([]model.Order, error)
+	FindOneById(ctx context.Context, id int) (*model.Order, error)
+	ChangeStatus(ctx context.Context, id int, dto *order_dto.UpdateDTO) (*model.Order, error)
 }
 
 type orderHandler struct {
@@ -28,7 +28,7 @@ func NewOrderHandler(orderService OrderService) *orderHandler {
 func (handler *orderHandler) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		var dto dto.OrderCreateDTO
+		var dto order_dto.CreateDTO
 		//error occurs from binding json data into struct data
 		if err := ctx.ShouldBind(&dto); err != nil {
 			panic(common.ErrBadRequest(err))
@@ -53,7 +53,7 @@ func (handler *orderHandler) GetAll() gin.HandlerFunc {
 		}
 		paging.Fulfill()
 		//filter
-		var query dto.QueryDTO
+		var query order_dto.QueryDTO
 		if err := ctx.ShouldBind(&query); err != nil {
 			panic(common.ErrBadRequest(err))
 		}
@@ -95,7 +95,7 @@ func (handler *orderHandler) ChangeStatus() gin.HandlerFunc {
 			panic(common.ErrBadRequest(err))
 		}
 
-		var dto dto.OrderUpdateDTO
+		var dto order_dto.UpdateDTO
 
 		if err := ctx.ShouldBind(&dto); err != nil {
 			panic(common.ErrBadRequest(err))

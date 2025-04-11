@@ -1,7 +1,8 @@
 package category_http
 
 import (
-	categorymodel "Food-Delivery/internal/category/model"
+	category_dto "Food-Delivery/entity/dto/category"
+	"Food-Delivery/entity/model"
 	"Food-Delivery/pkg/common"
 	"context"
 	"github.com/gin-gonic/gin"
@@ -10,10 +11,10 @@ import (
 )
 
 type CategoryService interface {
-	Create(ctx context.Context, cate *categorymodel.CategoryCreateDto) error
-	FindAll(ctx context.Context, paging *common.Paging, filter *categorymodel.QueryDTO) ([]categorymodel.Category, error)
-	FindOneById(ctx context.Context, id int) (*categorymodel.Category, error)
-	Update(ctx context.Context, id int, dto *categorymodel.CategoryCreateDto) error
+	Create(ctx context.Context, cate *category_dto.CreateDto) error
+	FindAll(ctx context.Context, paging *common.Paging, filter *category_dto.QueryDTO) ([]model.Category, error)
+	FindOneById(ctx context.Context, id int) (*model.Category, error)
+	Update(ctx context.Context, id int, dto *category_dto.CreateDto) error
 	Delete(ctx context.Context, id int) error
 }
 
@@ -28,14 +29,14 @@ func NewCategoryHandler(cateService CategoryService) *categoryHandler {
 func (handler *categoryHandler) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		var cate categorymodel.CategoryCreateDto
+		var dto category_dto.CreateDto
 		//error occurs from binding json data into struct data
-		if err := ctx.ShouldBind(&cate); err != nil {
+		if err := ctx.ShouldBind(&dto); err != nil {
 			panic(common.ErrBadRequest(err))
 		}
 
 		// check error from usecase layer
-		if err := handler.cateService.Create(ctx.Request.Context(), &cate); err != nil {
+		if err := handler.cateService.Create(ctx.Request.Context(), &dto); err != nil {
 			panic(err)
 		}
 
@@ -56,7 +57,7 @@ func (handler *categoryHandler) FindAll() gin.HandlerFunc {
 		}
 		paging.Fulfill()
 		//filter
-		var query categorymodel.QueryDTO
+		var query category_dto.QueryDTO
 		if err := ctx.ShouldBind(&query); err != nil {
 			panic(common.ErrBadRequest(err))
 		}
@@ -99,7 +100,7 @@ func (handler *categoryHandler) Update() gin.HandlerFunc {
 			panic(common.ErrBadRequest(err))
 		}
 
-		var dto categorymodel.CategoryCreateDto
+		var dto category_dto.CreateDto
 		if err := ctx.ShouldBind(&dto); err != nil {
 			panic(common.ErrBadRequest(err))
 		}

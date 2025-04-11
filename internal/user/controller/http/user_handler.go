@@ -1,7 +1,7 @@
 package user_http
 
 import (
-	usermodel "Food-Delivery/internal/user/entity/dto"
+	user_dto "Food-Delivery/entity/dto/user"
 	"Food-Delivery/pkg/common"
 	"Food-Delivery/pkg/utils"
 	"context"
@@ -10,8 +10,8 @@ import (
 )
 
 type UserService interface {
-	Signup(ctx context.Context, dto *usermodel.UserCreate) error
-	SignIn(ctx context.Context, dto *usermodel.UserLogin) (*utils.Token, error)
+	Signup(ctx context.Context, dto *user_dto.UserCreate) error
+	SignIn(ctx context.Context, dto *user_dto.UserLogin) (*utils.Token, error)
 	DeleteUserById(ctx context.Context, id int) error
 }
 
@@ -27,7 +27,7 @@ func NewUserHandler(userService UserService, hasher *utils.Hasher) *userHandler 
 func (handler *userHandler) Signup() gin.HandlerFunc {
 
 	return func(ctx *gin.Context) {
-		var dto usermodel.UserCreate
+		var dto user_dto.UserCreate
 
 		if err := ctx.ShouldBind(&dto); err != nil {
 			panic(common.ErrBadRequest(err).WithDebug(err.Error()))
@@ -43,7 +43,7 @@ func (handler *userHandler) Signup() gin.HandlerFunc {
 
 func (handler *userHandler) SignIn() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var dto usermodel.UserLogin
+		var dto user_dto.UserLogin
 
 		if err := ctx.ShouldBind(&dto); err != nil {
 			panic(common.ErrBadRequest(err))

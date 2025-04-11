@@ -1,7 +1,7 @@
 package user_rpc
 
 import (
-	usermodel "Food-Delivery/internal/user/entity/model"
+	"Food-Delivery/entity/model"
 	"Food-Delivery/pkg/common"
 	"Food-Delivery/pkg/utils"
 	"context"
@@ -10,7 +10,7 @@ import (
 )
 
 type UserService interface {
-	FindById(ctx context.Context, id int) (*usermodel.User, error)
+	FindById(ctx context.Context, id int) (*model.User, error)
 }
 
 type rpcUserHandler struct {

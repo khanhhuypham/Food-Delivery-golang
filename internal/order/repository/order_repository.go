@@ -1,9 +1,8 @@
 package order_repository
 
 import (
-	"Food-Delivery/internal/order/entity/dto"
-	order_model "Food-Delivery/internal/order/entity/order_model"
-
+	order_dto "Food-Delivery/entity/dto/order"
+	"Food-Delivery/entity/model"
 	"Food-Delivery/pkg/common"
 	"context"
 	"github.com/go-sql-driver/mysql"
@@ -20,13 +19,13 @@ type orderRepository struct {
 
 func NewOrderRepository(db *gorm.DB) *orderRepository {
 	return &orderRepository{
-		tableName: order_model.Order{}.TableName(),
+		tableName: model.Order{}.TableName(),
 		db:        db,
 	}
 }
 
 // create place
-func (repo *orderRepository) Create(ctx context.Context, dto *dto.OrderCreateDTO) error {
+func (repo *orderRepository) Create(ctx context.Context, dto *order_dto.CreateDTO) error {
 
 	//apply transaction technique
 	db := repo.db.Begin()
@@ -54,12 +53,12 @@ func (repo *orderRepository) Create(ctx context.Context, dto *dto.OrderCreateDTO
 func (repo *orderRepository) FindAllWithCondition(
 	ctx context.Context,
 	paging *common.Paging,
-	query *dto.QueryDTO,
-	keys ...string) ([]order_model.Order, error) {
+	query *order_dto.QueryDTO,
+	keys ...string) ([]model.Order, error) {
 
-	var data []order_model.Order
+	var data []model.Order
 
-	db := repo.db.Model(&order_model.Order{}).Table(repo.tableName)
+	db := repo.db.Model(&model.Order{}).Table(repo.tableName)
 
 	if query.SearchKey != nil {
 		db.Where("name LIKE ?", "%"+*query.SearchKey+"%")
@@ -87,8 +86,8 @@ func (repo *orderRepository) FindAllWithCondition(
 	return data, nil
 }
 
-func (repo *orderRepository) FindOneWithCondition(ctx context.Context, condition map[string]any, keys ...string) (*order_model.Order, error) {
-	var data order_model.Order
+func (repo *orderRepository) FindOneWithCondition(ctx context.Context, condition map[string]any, keys ...string) (*model.Order, error) {
+	var data model.Order
 	db := repo.db.Table(repo.tableName)
 
 	for _, v := range keys {
@@ -104,22 +103,22 @@ func (repo *orderRepository) FindOneWithCondition(ctx context.Context, condition
 // Delete place by condition
 func (repo *orderRepository) DeleteDataWithCondition(ctx context.Context, condition map[string]any) error {
 
-	if err := repo.db.Table(repo.tableName).Where(condition).Delete(&order_model.Order{}).Error; err != nil {
+	if err := repo.db.Table(repo.tableName).Where(condition).Delete(&model.Order{}).Error; err != nil {
 		return errors.WithStack(err)
 	}
 	return nil
 }
 
 // update place by condition
-func (repo *orderRepository) UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *dto.OrderUpdateDTO) (*order_model.Order, error) {
-	var updatedData order_model.Order
+func (repo *orderRepository) UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *order_dto.UpdateDTO) (*model.Order, error) {
+	var data model.Order
 
 	err := repo.db.WithContext(ctx).
 		Table(repo.tableName).
 		Clauses(clause.Returning{}).
 		Where(condition).
 		Updates(dto).
-		Scan(&updatedData).
+		Scan(&data).
 		Error
 
 	if err != nil {
@@ -134,5 +133,5 @@ func (repo *orderRepository) UpdateDataWithCondition(ctx context.Context, condit
 		}
 		return nil, errors.WithStack(err)
 	}
-	return &updatedData, nil
+	return &data, nil
 }

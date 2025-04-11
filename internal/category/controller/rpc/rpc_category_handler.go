@@ -1,7 +1,9 @@
 package rpc_category_handler
 
 import (
-	categorymodel "Food-Delivery/internal/category/model"
+	category_dto "Food-Delivery/entity/dto/category"
+	"Food-Delivery/entity/model"
+
 	"Food-Delivery/pkg/common"
 	"context"
 	"github.com/gin-gonic/gin"
@@ -9,7 +11,7 @@ import (
 )
 
 type RPCCategoryService interface {
-	FindAllByIds(ctx context.Context, ids []int) ([]categorymodel.Category, error)
+	FindAllByIds(ctx context.Context, ids []int) ([]model.Category, error)
 }
 
 type rpcHandler struct {
@@ -22,7 +24,7 @@ func NewRPCCategoryHandler(service RPCCategoryService) *rpcHandler {
 
 func (handler *rpcHandler) GetByIds() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var dto categorymodel.RPCRequestDTO
+		var dto category_dto.RPCRequestDTO
 
 		if err := ctx.ShouldBindJSON(&dto); err != nil {
 			panic(common.ErrBadRequest(err))

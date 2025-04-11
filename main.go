@@ -5,7 +5,7 @@ import (
 	category_module "Food-Delivery/internal/category"
 	order_item_module "Food-Delivery/internal/order_item"
 
-	menu_item_module "Food-Delivery/internal/menu_item"
+	menu_item_module "Food-Delivery/internal/item"
 	"Food-Delivery/internal/middleware"
 	order_module "Food-Delivery/internal/order"
 	restaurant_module "Food-Delivery/internal/restaurant"
@@ -20,7 +20,7 @@ import (
 )
 
 //TIP <p>To run your code, right-click the code and select <b>Run</b>.</p> <p>Alternatively, click
-// the <icon src="AllIcons.Actions.Execute"/> icon in the gutter and select the <b>Run</b> menu_item item from here.</p>
+// the <icon src="AllIcons.Actions.Execute"/> icon in the gutter and select the <b>Run</b> item item from here.</p>
 
 func main() {
 	env := os.Getenv("ENV")

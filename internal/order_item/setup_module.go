@@ -1,8 +1,8 @@
 package order_item_module
 
 import (
+	"Food-Delivery/entity/model"
 	order_item_http_handler "Food-Delivery/internal/order_item/controller/http"
-	"Food-Delivery/internal/order_item/entity/order_item_model"
 	order_item_repository "Food-Delivery/internal/order_item/repository"
 	order_item_service "Food-Delivery/internal/order_item/service"
 	"github.com/gin-gonic/gin"
@@ -11,7 +11,7 @@ import (
 )
 
 func Setup(db *gorm.DB, r *gin.RouterGroup) {
-	if err := db.AutoMigrate(&order_item_model.OrderItem{}); err != nil {
+	if err := db.AutoMigrate(&model.OrderItem{}); err != nil {
 		log.Fatalf("could not migrate schema: %v", err)
 	}
 	////dependency of place module

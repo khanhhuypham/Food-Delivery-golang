@@ -1,8 +1,8 @@
 package gorm_mysql
 
 import (
-	"Food-Delivery/internal/restaurant/entity/dto"
-	restaurant_model "Food-Delivery/internal/restaurant/entity/model"
+	restaurant_dto "Food-Delivery/entity/dto/restaurant"
+	"Food-Delivery/entity/model"
 	"Food-Delivery/pkg/common"
 	"context"
 	"github.com/pkg/errors"
@@ -11,19 +11,23 @@ import (
 )
 
 type restaurantRepository struct {
-	db *gorm.DB
+	tableName string
+	db        *gorm.DB
 }
 
 func NewRestaurantRepository(db *gorm.DB) *restaurantRepository {
-	return &restaurantRepository{db: db}
+	return &restaurantRepository{
+		tableName: model.Restaurant{}.TableName(),
+		db:        db,
+	}
 }
 
 // create place
-func (repo *restaurantRepository) Create(ctx context.Context, dto *dto.RestaurantCreateDTO) error {
-	tableName := restaurant_model.Restaurant{}.TableName()
+func (repo *restaurantRepository) Create(ctx context.Context, dto *restaurant_dto.CreateDTO) error {
+
 	//apply transaction technique
 	db := repo.db.Begin()
-	if err := repo.db.Table(tableName).Create(dto).Error; err != nil {
+	if err := repo.db.Table(repo.tableName).Create(dto).Error; err != nil {
 		db.Rollback()
 		return errors.WithStack(err)
 	}
@@ -39,22 +43,20 @@ func (repo *restaurantRepository) Create(ctx context.Context, dto *dto.Restauran
 func (repo *restaurantRepository) ListDataWithCondition(
 	ctx context.Context,
 	paging *common.Paging,
-	query *restaurant_model.QueryDTO,
-	keys ...string) ([]restaurant_model.Restaurant, error) {
+	query *restaurant_dto.QueryDTO,
+	keys ...string) ([]model.Restaurant, error) {
 
-	tableName := restaurant_model.Restaurant{}.TableName()
+	var data []model.Restaurant
 
-	var data []restaurant_model.Restaurant
-
-	db := repo.db.Table(tableName)
+	db := repo.db.Table(repo.tableName)
 
 	////Để không count những record bị  soft delete ta cần dùng Model
 	//db = repo.db.Model(&data)
 
 	// Check if Status pointer is not nil and points to a non-empty string
-	if query.Status != nil && *query.Status != "" {
-		db = db.Where("status = ?", *query.Status)
-	}
+	//if query.Status != nil && *query.Status != "" {
+	//	db = db.Where("status = ?", *query.Status)
+	//}
 
 	// Count total records (without pagination)
 	if err := db.Count(&paging.Total).Error; err != nil {
@@ -78,9 +80,9 @@ func (repo *restaurantRepository) ListDataWithCondition(
 	return data, nil
 }
 
-func (repo *restaurantRepository) FindDataWithCondition(ctx context.Context, condition map[string]any, keys ...string) (*restaurant_model.Restaurant, error) {
-	var data restaurant_model.Restaurant
-	db := repo.db.Table(data.TableName())
+func (repo *restaurantRepository) FindDataWithCondition(ctx context.Context, condition map[string]any, keys ...string) (*model.Restaurant, error) {
+	var data model.Restaurant
+	db := repo.db.Table(repo.tableName)
 
 	for _, v := range keys {
 		db.Preload(v)
@@ -95,17 +97,17 @@ func (repo *restaurantRepository) FindDataWithCondition(ctx context.Context, con
 
 // Delete place by condition
 func (repo *restaurantRepository) DeleteDataWithCondition(ctx context.Context, condition map[string]any) error {
-	tableName := restaurant_model.Restaurant{}.TableName()
-	if err := repo.db.Table(tableName).Where(condition).Delete(&restaurant_model.Restaurant{}).Error; err != nil {
+
+	if err := repo.db.Table(repo.tableName).Where(condition).Delete(&model.Restaurant{}).Error; err != nil {
 		return errors.WithStack(err)
 	}
 	return nil
 }
 
 // update place by condition
-func (repo *restaurantRepository) UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *dto.RestaurantCreateDTO) error {
-	tableName := restaurant_model.Restaurant{}.TableName()
-	if err := repo.db.Table(tableName).Clauses(clause.Returning{}).Where(condition).Updates(dto).Error; err != nil {
+func (repo *restaurantRepository) UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *restaurant_dto.CreateDTO) error {
+
+	if err := repo.db.Table(repo.tableName).Clauses(clause.Returning{}).Where(condition).Updates(dto).Error; err != nil {
 		return errors.WithStack(err)
 	}
 	return nil

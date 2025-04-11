@@ -1,8 +1,8 @@
 package restaurant_service
 
 import (
-	"Food-Delivery/internal/restaurant/entity/dto"
-	restaurant_model "Food-Delivery/internal/restaurant/entity/model"
+	restaurant_dto "Food-Delivery/entity/dto/restaurant"
+	"Food-Delivery/entity/model"
 	"Food-Delivery/pkg/common"
 	"context"
 	"errors"
@@ -10,14 +10,14 @@ import (
 )
 
 type RestaurantRepository interface {
-	Create(ctx context.Context, dto *dto.RestaurantCreateDTO) error
+	Create(ctx context.Context, dto *restaurant_dto.CreateDTO) error
 	ListDataWithCondition(
 		ctx context.Context,
 		paging *common.Paging,
-		query *restaurant_model.QueryDTO,
-		keys ...string) ([]restaurant_model.Restaurant, error)
-	FindDataWithCondition(ctx context.Context, condition map[string]any, keys ...string) (*restaurant_model.Restaurant, error)
-	UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *dto.RestaurantCreateDTO) error
+		query *restaurant_dto.QueryDTO,
+		keys ...string) ([]model.Restaurant, error)
+	FindDataWithCondition(ctx context.Context, condition map[string]any, keys ...string) (*model.Restaurant, error)
+	UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *restaurant_dto.CreateDTO) error
 	DeleteDataWithCondition(ctx context.Context, condition map[string]any) error
 }
 
@@ -29,19 +29,19 @@ func NewRestaurantService(restaurantRepo RestaurantRepository) *restaurantServic
 	return &restaurantService{restaurantRepo}
 }
 
-func (service *restaurantService) Create(ctx context.Context, cate *dto.RestaurantCreateDTO) error {
+func (service *restaurantService) Create(ctx context.Context, dto *restaurant_dto.CreateDTO) error {
 	//------perform business operation such as validate data
-	if err := cate.Validate(); err != nil {
+	if err := dto.Validate(); err != nil {
 		return err
 	}
 	//------
-	if err := service.restaurantRepo.Create(ctx, cate); err != nil {
+	if err := service.restaurantRepo.Create(ctx, dto); err != nil {
 		return common.ErrInternal(err).WithDebug(err.Error())
 	}
 	return nil
 }
 
-func (service *restaurantService) FindAll(ctx context.Context, paging *common.Paging, filter *restaurant_model.QueryDTO) ([]restaurant_model.Restaurant, error) {
+func (service *restaurantService) FindAll(ctx context.Context, paging *common.Paging, filter *restaurant_dto.QueryDTO) ([]model.Restaurant, error) {
 	//there will have business logic before getting data list with condition
 	restaurants, err := service.restaurantRepo.ListDataWithCondition(ctx, paging, filter, "Category")
 
@@ -52,7 +52,7 @@ func (service *restaurantService) FindAll(ctx context.Context, paging *common.Pa
 	return restaurants, nil
 }
 
-func (service *restaurantService) FindOneById(ctx context.Context, id int) (*restaurant_model.Restaurant, error) {
+func (service *restaurantService) FindOneById(ctx context.Context, id int) (*model.Restaurant, error) {
 	//there will have business logic before getting specific data with condition
 
 	restaurant, err := service.restaurantRepo.FindDataWithCondition(ctx, map[string]any{"id": id}, "Category", "Orders", "MenuItems")
@@ -65,7 +65,7 @@ func (service *restaurantService) FindOneById(ctx context.Context, id int) (*res
 	return restaurant, nil
 }
 
-func (service *restaurantService) Update(ctx context.Context, id int, dto *dto.RestaurantCreateDTO) error {
+func (service *restaurantService) Update(ctx context.Context, id int, dto *restaurant_dto.CreateDTO) error {
 	//validate the data first under this usecase layer
 	if err := dto.Validate(); err != nil {
 		return err

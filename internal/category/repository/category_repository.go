@@ -1,7 +1,8 @@
 package category_repository
 
 import (
-	categorymodel "Food-Delivery/internal/category/model"
+	category_dto "Food-Delivery/entity/dto/category"
+	"Food-Delivery/entity/model"
 	"Food-Delivery/pkg/common"
 	"context"
 	"github.com/pkg/errors"
@@ -17,13 +18,13 @@ type categoryRepository struct {
 func NewCategoryRepository(db *gorm.DB) *categoryRepository {
 	return &categoryRepository{
 		db:        db,
-		tableName: categorymodel.Category{}.TableName(),
+		tableName: model.Category{}.TableName(),
 	}
 
 }
 
 // create place
-func (repo *categoryRepository) Create(ctx context.Context, dto *categorymodel.CategoryCreateDto) error {
+func (repo *categoryRepository) Create(ctx context.Context, dto *category_dto.CreateDto) error {
 
 	//apply transaction technique
 	db := repo.db.Begin()
@@ -42,10 +43,10 @@ func (repo *categoryRepository) Create(ctx context.Context, dto *categorymodel.C
 func (repo *categoryRepository) FindAllWithCondition(
 	ctx context.Context,
 	paging *common.Paging,
-	query *categorymodel.QueryDTO,
-	keys ...string) ([]categorymodel.Category, error) {
+	query *category_dto.QueryDTO,
+	keys ...string) ([]model.Category, error) {
 
-	var data []categorymodel.Category
+	var data []model.Category
 	db := repo.db.Table(repo.tableName)
 	//Để không count những record bị  soft delete ta cần dùng Model
 	db = repo.db.Model(&data)
@@ -76,9 +77,9 @@ func (repo *categoryRepository) FindAllWithCondition(
 	return data, nil
 }
 
-func (repo *categoryRepository) FindAllByIds(ctx context.Context, ids []int, keys ...string) ([]categorymodel.Category, error) {
+func (repo *categoryRepository) FindAllByIds(ctx context.Context, ids []int, keys ...string) ([]model.Category, error) {
 
-	var data []categorymodel.Category
+	var data []model.Category
 	// Start with the correct table and entity
 	db := repo.db.Model(&data).Table(repo.tableName)
 
@@ -95,8 +96,8 @@ func (repo *categoryRepository) FindAllByIds(ctx context.Context, ids []int, key
 	return data, nil
 }
 
-func (repo *categoryRepository) FindOneWithCondition(ctx context.Context, condition map[string]any, keys ...string) (*categorymodel.Category, error) {
-	var data categorymodel.Category
+func (repo *categoryRepository) FindOneWithCondition(ctx context.Context, condition map[string]any, keys ...string) (*model.Category, error) {
+	var data model.Category
 	db := repo.db.Table(repo.tableName)
 
 	for _, v := range keys {
@@ -115,14 +116,14 @@ func (repo *categoryRepository) FindOneWithCondition(ctx context.Context, condit
 // Delete place by condition
 func (repo *categoryRepository) DeleteDataWithCondition(ctx context.Context, condition map[string]any) error {
 
-	if err := repo.db.Table(repo.tableName).Where(condition).Delete(&categorymodel.Category{}).Error; err != nil {
+	if err := repo.db.Table(repo.tableName).Where(condition).Delete(&model.Category{}).Error; err != nil {
 		return errors.WithStack(err)
 	}
 	return nil
 }
 
 // update place by condition
-func (repo *categoryRepository) UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *categorymodel.CategoryCreateDto) error {
+func (repo *categoryRepository) UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *category_dto.CreateDto) error {
 
 	if err := repo.db.Table(repo.tableName).Clauses(clause.Returning{}).Where(condition).Updates(dto).Error; err != nil {
 		return common.ErrDB(err)
