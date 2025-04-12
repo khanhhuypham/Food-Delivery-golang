@@ -20,7 +20,7 @@ type User struct {
 	Orders    []Order             `gorm:"foreignKey:UserId"`
 }
 
-func (User) TableName() string {
+func (user *User) TableName() string {
 	return "user"
 }
 

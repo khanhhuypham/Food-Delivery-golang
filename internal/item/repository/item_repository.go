@@ -1,4 +1,4 @@
-package menu_item_repository
+package item_repository
 
 import (
 	menu_item_dto "Food-Delivery/entity/dto/item"
@@ -18,8 +18,10 @@ type itemRepository struct {
 }
 
 func NewItemRepository(db *gorm.DB) *itemRepository {
+
+	item := model.Item{}
 	return &itemRepository{
-		tableName: model.Item{}.TableName(),
+		tableName: item.TableName(),
 		db:        db,
 	}
 }

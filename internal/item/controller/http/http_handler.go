@@ -1,4 +1,4 @@
-package menu_item_http_handler
+package item_http_handler
 
 import (
 	menu_item_dto "Food-Delivery/entity/dto/item"

@@ -16,8 +16,9 @@ type restaurantRepository struct {
 }
 
 func NewRestaurantRepository(db *gorm.DB) *restaurantRepository {
+	restaurant := model.Restaurant{}
 	return &restaurantRepository{
-		tableName: model.Restaurant{}.TableName(),
+		tableName: restaurant.TableName(),
 		db:        db,
 	}
 }

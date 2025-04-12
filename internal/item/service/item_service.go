@@ -1,4 +1,4 @@
-package menu_item_service
+package item_service
 
 import (
 	menu_item_dto "Food-Delivery/entity/dto/item"

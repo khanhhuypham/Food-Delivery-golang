@@ -11,12 +11,13 @@ const CategoryEntity = "category"
 
 type Category struct {
 	common.SQLModel
+	Image       *common.Image
 	Name        string                  `json:"name" gorm:"column:name;"`
 	Description string                  `json:"description" gorm:"column:description;"`
 	Status      constant.CategoryStatus `json:"status" gorm:"column:status;"`
 }
 
-func (Category) TableName() string {
+func (cate *Category) TableName() string {
 	return "category"
 }
 

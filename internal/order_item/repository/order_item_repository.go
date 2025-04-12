@@ -17,8 +17,9 @@ type orderItemRepository struct {
 }
 
 func NewOrderItemRepository(db *gorm.DB) *orderItemRepository {
+	orderItem := model.OrderItem{}
 	return &orderItemRepository{
-		tableName: model.OrderItem{}.TableName(),
+		tableName: orderItem.TableName(),
 		db:        db,
 	}
 }

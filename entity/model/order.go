@@ -7,15 +7,24 @@ import (
 
 const OrderEntity = "menu item"
 
+// ;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;
 type Order struct {
 	common.SQLModel
 	UserId       int                  `json:"user_id" gorm:"column:user_id;"`
 	RestaurantId int                  `json:"restaurant_id" gorm:"column:restaurant_id;"`
-	OrderItem    []OrderItem          `json:"orderItems" gorm:"foreignKey:OrderId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	TotalAmount  float64              `json:"total_amount" gorm:"column:total_amount;"`
 	Status       constant.OrderStatus `json:"status" gorm:"column:status;"`
+	OrderItems   []*OrderItem         `json:"orderItems"  gorm:"foreignKey:OrderId;references:Id"`
 }
 
-func (Order) TableName() string {
+/*
+	1. Define the join table (OrderItem) explicitly.
+	2 .Avoid using many2many: if you're using a custom join model like OrderItem.
+ 	3.Use foreignKey, joinForeignKey, references, and joinReferences as needed.
+note:
+	- You don’t use many2many: because OrderItem is a full join model (with additional fields like Quantity).
+*/
+
+func (order *Order) TableName() string {
 	return "order"
 }

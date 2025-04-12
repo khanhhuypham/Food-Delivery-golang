@@ -16,9 +16,11 @@ type categoryRepository struct {
 }
 
 func NewCategoryRepository(db *gorm.DB) *categoryRepository {
+	category := model.Category{}
+	
 	return &categoryRepository{
 		db:        db,
-		tableName: model.Category{}.TableName(),
+		tableName: category.TableName(),
 	}
 
 }

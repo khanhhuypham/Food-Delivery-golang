@@ -2,7 +2,6 @@ package user_module
 
 import (
 	"Food-Delivery/config"
-	"Food-Delivery/entity/model"
 	"Food-Delivery/internal/middleware"
 	user_http "Food-Delivery/internal/user/controller/http"
 	user_rpc "Food-Delivery/internal/user/controller/rpc"
@@ -11,13 +10,10 @@ import (
 	"Food-Delivery/pkg/utils"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"log"
 )
 
 func Setup(db *gorm.DB, r *gin.RouterGroup, cfg *config.Config, hasher *utils.Hasher, middleWare *middleware.MiddlewareManager) {
-	if err := db.AutoMigrate(&model.User{}); err != nil {
-		log.Fatalf("could not migrate schema: %v", err)
-	}
+
 	//dependency of place module
 	repo := user_repository.NewUserRepository(db)
 	service := user_service.NewUserService(repo, cfg)

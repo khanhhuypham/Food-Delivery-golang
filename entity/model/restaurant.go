@@ -28,7 +28,7 @@ type Restaurant struct {
 	//Category         *Category  `json:"category" gorm:"foreignKey:CategoryId;references:Id;"`
 }
 
-func (Restaurant) TableName() string {
+func (restaurant *Restaurant) TableName() string {
 	return "restaurant"
 }
 

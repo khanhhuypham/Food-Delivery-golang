@@ -2,10 +2,11 @@ package main
 
 import (
 	"Food-Delivery/config"
+	"Food-Delivery/entity/model"
 	category_module "Food-Delivery/internal/category"
 	order_item_module "Food-Delivery/internal/order_item"
 
-	menu_item_module "Food-Delivery/internal/item"
+	item_module "Food-Delivery/internal/item"
 	"Food-Delivery/internal/middleware"
 	order_module "Food-Delivery/internal/order"
 	restaurant_module "Food-Delivery/internal/restaurant"
@@ -47,10 +48,10 @@ func main() {
 	r := gin.Default()
 	r.Use(middlewareManager.Recover())
 	v1 := r.Group("/api/v1")
-
+	model.SetupModel(db)
 	category_module.Setup(db, v1)
 	restaurant_module.Setup(db, v1)
-	menu_item_module.Setup(db, v1)
+	item_module.Setup(db, v1)
 	order_module.Setup(db, v1)
 	order_item_module.Setup(db, v1)
 	user_module.Setup(db, v1, cfg, hasher, middlewareManager)
