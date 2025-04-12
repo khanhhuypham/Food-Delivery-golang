@@ -9,7 +9,7 @@ import (
 
 // ======================================= query dto ========================================
 type QueryDTO struct {
-	Status string `json:"status"`
+	Active *bool `json:"active"`
 }
 
 // ======================================= query dto ========================================

@@ -17,7 +17,7 @@ type categoryRepository struct {
 
 func NewCategoryRepository(db *gorm.DB) *categoryRepository {
 	category := model.Category{}
-	
+
 	return &categoryRepository{
 		db:        db,
 		tableName: category.TableName(),
@@ -53,8 +53,8 @@ func (repo *categoryRepository) FindAllWithCondition(
 	//Để không count những record bị  soft delete ta cần dùng Model
 	db = repo.db.Model(&data)
 
-	if v := query.Status; len(v) > 0 {
-		db = db.Where("status = ?", v)
+	if v := query.Active; v != nil {
+		db = db.Where("active = ?", v)
 	}
 
 	// Count total records (without pagination)

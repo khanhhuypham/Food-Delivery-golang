@@ -3,7 +3,7 @@ package common
 type Paging struct {
 	Page  int   `json:"page" form:"page"`
 	Limit int   `json:"limit" form:"limit"`
-	Total int64 `json:"total" form:"total"`
+	Total int64 `json:"total_record" form:"total"`
 
 	//// Phân trang bằng cursor
 	//Cursor     int `json:"-" form:"cursor"`

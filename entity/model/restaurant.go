@@ -25,10 +25,10 @@ type Restaurant struct {
 	Status           constant.RestaurantStatus `json:"status" gorm:"column:status;"`
 	Items            []Item                    `json:"items" gorm:"foreignKey:RestaurantId;references:Id;"`
 	Orders           []Order                   `json:"orders" gorm:"foreignKey:RestaurantId;references:Id;"`
-	//Category         *Category  `json:"category" gorm:"foreignKey:CategoryId;references:Id;"`
+	Rating           *Rating                   `json:"rating" gorm:"foreignKey:RestaurantId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 }
 
-func (restaurant *Restaurant) TableName() string {
+func (Restaurant) TableName() string {
 	return "restaurant"
 }
 

@@ -16,6 +16,7 @@ func SetupModel(db *gorm.DB) {
 		&Item{},
 		&Order{},
 		&OrderItem{},
+		&Rating{},
 	); err != nil {
 		log.Fatalf("could not migrate schema: %v", err)
 	}

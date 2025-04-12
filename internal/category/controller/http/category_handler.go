@@ -63,12 +63,12 @@ func (handler *categoryHandler) FindAll() gin.HandlerFunc {
 		}
 
 		// check error from usecase layer
-		places, err := handler.cateService.FindAll(ctx.Request.Context(), &paging, &query)
+		list, err := handler.cateService.FindAll(ctx.Request.Context(), &paging, &query)
 		if err != nil {
 			panic(err)
 		}
 
-		ctx.JSON(http.StatusOK, common.ResponseWithPaging(places, paging))
+		ctx.JSON(http.StatusOK, common.ResponseWithPaging(list, paging))
 	}
 }
 

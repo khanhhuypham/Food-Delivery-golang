@@ -16,3 +16,14 @@ func (s CategoryStatus) IsValid() bool {
 	}
 	return false
 }
+
+type CategoryType string
+
+//
+//const (
+//	CATEGORY_TYPE_DRINK     = "drink"
+//	CATEGORY_TYPE_FOOD      = "food"
+//	CATEGORY_TYPE_BREAKFAST = "Breakfast"
+//	CATEGORY_TYPE_LUNCH     = "Lunch"
+//	CATEGORY_TYPE_BREAKFAST = "Dinner"
+//)

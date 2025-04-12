@@ -17,7 +17,8 @@ type User struct {
 	Phone     string              `json:"phone" gorm:"column:phone"`
 	Role      constant.UserRole   `json:"role" gorm:"column:role"`
 	Status    constant.UserStatus `json:"status" gorm:"column:status;"`
-	Orders    []Order             `gorm:"foreignKey:UserId"`
+	Orders    []Order             `gorm:"foreignKey:UserId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
+	Ratings   []Rating            `gorm:"foreignKey:UserId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 }
 
 func (user *User) TableName() string {

@@ -11,10 +11,12 @@ const CategoryEntity = "category"
 
 type Category struct {
 	common.SQLModel
-	Image       *common.Image
-	Name        string                  `json:"name" gorm:"column:name;"`
-	Description string                  `json:"description" gorm:"column:description;"`
+	Image       *common.Image           `json:"image"`
+	Name        string                  `json:"name" gorm:"column:name;not null;unique"`
+	Description *string                 `json:"description" gorm:"column:description;"`
+	Active      bool                    `json:"active" gorm:"column:active;default:true"`
 	Status      constant.CategoryStatus `json:"status" gorm:"column:status;"`
+	Items       []Item                  `json:"items" gorm:"foreignKey:CategoryId;references:Id"`
 }
 
 func (cate *Category) TableName() string {
