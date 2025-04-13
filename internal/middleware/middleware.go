@@ -2,12 +2,12 @@ package middleware
 
 import (
 	"Food-Delivery/config"
-	usermodel "Food-Delivery/internal/user/model"
+	"Food-Delivery/entity/model"
 	"context"
 )
 
 type UserRepository interface {
-	FindDataWithCondition(context.Context, map[string]any) (*usermodel.User, error)
+	FindDataWithCondition(context.Context, map[string]any) (*model.User, error)
 }
 
 type MiddlewareManager struct {
