@@ -23,6 +23,7 @@ type Restaurant struct {
 	Lng              float64                   `json:"lng" gorm:"column:lng;"`
 	ShippingFeePerKm float64                   `json:"shippingFeePerKm" gorm:"column:shipping_fee_per_km;"`
 	Status           constant.RestaurantStatus `json:"status" gorm:"column:status;"`
+	Active           bool                      `json:"active" gorm:"column:active;default:true"`
 	Items            []Item                    `json:"items" gorm:"foreignKey:RestaurantId;references:Id;"`
 	Orders           []Order                   `json:"orders" gorm:"foreignKey:RestaurantId;references:Id;"`
 	Rating           *Rating                   `json:"rating" gorm:"foreignKey:RestaurantId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
@@ -34,6 +35,7 @@ func (Restaurant) TableName() string {
 
 func (r *Restaurant) Validate() error {
 	r.Name = strings.TrimSpace(r.Name)
+
 	r.Address = strings.TrimSpace(r.Address)
 
 	if r.Name == "" {

@@ -12,10 +12,13 @@ import (
 
 type ItemService interface {
 	Create(ctx context.Context, menuItem *menu_item_dto.CreateDTO) (*model.Item, error)
-	FindAll(ctx context.Context, paging *common.Paging, query *menu_item_dto.QueryDTO) ([]model.Item, error)
-	FindOneById(ctx context.Context, id int) (*model.Item, error)
 	Update(ctx context.Context, id int, dto *menu_item_dto.CreateDTO) (*model.Item, error)
 	Delete(ctx context.Context, id int) error
+
+	FindAll(ctx context.Context, paging *common.Paging, query *menu_item_dto.QueryDTO) ([]model.Item, error)
+	FindOneById(ctx context.Context, id int) (*model.Item, error)
+	FindTheMostPopularItem(ctx context.Context, paging *common.Paging) ([]model.Item, error)
+	FindTheMostRecommendedItem(ctx context.Context, paging *common.Paging) ([]model.Item, error)
 }
 
 type menuItemHandler struct {
@@ -43,6 +46,46 @@ func (handler *menuItemHandler) Create() gin.HandlerFunc {
 		}
 
 		ctx.JSON(http.StatusOK, common.Response(newItem))
+	}
+}
+
+func (handler *menuItemHandler) Update() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		id, err := strconv.Atoi(ctx.Param("id"))
+
+		if err != nil {
+			panic(common.ErrBadRequest(err))
+		}
+
+		var dto menu_item_dto.CreateDTO
+		if err := ctx.ShouldBind(&dto); err != nil {
+			panic(common.ErrBadRequest(err))
+		}
+
+		updatedItem, err := handler.menuItemService.Update(ctx.Request.Context(), id, &dto)
+
+		if err != nil {
+			panic(err)
+		}
+
+		ctx.JSON(http.StatusOK, common.Response(updatedItem))
+	}
+}
+
+func (handler *menuItemHandler) Delete() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		id, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			panic(common.ErrBadRequest(err))
+		}
+
+		if err := handler.menuItemService.Delete(ctx.Request.Context(), id); err != nil {
+			panic(err)
+		}
+
+		ctx.JSON(http.StatusOK, common.Response(true))
 	}
 }
 
@@ -89,42 +132,42 @@ func (handler *menuItemHandler) FindOneByID() gin.HandlerFunc {
 	}
 }
 
-func (handler *menuItemHandler) Update() gin.HandlerFunc {
+func (handler *menuItemHandler) FindTheMostPopularItem() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-
-		id, err := strconv.Atoi(ctx.Param("id"))
-
-		if err != nil {
+		//paging
+		var paging common.Paging
+		//error occurs from binding json data into struct data
+		if err := ctx.ShouldBind(&paging); err != nil {
 			panic(common.ErrBadRequest(err))
 		}
+		paging.Fulfill()
 
-		var dto menu_item_dto.CreateDTO
-		if err := ctx.ShouldBind(&dto); err != nil {
-			panic(common.ErrBadRequest(err))
-		}
-
-		updatedItem, err := handler.menuItemService.Update(ctx.Request.Context(), id, &dto)
-
+		// check error from usecase layer
+		items, err := handler.menuItemService.FindTheMostPopularItem(ctx.Request.Context(), &paging)
 		if err != nil {
 			panic(err)
 		}
 
-		ctx.JSON(http.StatusOK, common.Response(updatedItem))
+		ctx.JSON(http.StatusOK, common.ResponseWithPaging(items, paging))
 	}
 }
 
-func (handler *menuItemHandler) Delete() gin.HandlerFunc {
+func (handler *menuItemHandler) FindTheMostRecommendedItem() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-
-		id, err := strconv.Atoi(ctx.Param("id"))
-		if err != nil {
+		//paging
+		var paging common.Paging
+		//error occurs from binding json data into struct data
+		if err := ctx.ShouldBind(&paging); err != nil {
 			panic(common.ErrBadRequest(err))
 		}
+		paging.Fulfill()
 
-		if err := handler.menuItemService.Delete(ctx.Request.Context(), id); err != nil {
+		// check error from usecase layer
+		items, err := handler.menuItemService.FindTheMostRecommendedItem(ctx.Request.Context(), &paging)
+		if err != nil {
 			panic(err)
 		}
 
-		ctx.JSON(http.StatusOK, common.Response(true))
+		ctx.JSON(http.StatusOK, common.ResponseWithPaging(items, paging))
 	}
 }

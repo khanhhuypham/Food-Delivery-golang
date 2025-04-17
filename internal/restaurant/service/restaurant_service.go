@@ -43,7 +43,7 @@ func (service *restaurantService) Create(ctx context.Context, dto *restaurant_dt
 
 func (service *restaurantService) FindAll(ctx context.Context, paging *common.Paging, filter *restaurant_dto.QueryDTO) ([]model.Restaurant, error) {
 	//there will have business logic before getting data list with condition
-	restaurants, err := service.restaurantRepo.ListDataWithCondition(ctx, paging, filter, "Category")
+	restaurants, err := service.restaurantRepo.ListDataWithCondition(ctx, paging, filter)
 
 	if err != nil {
 		return nil, common.ErrInternal(err).WithDebug(err.Error())

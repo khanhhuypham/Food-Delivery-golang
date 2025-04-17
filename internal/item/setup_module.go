@@ -15,11 +15,14 @@ func Setup(db *gorm.DB, r *gin.RouterGroup) {
 	service := menu_item_service.NewRestaurantService(repo)
 	http_handler := menu_item_http_handler.NewRestaurantHandler(service)
 
-	r.POST("/menu-item", http_handler.Create())
-	r.GET("/menu-item", http_handler.FindAll())
-	r.GET("/menu-item/:id", http_handler.FindOneByID())
-	r.PUT("/menu-item/:id", http_handler.Update())
-	r.PATCH("/menu-item/:id", http_handler.Update())
-	r.DELETE("/menu-item/:id", http_handler.Delete())
+	r.POST("/item", http_handler.Create())
+	r.PUT("/item/:id", http_handler.Update())
+	r.PATCH("/item/:id", http_handler.Update())
+	r.DELETE("/item/:id", http_handler.Delete())
+
+	r.GET("/item", http_handler.FindAll())
+	r.GET("/item/:id", http_handler.FindOneByID())
+	r.GET("/item/the-most-popular", http_handler.FindTheMostPopularItem())
+	r.GET("/item/the-most-recommended", http_handler.FindTheMostRecommendedItem())
 
 }

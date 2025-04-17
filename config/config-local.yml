@@ -16,10 +16,10 @@ mysql:
 
 aws:
   Region: ap-southeast-1
-  APIKey: AKIAQQMFSZOXTXZMI46G
-  SecretKey: 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
-  S3Domain: https://d2yhpu1ogsm212.cloudfront.net
-  S3Bucket: go01-airbnb
+  APIKey: AKIAWGKXZKJQTB7B46HZ
+  SecretKey: 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
+  S3Domain: https://d16dv63bbprpig.cloudfront.net
+  S3Bucket: food-delivery-app-resource
 
 redis:
   Host: localhost

@@ -1,19 +1,28 @@
 package category_module
 
 import (
+	"Food-Delivery/config"
 	category_http "Food-Delivery/internal/category/controller/http"
 	rpc_category_handler "Food-Delivery/internal/category/controller/rpc"
 	category_repository "Food-Delivery/internal/category/repository"
 	category_service "Food-Delivery/internal/category/service"
+	media_repository "Food-Delivery/internal/media/repository"
+	media_service "Food-Delivery/internal/media/service"
+	"Food-Delivery/pkg/upload"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
-func Setup(db *gorm.DB, r *gin.RouterGroup) {
+func Setup(db *gorm.DB, r *gin.RouterGroup, cfg *config.Config) {
+
+	//Declare s3
+	s3Provider := upload.NewS3Provider(cfg)
+	repo := media_repository.NewMediaRepository(db)
+	mediaService := media_service.NewMediaService(repo, s3Provider)
 
 	//dependency of place module
 	cateRepo := category_repository.NewCategoryRepository(db)
-	cateService := category_service.NewCategoryService(cateRepo)
+	cateService := category_service.NewCategoryService(cateRepo, mediaService)
 	http_handler := category_http.NewCategoryHandler(cateService)
 	rpc_handler := rpc_category_handler.NewRPCCategoryHandler(cateService)
 

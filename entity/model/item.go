@@ -6,7 +6,7 @@ const ItemEntity = "menu item"
 
 type Item struct {
 	common.SQLModel
-	Image        *common.Image
+	Image        *Media       `json:"image" gorm:"column:image;"`
 	RestaurantId int          `json:"restaurant_id" gorm:"column:restaurant_id;not null"`
 	Name         string       `json:"name" gorm:"column:name;type:varchar(255);not null;uniqueIndex:idx_item_name"`
 	Description  *string      `json:"description" gorm:"column:description;"`

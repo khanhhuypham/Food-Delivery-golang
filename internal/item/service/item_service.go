@@ -5,20 +5,23 @@ import (
 	"Food-Delivery/entity/model"
 	"Food-Delivery/pkg/common"
 	"context"
-	"errors"
+	"github.com/pkg/errors"
 	"gorm.io/gorm"
 )
 
 type ItemRepository interface {
 	Create(ctx context.Context, dto *menu_item_dto.CreateDTO) (*model.Item, error)
+	UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *menu_item_dto.CreateDTO) (*model.Item, error)
+	DeleteDataWithCondition(ctx context.Context, condition map[string]any) error
+
 	FindAllWithCondition(
 		ctx context.Context,
 		paging *common.Paging,
 		query *menu_item_dto.QueryDTO,
 		keys ...string) ([]model.Item, error)
 	FindOneWithCondition(ctx context.Context, condition map[string]any, keys ...string) (*model.Item, error)
-	UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *menu_item_dto.CreateDTO) (*model.Item, error)
-	DeleteDataWithCondition(ctx context.Context, condition map[string]any) error
+	FindTheMostPopularItem(ctx context.Context, paging *common.Paging) ([]model.Item, error)
+	FindTheMostRecommendedItem(ctx context.Context, paging *common.Paging) ([]model.Item, error)
 }
 
 type itemService struct {
@@ -41,30 +44,6 @@ func (service *itemService) Create(ctx context.Context, dto *menu_item_dto.Creat
 		return nil, common.ErrInternal(err).WithDebug(err.Error())
 	}
 	return newItem, nil
-}
-
-func (service *itemService) FindAll(ctx context.Context, paging *common.Paging, query *menu_item_dto.QueryDTO) ([]model.Item, error) {
-	//there will have business logic before getting data list with condition
-	items, err := service.itemRepo.FindAllWithCondition(ctx, paging, query)
-
-	if err != nil {
-		return nil, common.ErrInternal(err).WithDebug(err.Error())
-	}
-
-	return items, nil
-}
-
-func (service *itemService) FindOneById(ctx context.Context, id int) (*model.Item, error) {
-	//there will have business logic before getting specific data with condition
-
-	item, err := service.itemRepo.FindOneWithCondition(ctx, map[string]any{"id": id}, "Restaurant")
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, common.ErrEntityNotFound(model.ItemEntity, err).WithDebug(err.Error())
-		}
-		return nil, common.ErrInternal(err).WithDebug(err.Error())
-	}
-	return item, nil
 }
 
 func (service *itemService) Update(ctx context.Context, id int, dto *menu_item_dto.CreateDTO) (*model.Item, error) {
@@ -96,4 +75,52 @@ func (service *itemService) Delete(ctx context.Context, id int) error {
 		return common.ErrInternal(err).WithDebug(err.Error())
 	}
 	return nil
+}
+
+//=========================================Query=========================================
+
+func (service *itemService) FindAll(ctx context.Context, paging *common.Paging, query *menu_item_dto.QueryDTO) ([]model.Item, error) {
+	//there will have business logic before getting data list with condition
+	items, err := service.itemRepo.FindAllWithCondition(ctx, paging, query)
+
+	if err != nil {
+		return nil, common.ErrInternal(err).WithDebug(err.Error())
+	}
+
+	return items, nil
+}
+
+func (service *itemService) FindOneById(ctx context.Context, id int) (*model.Item, error) {
+	//there will have business logic before getting specific data with condition
+
+	item, err := service.itemRepo.FindOneWithCondition(ctx, map[string]any{"id": id}, "Restaurant")
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, common.ErrEntityNotFound(model.ItemEntity, err).WithDebug(err.Error())
+		}
+		return nil, common.ErrInternal(err).WithDebug(err.Error())
+	}
+	return item, nil
+}
+
+func (service *itemService) FindTheMostPopularItem(ctx context.Context, paging *common.Paging) ([]model.Item, error) {
+	//there will have business logic before getting data list with condition
+	items, err := service.itemRepo.FindTheMostPopularItem(ctx, paging)
+
+	if err != nil {
+		return nil, common.ErrInternal(err).WithDebug(err.Error())
+	}
+
+	return items, nil
+}
+
+func (service *itemService) FindTheMostRecommendedItem(ctx context.Context, paging *common.Paging) ([]model.Item, error) {
+	//there will have business logic before getting data list with condition
+	items, err := service.itemRepo.FindTheMostRecommendedItem(ctx, paging)
+
+	if err != nil {
+		return nil, common.ErrInternal(err).WithDebug(err.Error())
+	}
+
+	return items, nil
 }

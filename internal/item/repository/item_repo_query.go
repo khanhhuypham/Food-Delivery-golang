@@ -13,9 +13,6 @@ func (repo *itemRepository) FindTheMostPopularItem(ctx context.Context, paging *
 
 	db := repo.db.Table(repo.tableName)
 
-	////Để không count những record bị  soft delete ta cần dùng Model
-	//db = repo.db.Model(&data)
-
 	// Count total records (without pagination)
 	if err := db.Count(&paging.Total).Error; err != nil {
 		return nil, errors.WithStack(err)
