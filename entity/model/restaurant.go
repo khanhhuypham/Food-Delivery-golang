@@ -7,16 +7,12 @@ import (
 	"strings"
 )
 
-type QueryDTO struct {
-	OwnerId *string `json:"ownerId"`
-	CityId  *int    `json:"cityId"`
-	Status  *string `json:"status"`
-}
-
 type Restaurant struct {
 	common.SQLModel
 	OwnerId          int                       `json:"ownerId" gorm:"column:owner_id;"`
 	Name             string                    `json:"name" gorm:"column:name;"`
+	Email            *string                   `json:"email" gorm:"column:email;"`
+	Phone            string                    `json:"phone" gorm:"column:phone;"`
 	Address          string                    `json:"address" gorm:"column:address;"`
 	CityId           *int                      `json:"cityId" gorm:"column:city_id;"`
 	Lat              float64                   `json:"lat" gorm:"column:lat;"`
@@ -24,6 +20,7 @@ type Restaurant struct {
 	ShippingFeePerKm float64                   `json:"shippingFeePerKm" gorm:"column:shipping_fee_per_km;"`
 	Status           constant.RestaurantStatus `json:"status" gorm:"column:status;"`
 	Active           bool                      `json:"active" gorm:"column:active;default:true"`
+	Description      *string                   `json:"description" gorm:"column:description;"`
 	Items            []Item                    `json:"items" gorm:"foreignKey:RestaurantId;references:Id;"`
 	Orders           []Order                   `json:"orders" gorm:"foreignKey:RestaurantId;references:Id;"`
 	Rating           *Rating                   `json:"rating" gorm:"foreignKey:RestaurantId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`

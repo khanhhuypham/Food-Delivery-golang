@@ -1,4 +1,4 @@
-package db
+package app_context
 
 import "gorm.io/gorm"
 

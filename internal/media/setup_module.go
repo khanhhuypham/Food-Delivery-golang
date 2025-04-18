@@ -20,5 +20,5 @@ func Setup(db *gorm.DB, r *gin.RouterGroup, cfg *config.Config) {
 	service := media_service.NewMediaService(repo, s3Provider)
 	handler := media_http.NewMediaHandler(s3Provider, service)
 
-	r.POST("/upload", handler.Upload())
+	r.POST("/media/upload", handler.Upload())
 }

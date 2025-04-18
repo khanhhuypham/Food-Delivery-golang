@@ -64,7 +64,7 @@ func NewS3Provider(cfg *config.Config) *s3Provider {
 }
 
 func (provider *s3Provider) UploadFile(ctx *gin.Context) (*model.Media, error) {
-	fileHeader, err := ctx.FormFile("file")
+	fileHeader, err := ctx.FormFile("files")
 	if err != nil {
 		panic(common.ErrBadRequest(err))
 	}

@@ -1,7 +1,7 @@
 package restaurant_dto
 
 type QueryDTO struct {
-	OwnerId *string `json:"ownerId"`
-	CityId  *int    `json:"cityId"`
-	Status  *string `json:"status"`
+	Active    *bool   `form:"active"`
+	Status    *string `form:"status"`
+	SearchKey *string `form:"search_key"`
 }

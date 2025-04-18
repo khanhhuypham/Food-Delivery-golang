@@ -2,6 +2,7 @@ package restaurant_dto
 
 import (
 	"Food-Delivery/entity/constant"
+	"Food-Delivery/entity/model"
 	"Food-Delivery/pkg/common"
 	"errors"
 	"strings"
@@ -9,15 +10,15 @@ import (
 
 // DTO = Data Transfer Object
 type CreateDTO struct {
-	Name   *string  `json:"name"`
-	Addr   *string  `json:"addr"`
-	CityId *int     `json:"cityId"`
-	Lat    *float64 `json:"lat"`
-	Lng    *float64 `json:"lng"`
-	// Cover            *json.RawMessage `json:"cover"`
-	// Logo             *json.RawMessage `json:"logo"`
-	ShippingFeePerKm *float64                   `json:"shippingFeePerKm"`
-	Status           *constant.RestaurantStatus `json:"status"`
+	Name    *string      `json:"name"`
+	Email   *string      `json:"email"`
+	Phone   string       `json:"phone"`
+	Address *string      `json:"address" gorm:"column:address;"`
+	Cover   *model.Media `json:"cover" gorm:"column:cover;"`
+	Logo    *model.Media `json:"logo" gorm:"column:image;"`
+	//ShippingFeePerKm *float64                   `json:"shippingFeePerKm"`
+	Description *string                    `json:"description" gorm:"column:description;"`
+	Status      *constant.RestaurantStatus `json:"status"`
 }
 
 func (dto *CreateDTO) Validate() error {
@@ -33,10 +34,10 @@ func (dto *CreateDTO) Validate() error {
 		}
 	}
 
-	if addr := dto.Addr; addr != nil {
-		*dto.Addr = strings.TrimSpace(*addr)
+	if addr := dto.Address; addr != nil {
+		*dto.Address = strings.TrimSpace(*addr)
 
-		if len(*dto.Addr) == 0 {
+		if len(*dto.Address) == 0 {
 			return common.ErrBadRequest(errors.New("restaurant address is required"))
 		}
 	}

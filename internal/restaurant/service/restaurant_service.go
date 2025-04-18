@@ -16,6 +16,7 @@ type RestaurantRepository interface {
 		paging *common.Paging,
 		query *restaurant_dto.QueryDTO,
 		keys ...string) ([]model.Restaurant, error)
+	GetStatistic() (*restaurant_dto.Statistic, error)
 	FindDataWithCondition(ctx context.Context, condition map[string]any, keys ...string) (*model.Restaurant, error)
 	UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *restaurant_dto.CreateDTO) error
 	DeleteDataWithCondition(ctx context.Context, condition map[string]any) error
@@ -41,15 +42,21 @@ func (service *restaurantService) Create(ctx context.Context, dto *restaurant_dt
 	return nil
 }
 
-func (service *restaurantService) FindAll(ctx context.Context, paging *common.Paging, filter *restaurant_dto.QueryDTO) ([]model.Restaurant, error) {
+func (service *restaurantService) FindAll(ctx context.Context, paging *common.Paging, filter *restaurant_dto.QueryDTO) ([]model.Restaurant, *restaurant_dto.Statistic, error) {
 	//there will have business logic before getting data list with condition
 	restaurants, err := service.restaurantRepo.ListDataWithCondition(ctx, paging, filter)
 
 	if err != nil {
-		return nil, common.ErrInternal(err).WithDebug(err.Error())
+		return nil, nil, common.ErrInternal(err).WithDebug(err.Error())
 	}
 
-	return restaurants, nil
+	statistic, err := service.restaurantRepo.GetStatistic()
+
+	if err != nil {
+		return nil, nil, common.ErrInternal(err).WithDebug(err.Error())
+	}
+
+	return restaurants, statistic, nil
 }
 
 func (service *restaurantService) FindOneById(ctx context.Context, id int) (*model.Restaurant, error) {

@@ -20,7 +20,7 @@ func Setup(db *gorm.DB, r *gin.RouterGroup) {
 	r.GET("/restaurant", handler.GetAll())
 	r.GET("/restaurant/:id", handler.GetOneByID())
 	r.PUT("/restaurant/:id", handler.Update())
-	r.POST("/restaurant/:id", handler.Update())
+	r.PATCH("/restaurant/:id", handler.Update())
 	r.DELETE("/restaurant/:id", handler.Delete())
 
 }

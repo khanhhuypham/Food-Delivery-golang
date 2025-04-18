@@ -12,7 +12,7 @@ import (
 
 type RestaurantService interface {
 	Create(ctx context.Context, cate *restaurant_dto.CreateDTO) error
-	FindAll(ctx context.Context, paging *common.Paging, filter *restaurant_dto.QueryDTO) ([]model.Restaurant, error)
+	FindAll(ctx context.Context, paging *common.Paging, filter *restaurant_dto.QueryDTO) ([]model.Restaurant, *restaurant_dto.Statistic, error)
 	FindOneById(ctx context.Context, id int) (*model.Restaurant, error)
 	Update(ctx context.Context, id int, dto *restaurant_dto.CreateDTO) error
 	Delete(ctx context.Context, id int) error
@@ -55,17 +55,21 @@ func (handler *restaurantHandler) GetAll() gin.HandlerFunc {
 		paging.Fulfill()
 		//filter
 		var query restaurant_dto.QueryDTO
-		if err := ctx.ShouldBind(&query); err != nil {
+		if err := ctx.ShouldBindQuery(&query); err != nil {
 			panic(common.ErrBadRequest(err))
 		}
 
 		// check error from usecase layer
-		restaurants, err := handler.restaurantService.FindAll(ctx.Request.Context(), &paging, &query)
+		restaurants, statistic, err := handler.restaurantService.FindAll(ctx.Request.Context(), &paging, &query)
 		if err != nil {
 			panic(err)
 		}
 
-		ctx.JSON(http.StatusOK, common.ResponseWithPaging(restaurants, paging))
+		ctx.JSON(http.StatusOK, common.ResponseWithPagingAndStatistic(
+			restaurants,
+			statistic,
+			paging,
+		))
 	}
 }
 

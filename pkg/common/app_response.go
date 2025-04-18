@@ -9,12 +9,17 @@ type AppReponse struct {
 }
 
 type PaginationResult struct {
-	Data interface{} `json:"data"`
+	Data      interface{} `json:"data"`
+	Statistic interface{} `json:"statistic,omitempty"`
 	Paging
 }
 
 func Response(data interface{}) *AppReponse {
-	return &AppReponse{Data: data}
+	return &AppReponse{
+		Status:  http.StatusOK,
+		Message: "Success",
+		Data:    data,
+	}
 }
 
 func ResponseWithPaging(data interface{}, paging Paging) *AppReponse {
@@ -26,5 +31,16 @@ func ResponseWithPaging(data interface{}, paging Paging) *AppReponse {
 			Paging: paging,
 		},
 	}
+}
 
+func ResponseWithPagingAndStatistic(data interface{}, statistic interface{}, paging Paging) *AppReponse {
+	return &AppReponse{
+		Status:  http.StatusOK,
+		Message: "Success",
+		Data: PaginationResult{
+			Data:      data,
+			Statistic: statistic,
+			Paging:    paging,
+		},
+	}
 }

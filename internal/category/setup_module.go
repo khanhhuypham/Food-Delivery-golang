@@ -30,7 +30,7 @@ func Setup(db *gorm.DB, r *gin.RouterGroup, cfg *config.Config) {
 	r.GET("/category", http_handler.FindAll())
 	r.GET("/category/:id", http_handler.FindOneByID())
 	r.PUT("/category/:id", http_handler.Update())
-	r.POST("/category/:id", http_handler.Update())
+	r.PATCH("/category/:id", http_handler.Update())
 	r.DELETE("/category/:id", http_handler.Delete())
 	r.POST("/rpc/categories/find-by-ids", rpc_handler.GetByIds())
 
