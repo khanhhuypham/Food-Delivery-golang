@@ -21,6 +21,6 @@ type Driver struct {
 	Ratings   []Rating            `gorm:"foreignKey:UserId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 }
 
-func (driver *Driver) TableName() string {
+func (driver Driver) TableName() string {
 	return "driver"
 }

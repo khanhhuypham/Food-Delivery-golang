@@ -5,6 +5,6 @@ import (
 	"context"
 )
 
-type MesssagBroker interface {
+type MesssageBroker interface {
 	Publish(ctx context.Context, topic string, event *common.AppEvent) error
 }

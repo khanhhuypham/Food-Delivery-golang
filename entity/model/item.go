@@ -16,6 +16,6 @@ type Item struct {
 	Rating       *Rating      `json:"rating" gorm:"foreignKey:ItemId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 }
 
-func (item *Item) TableName() string {
+func (item Item) TableName() string {
 	return "item"
 }

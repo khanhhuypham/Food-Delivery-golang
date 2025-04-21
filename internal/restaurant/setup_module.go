@@ -2,15 +2,15 @@ package restaurant_module
 
 import (
 	restaurant_http "Food-Delivery/internal/restaurant/delivery/http"
+	"Food-Delivery/pkg/app_context"
 
 	restaurant_repository "Food-Delivery/internal/restaurant/repository/gorm-mysql"
 	restaurant_service "Food-Delivery/internal/restaurant/service"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
-func Setup(db *gorm.DB, r *gin.RouterGroup) {
-
+func Setup(appCtx app_context.AppContext, r *gin.RouterGroup) {
+	db := appCtx.GetDbContext().GetMainConnection()
 	//dependency of place module
 	repo := restaurant_repository.NewRestaurantRepository(db)
 	service := restaurant_service.NewRestaurantService(repo)

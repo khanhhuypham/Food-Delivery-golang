@@ -4,36 +4,31 @@ import (
 	"Food-Delivery/config"
 	"Food-Delivery/internal/middleware"
 	user_repository "Food-Delivery/internal/user/repository"
-
 	"gorm.io/gorm"
-	"log"
 )
 
 type MiddleWareProvider interface {
 }
 
-type DbContext interface{}
+type DbContext interface {
+	GetMainConnection() *gorm.DB
+}
 
 type AppContext interface {
 	GetMiddlewareProvider() MiddleWareProvider
 	GetDbContext() DbContext
 	GetConfig() *config.Config
-	GetMsgBroker() MesssagBroker
+	GetMsgBroker() MesssageBroker
 }
 
 type appContext struct {
 	middleWareProvider MiddleWareProvider
 	dbContext          DbContext
 	config             *config.Config
-	messagBroker       MesssagBroker
+	messageBroker      MesssageBroker
 }
 
-func NewAppContext(db *gorm.DB) AppContext {
-
-	cfg, err := config.LoadConfig("Food-Delivery/config/config-local-yml")
-	if err != nil {
-		log.Fatalln("db connection err: ", err)
-	}
+func NewAppContext(cfg *config.Config, db *gorm.DB) AppContext {
 
 	dbCtx := NewDbContext(db)
 
@@ -45,7 +40,7 @@ func NewAppContext(db *gorm.DB) AppContext {
 		middleWareProvider: middlewareProvider,
 		dbContext:          dbCtx,
 		config:             cfg,
-		messagBroker:       natsComp,
+		messageBroker:      natsComp,
 	}
 
 }
@@ -62,6 +57,6 @@ func (ctx *appContext) GetConfig() *config.Config {
 	return ctx.config
 }
 
-func (ctx *appContext) GetMsgBroker() MesssagBroker {
-	return ctx.messagBroker
+func (ctx *appContext) GetMsgBroker() MesssageBroker {
+	return ctx.messageBroker
 }

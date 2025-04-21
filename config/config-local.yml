@@ -26,3 +26,6 @@ redis:
   Port: 6379
   Password: ""
   DBName: 0
+
+nat:
+  Url: "nats://127.0.0.1:4222"

@@ -7,6 +7,8 @@ import (
 	"strings"
 )
 
+const RestaurantEntity = "restaurant"
+
 type Restaurant struct {
 	common.SQLModel
 	OwnerId          int                       `json:"ownerId" gorm:"column:owner_id;"`
@@ -18,12 +20,13 @@ type Restaurant struct {
 	Lat              float64                   `json:"lat" gorm:"column:lat;"`
 	Lng              float64                   `json:"lng" gorm:"column:lng;"`
 	ShippingFeePerKm float64                   `json:"shippingFeePerKm" gorm:"column:shipping_fee_per_km;"`
+	LikeCount        int                       `json:"like_count" gorm:"column:like_count; default:0"`
 	Status           constant.RestaurantStatus `json:"status" gorm:"column:status;"`
 	Active           bool                      `json:"active" gorm:"column:active;default:true"`
 	Description      *string                   `json:"description" gorm:"column:description;"`
 	Items            []Item                    `json:"items" gorm:"foreignKey:RestaurantId;references:Id;"`
 	Orders           []Order                   `json:"orders" gorm:"foreignKey:RestaurantId;references:Id;"`
-	Rating           *Rating                   `json:"rating" gorm:"foreignKey:RestaurantId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
+	Rating           []Rating                  `json:"rating" gorm:"foreignKey:RestaurantId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 }
 
 func (Restaurant) TableName() string {

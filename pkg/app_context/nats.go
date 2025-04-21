@@ -14,17 +14,17 @@ type natsComp struct {
 }
 
 func NewNatsComp() *natsComp {
-	nc, err := nats.Connect("nats://localhost:4222")
+	nc, err := nats.Connect("nats://127.0.0.1:4222")
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("unable to conect to nats server: ", err.Error())
 	}
 
 	return &natsComp{nc: nc}
 }
 
-func (c *natsComp) Publish(ctx context.Context, topic string, evt *common.AppEvent) error {
-	dataByte, err := json.Marshal(evt.Data)
+func (c *natsComp) Publish(ctx context.Context, topic string, event *common.AppEvent) error {
+	dataByte, err := json.Marshal(event.Data)
 
 	if err != nil {
 		return errors.WithStack(err)
