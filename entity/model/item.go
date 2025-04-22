@@ -1,6 +1,10 @@
 package model
 
-import "Food-Delivery/pkg/common"
+import (
+	item_dto "Food-Delivery/entity/dto/item"
+	rating_dto "Food-Delivery/entity/dto/rating"
+	"Food-Delivery/pkg/common"
+)
 
 const ItemEntity = "menu item"
 
@@ -18,4 +22,24 @@ type Item struct {
 
 func (item Item) TableName() string {
 	return "item"
+}
+
+func (item *Item) ToItemDTO() *item_dto.ItemDTO {
+	dto := &item_dto.ItemDTO{
+		ID:           item.Id,
+		Name:         item.Name,
+		Price:        item.Price,
+		Description:  item.Description,
+		CategoryId:   item.CategoryId,
+		RestaurantId: item.RestaurantId,
+	}
+
+	if item.Rating != nil {
+		dto.Rating = &rating_dto.RatingDTO{
+			Like:  item.Rating.Like,
+			Score: item.Rating.Score,
+		}
+	}
+
+	return dto
 }

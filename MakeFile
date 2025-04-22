@@ -1,0 +1,9 @@
+gen-cal:
+
+
+buf-gen:
+	buf generate
+
+
+run-server:
+	go run proto-buffer/server/server.go

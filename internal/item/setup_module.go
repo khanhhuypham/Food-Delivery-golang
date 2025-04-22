@@ -20,6 +20,17 @@ func Setup(db *gorm.DB, r *gin.RouterGroup) {
 	r.PATCH("/item/:id", http_handler.Update())
 	r.DELETE("/item/:id", http_handler.Delete())
 
+	/*
+	  - Short by:
+	          + Polular: ->  Bảng nào?
+	          + Free delivery  -> ??
+	          + Nearest me -> ?
+	          + Cost low to high: -> ??
+	          + Delivery time: -> ??
+	      - Rating: AVG(restaurant_ratings.point)?
+	      - Price Range: foods.price?
+	*/
+
 	r.GET("/item", http_handler.FindAll())
 	r.GET("/item/:id", http_handler.FindOneByID())
 	r.GET("/item/the-most-popular", http_handler.FindTheMostPopularItem())

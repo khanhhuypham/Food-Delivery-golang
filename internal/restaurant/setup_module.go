@@ -16,6 +16,17 @@ func Setup(appCtx app_context.AppContext, r *gin.RouterGroup) {
 	service := restaurant_service.NewRestaurantService(repo)
 	handler := restaurant_http.NewRestaurantHandler(service)
 
+	/*
+	  - Short by:
+	          + Polular: ->  Bảng nào?
+	          + Free delivery  -> ??
+	          + Nearest me -> ?
+	          + Cost low to high: -> ??
+	          + Delivery time: -> ??
+	      - Rating: AVG(restaurant_ratings.point)?
+	      - Price Range: foods.price?
+	*/
+
 	r.POST("/restaurant", handler.Create())
 	r.GET("/restaurant", handler.GetAll())
 	r.GET("/restaurant/:id", handler.GetOneByID())

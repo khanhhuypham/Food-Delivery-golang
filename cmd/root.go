@@ -75,5 +75,23 @@ func mainSetup() {
 	rating_module.Setup(appCtx, v1)
 	upload_module.Setup(db, v1, cfg)
 
+	//run grpc-server server
+	//go func() {
+	//	//Create a listener on TPC port
+	//	listen, err := net.Listen("tcp", "6000")
+	//	if err != nil {
+	//		log.Fatalln("Failed to listen:", err)
+	//	}
+	//	// Create a gRPC server object
+	//	s := grpc.NewServer()
+	//	// Attach the Greeter service to the server
+	//	category.RegisterCategoryServer(s, categorygrpcctl.NewCategoryGrpcServer(categorygormmysql.NewCategoryRepository(db)))
+	//	// Serve gRPC Server
+	//
+	//	log.Println("Serving gRPC on 0.0.0.0:6000")
+	//	log.Fatal(s.Serve(listen))
+	//
+	//}()
+
 	r.Run(fmt.Sprintf(":%s", cfg.App.Port)) // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
