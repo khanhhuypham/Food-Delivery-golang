@@ -1,7 +1,8 @@
 package restaurant_http
 
 import (
-	restaurant_model "Food-Delivery/internal/restaurant/model"
+	restaurant_dto "Food-Delivery/entity/dto/restaurant"
+	"Food-Delivery/entity/model"
 	"Food-Delivery/pkg/common"
 	"context"
 	"github.com/gin-gonic/gin"
@@ -10,10 +11,10 @@ import (
 )
 
 type RestaurantService interface {
-	Create(ctx context.Context, cate *restaurant_model.RestaurantCreateDTO) error
-	FindAll(ctx context.Context, paging *common.Paging, filter *restaurant_model.QueryDTO) ([]restaurant_model.Restaurant, error)
-	FindOneById(ctx context.Context, id int) (*restaurant_model.Restaurant, error)
-	Update(ctx context.Context, id int, dto *restaurant_model.RestaurantCreateDTO) error
+	Create(ctx context.Context, cate *restaurant_dto.CreateDTO) error
+	FindAll(ctx context.Context, paging *common.Paging, filter *restaurant_dto.QueryDTO) ([]model.Restaurant, *restaurant_dto.Statistic, error)
+	FindOneById(ctx context.Context, id int) (*model.Restaurant, error)
+	Update(ctx context.Context, id int, dto *restaurant_dto.CreateDTO) error
 	Delete(ctx context.Context, id int) error
 }
 
@@ -28,14 +29,14 @@ func NewRestaurantHandler(restaurantService RestaurantService) *restaurantHandle
 func (handler *restaurantHandler) Create() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		var restaurant restaurant_model.RestaurantCreateDTO
+		var dto restaurant_dto.CreateDTO
 		//error occurs from binding json data into struct data
-		if err := ctx.ShouldBind(&restaurant); err != nil {
+		if err := ctx.ShouldBind(&dto); err != nil {
 			panic(common.ErrBadRequest(err))
 		}
 
 		// check error from usecase layer
-		if err := handler.restaurantService.Create(ctx.Request.Context(), &restaurant); err != nil {
+		if err := handler.restaurantService.Create(ctx.Request.Context(), &dto); err != nil {
 			panic(err)
 		}
 
@@ -53,18 +54,22 @@ func (handler *restaurantHandler) GetAll() gin.HandlerFunc {
 		}
 		paging.Fulfill()
 		//filter
-		var query restaurant_model.QueryDTO
-		if err := ctx.ShouldBind(&query); err != nil {
+		var query restaurant_dto.QueryDTO
+		if err := ctx.ShouldBindQuery(&query); err != nil {
 			panic(common.ErrBadRequest(err))
 		}
 
 		// check error from usecase layer
-		restaurants, err := handler.restaurantService.FindAll(ctx.Request.Context(), &paging, &query)
+		restaurants, statistic, err := handler.restaurantService.FindAll(ctx.Request.Context(), &paging, &query)
 		if err != nil {
 			panic(err)
 		}
 
-		ctx.JSON(http.StatusOK, common.ResponseWithPaging(restaurants, paging))
+		ctx.JSON(http.StatusOK, common.ResponseWithPagingAndStatistic(
+			restaurants,
+			statistic,
+			paging,
+		))
 	}
 }
 
@@ -94,7 +99,7 @@ func (handler *restaurantHandler) Update() gin.HandlerFunc {
 			panic(common.ErrBadRequest(err))
 		}
 
-		var dto restaurant_model.RestaurantCreateDTO
+		var dto restaurant_dto.CreateDTO
 		if err := ctx.ShouldBind(&dto); err != nil {
 			panic(common.ErrBadRequest(err))
 		}

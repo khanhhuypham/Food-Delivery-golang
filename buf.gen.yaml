@@ -1,0 +1,9 @@
+version: v1
+plugins:
+    - plugin: go
+      out: proto-buffer/gen
+      opt: paths=import
+    - plugin: go-grpc
+      out: proto-buffer/gen
+      opt: paths=import
+

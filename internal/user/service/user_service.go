@@ -2,7 +2,10 @@ package user_service
 
 import (
 	"Food-Delivery/config"
-	usermodel "Food-Delivery/internal/user/model"
+	"Food-Delivery/entity/constant"
+	user_dto "Food-Delivery/entity/dto/user"
+	"Food-Delivery/entity/model"
+
 	"Food-Delivery/pkg/common"
 	"Food-Delivery/pkg/utils"
 	"context"
@@ -11,8 +14,8 @@ import (
 )
 
 type UserRepository interface {
-	Create(ctx context.Context, dto *usermodel.UserCreate) error
-	FindDataWithCondition(ctx context.Context, condition map[string]any) (*usermodel.User, error)
+	Create(ctx context.Context, dto *user_dto.UserCreate) error
+	FindDataWithCondition(ctx context.Context, condition map[string]any) (*model.User, error)
 	DeleteUserWithCondition(ctx context.Context, condition map[string]any) error
 }
 
@@ -28,7 +31,7 @@ func NewUserService(userRepo UserRepository, cfg *config.Config) *userService {
 	}
 }
 
-func (service *userService) Signup(ctx context.Context, dto *usermodel.UserCreate) error {
+func (service *userService) Signup(ctx context.Context, dto *user_dto.UserCreate) error {
 
 	if err := dto.Validate(); err != nil {
 		return common.ErrBadRequest(err).WithDebug(err.Error())
@@ -43,10 +46,10 @@ func (service *userService) Signup(ctx context.Context, dto *usermodel.UserCreat
 	}
 
 	if existUser != nil {
-		if existUser.Status == usermodel.StatusDeleted || existUser.Status == usermodel.StatusBanned {
-			return common.ErrBadRequest(usermodel.ErrUserBannedOrDeleted)
+		if existUser.Status == constant.USER_DELETED || existUser.Status == constant.USER_BANNED {
+			return common.ErrBadRequest(constant.ErrUserBannedOrDeleted)
 		}
-		return common.ErrBadRequest(usermodel.ErrEmailAlreadyExists).WithDebug(err.Error())
+		return common.ErrBadRequest(constant.ErrEmailAlreadyExists).WithDebug(err.Error())
 	}
 
 	if err := dto.PrepareCreate(); err != nil {
@@ -60,7 +63,7 @@ func (service *userService) Signup(ctx context.Context, dto *usermodel.UserCreat
 	return nil
 }
 
-func (service *userService) SignIn(ctx context.Context, dto *usermodel.UserLogin) (*utils.Token, error) {
+func (service *userService) SignIn(ctx context.Context, dto *user_dto.UserLogin) (*utils.Token, error) {
 
 	if err := dto.Validate(); err != nil {
 		return nil, common.ErrBadRequest(err)
@@ -72,13 +75,13 @@ func (service *userService) SignIn(ctx context.Context, dto *usermodel.UserLogin
 
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, common.ErrEntityNotFound(usermodel.EntityName, err)
+			return nil, common.ErrEntityNotFound(model.UserEntity, err)
 		}
 		return nil, common.ErrInternal(err)
 	}
 
-	if user.Status == usermodel.StatusDeleted || user.Status == usermodel.StatusBanned {
-		return nil, common.ErrBadRequest(usermodel.ErrUserBannedOrDeleted)
+	if user.Status == constant.USER_DELETED || user.Status == constant.USER_BANNED {
+		return nil, common.ErrBadRequest(constant.ErrUserBannedOrDeleted)
 	}
 
 	if err := utils.CheckPasswordHash(dto.Password, user.Password); err != nil {
@@ -96,12 +99,13 @@ func (service *userService) SignIn(ctx context.Context, dto *usermodel.UserLogin
 
 func (userService *userService) DeleteUserById(ctx context.Context, id int) error {
 	userRepo := userService.userRepo
+
 	_, err := userRepo.FindDataWithCondition(ctx, map[string]any{
 		"id": id,
 	})
 
 	if err != nil {
-		return common.ErrEntityNotFound(usermodel.EntityName, err)
+		return common.ErrEntityNotFound(model.UserEntity, err)
 	}
 
 	if err := userRepo.DeleteUserWithCondition(ctx, map[string]any{"id": id}); err != nil {
@@ -109,4 +113,17 @@ func (userService *userService) DeleteUserById(ctx context.Context, id int) erro
 	}
 
 	return nil
+}
+
+func (userService *userService) FindById(ctx context.Context, id int) (*model.User, error) {
+	userRepo := userService.userRepo
+
+	user, err := userRepo.FindDataWithCondition(ctx, map[string]any{
+		"id": id,
+	})
+	if err != nil {
+		return nil, common.ErrEntityNotFound(model.UserEntity, err)
+	}
+
+	return user, nil
 }

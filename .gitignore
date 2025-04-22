@@ -1,0 +1,21 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Build folders
+/bin/
+/vendor/
+
+# IDE and OS files
+.idea/
+*.log
+*.DS_Store
+
+# Env and config
+.env
+config/config-local.yml

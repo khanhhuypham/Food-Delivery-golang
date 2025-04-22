@@ -19,3 +19,8 @@ type Requester interface {
 	GetFullName() string
 	GetUserRole() string
 }
+
+const (
+	EventUserLikeRestaurant    = "UserLikedRestaurant"
+	EventUserDislikeRestaurant = "UserUnlikedRestaurant"
+)

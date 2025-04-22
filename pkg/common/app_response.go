@@ -1,15 +1,46 @@
 package common
 
+import "net/http"
+
 type AppReponse struct {
-	Data    interface{} `json:"data"`
-	Message string      `json:"message"`
 	Status  int         `json:"status"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
+}
+
+type PaginationResult struct {
+	Data      interface{} `json:"data"`
+	Statistic interface{} `json:"statistic,omitempty"`
+	Paging
 }
 
 func Response(data interface{}) *AppReponse {
-	return &AppReponse{Data: data}
+	return &AppReponse{
+		Status:  http.StatusOK,
+		Message: "Success",
+		Data:    data,
+	}
 }
 
-func ResponseWithPaging(data interface{}, paging interface{}) *AppReponse {
-	return &AppReponse{Data: data}
+func ResponseWithPaging(data interface{}, paging Paging) *AppReponse {
+	return &AppReponse{
+		Status:  http.StatusOK,
+		Message: "Success",
+		Data: PaginationResult{
+			Data:   data,
+			Paging: paging,
+		},
+	}
+}
+
+func ResponseWithPagingAndStatistic(data interface{}, statistic interface{}, paging Paging) *AppReponse {
+	return &AppReponse{
+		Status:  http.StatusOK,
+		Message: "Success",
+		Data: PaginationResult{
+			Data:      data,
+			Statistic: statistic,
+			Paging:    paging,
+		},
+	}
 }

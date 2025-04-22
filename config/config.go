@@ -7,6 +7,7 @@ type Config struct {
 	Mysql MysqlConfig
 	Aws   AwsConfig
 	Redis RedisConfig
+	Nat   NatConfig
 }
 
 type AppConfig struct {
@@ -37,6 +38,10 @@ type RedisConfig struct {
 	Port     string
 	Password string
 	DB       string
+}
+
+type NatConfig struct {
+	Url string
 }
 
 func LoadConfig(fileName string) (*Config, error) {

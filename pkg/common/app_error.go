@@ -58,6 +58,10 @@ func ErrEntityNotFound(entity string, cause error) *AppError {
 	return &AppError{Causes: cause, Status: http.StatusBadRequest, Message: fmt.Sprintf("can't find %s", entity)}
 }
 
+func ErrConflict(cause error) *AppError {
+	return &AppError{Causes: cause, Status: http.StatusConflict, Message: "The resource could not be created due to a conflict"}
+}
+
 func (e *AppError) WithDebug(debug string) *AppError {
 	e.DebugField = debug
 	return e
