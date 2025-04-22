@@ -19,3 +19,4 @@
 # Env and config
 .env
 config/config-local.yml
+config/config-product.yml
