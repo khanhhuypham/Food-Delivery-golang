@@ -4,6 +4,7 @@ import (
 	"Food-Delivery/config"
 	"Food-Delivery/entity/model"
 	"Food-Delivery/pkg/common"
+	"Food-Delivery/proto-buffer/gen/mediapb"
 	"bytes"
 	"context"
 	"fmt"
@@ -27,6 +28,7 @@ import (
 
 type UploadProvider interface {
 	UploadFile(ctx *gin.Context) (*model.Media, error)
+	UploadFiles(ctx context.Context, files []*mediapb.ImageUpload) (*model.Media, error)
 	DeleteFile(ctx context.Context, destination string) error
 }
 
@@ -118,6 +120,52 @@ func (provider *s3Provider) UploadFile(ctx *gin.Context) (*model.Media, error) {
 		Height:    &height,
 		Width:     &width,
 		Ext:       strings.ReplaceAll(filepath.Ext(fileName), ".", ""),
+	}
+	return img, nil
+}
+
+func (provider *s3Provider) UploadFiles(ctx context.Context, files []*mediapb.ImageUpload) (*model.Media, error) {
+
+	if len(files) == 0 {
+		return nil, nil
+	}
+
+	file := files[0]
+	Id, _ := uuid.NewV7()
+	folder := "photo"
+	fileName := fmt.Sprintf("%s%s", Id, filepath.Ext(file.Filename))
+
+	//Lấy width, height của image
+	width, height, err := getImageDimension(file.Content)
+	if err != nil {
+		//File không phải là hình ảnh
+		panic(common.ErrBadRequest(err))
+	}
+
+	destination := fmt.Sprintf("%s/%s", folder, fileName)
+
+	// Upload to S3
+	_, err = s3.New(provider.session).PutObject(&s3.PutObjectInput{
+		Bucket:      aws.String(provider.bucket),
+		Key:         aws.String(destination),
+		ACL:         aws.String("private"),
+		ContentType: aws.String(file.ContentType),
+		Body:        bytes.NewReader(file.Content),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	img := &model.Media{
+		Folder:    folder,
+		Filename:  file.Filename,
+		CloudName: "aws-s3",
+		Url:       fmt.Sprintf("%s/%s", provider.domain, destination),
+		//Size:      fileHeader.Size,
+		Height: &height,
+		Width:  &width,
+		Ext:    strings.ReplaceAll(filepath.Ext(fileName), ".", ""),
 	}
 	return img, nil
 }

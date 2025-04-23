@@ -2,37 +2,40 @@ package media_grpc_server
 
 import (
 	"Food-Delivery/entity/model"
+	"Food-Delivery/pkg/common"
+	"Food-Delivery/pkg/upload"
 	"Food-Delivery/proto-buffer/gen/mediapb"
 	"context"
 )
 
-type MediaRepository interface {
+type MediaService interface {
 	Create(ctx context.Context, media *model.Media) error
-	FindDataWithCondition(ctx context.Context, condition map[string]any) (*model.Media, error)
-	Delete(ctx context.Context, condition map[string]any) error
 }
 
 type mediaGrpcServer struct {
 	mediapb.UnimplementedMediaServer
-	repo MediaRepository
+	s3Provider   upload.UploadProvider
+	mediaService MediaService
 }
 
-func NewCategoryGrpcServer(repo MediaRepository) *mediaGrpcServer {
+func NewMediaGrpcServer(s3Provider upload.UploadProvider, mediaService MediaService) *mediaGrpcServer {
 	return &mediaGrpcServer{
-		repo: repo,
+		s3Provider:   s3Provider,
+		mediaService: mediaService,
 	}
 }
 
 func (grpc *mediaGrpcServer) UploadImages(ctx context.Context, request *mediapb.UploadImagesRequest) (*mediapb.UploadImagesResponse, error) {
-	//img, err := handler.s3Provider.UploadFile(ctx)
-	//
-	//if err != nil {
-	//	panic(common.ErrBadRequest(err))
-	//}
-	//
-	//if err := handler.mediaService.Create(ctx, img); err != nil {
-	//	panic(err)
-	//}
+
+	img, err := grpc.s3Provider.UploadFiles(ctx, request.Images)
+
+	if err != nil {
+		panic(common.ErrBadRequest(err))
+	}
+
+	if err := grpc.mediaService.Create(ctx, img); err != nil {
+		panic(err)
+	}
 
 	return &mediapb.UploadImagesResponse{Data: nil}, nil
 }
