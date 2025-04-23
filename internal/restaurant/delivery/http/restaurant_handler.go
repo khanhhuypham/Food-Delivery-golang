@@ -5,6 +5,8 @@ import (
 	"Food-Delivery/entity/model"
 	"Food-Delivery/pkg/common"
 	"context"
+	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -18,12 +20,20 @@ type RestaurantService interface {
 	Delete(ctx context.Context, id int) error
 }
 
-type restaurantHandler struct {
-	restaurantService RestaurantService
+type CategoryGRPCClient interface {
+	FindByIds(ctx context.Context, ids []int64) ([]model.Category, error)
 }
 
-func NewRestaurantHandler(restaurantService RestaurantService) *restaurantHandler {
-	return &restaurantHandler{restaurantService}
+type restaurantHandler struct {
+	restaurantService  RestaurantService
+	categoryGRPCClient CategoryGRPCClient
+}
+
+func NewRestaurantHandler(restaurantService RestaurantService, categoryGRPCClient CategoryGRPCClient) *restaurantHandler {
+	return &restaurantHandler{
+		restaurantService,
+		categoryGRPCClient,
+	}
 }
 
 func (handler *restaurantHandler) Create() gin.HandlerFunc {
@@ -76,6 +86,18 @@ func (handler *restaurantHandler) GetAll() gin.HandlerFunc {
 func (handler *restaurantHandler) GetOneByID() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id, err := strconv.Atoi(ctx.Param("id"))
+
+		categories, err := handler.categoryGRPCClient.FindByIds(ctx, []int64{1, 3})
+
+		for i, v := range categories {
+			b, _ := json.MarshalIndent(v, "", "  ")
+			fmt.Printf("%d: %s\n", i, b)
+		}
+
+		if err != nil {
+			// return restaurants, nil (if category is not important, we can return restaurants)
+			panic(common.ErrInternal(err))
+		}
 
 		if err != nil {
 			panic(common.ErrBadRequest(err))

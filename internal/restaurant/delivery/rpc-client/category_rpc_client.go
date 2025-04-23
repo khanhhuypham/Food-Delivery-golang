@@ -1,4 +1,4 @@
-package rpc_category_client
+package category_rpc_client
 
 import (
 	"Food-Delivery/entity/model"

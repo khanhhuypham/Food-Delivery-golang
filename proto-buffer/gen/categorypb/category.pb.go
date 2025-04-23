@@ -21,27 +21,27 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type GetCatIdsRequest struct {
+type GetCategoriesRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Ids           []string               `protobuf:"bytes,1,rep,name=ids,proto3" json:"ids,omitempty"`
+	Ids           []int64                `protobuf:"varint,1,rep,packed,name=ids,proto3" json:"ids,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetCatIdsRequest) Reset() {
-	*x = GetCatIdsRequest{}
+func (x *GetCategoriesRequest) Reset() {
+	*x = GetCategoriesRequest{}
 	mi := &file_proto_buffer_category_category_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetCatIdsRequest) String() string {
+func (x *GetCategoriesRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetCatIdsRequest) ProtoMessage() {}
+func (*GetCategoriesRequest) ProtoMessage() {}
 
-func (x *GetCatIdsRequest) ProtoReflect() protoreflect.Message {
+func (x *GetCategoriesRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_buffer_category_category_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -53,12 +53,12 @@ func (x *GetCatIdsRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetCatIdsRequest.ProtoReflect.Descriptor instead.
-func (*GetCatIdsRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetCategoriesRequest.ProtoReflect.Descriptor instead.
+func (*GetCategoriesRequest) Descriptor() ([]byte, []int) {
 	return file_proto_buffer_category_category_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *GetCatIdsRequest) GetIds() []string {
+func (x *GetCategoriesRequest) GetIds() []int64 {
 	if x != nil {
 		return x.Ids
 	}
@@ -66,27 +66,27 @@ func (x *GetCatIdsRequest) GetIds() []string {
 }
 
 //The response message containing the greetings
-type CatIdsResp struct {
+type GetCategoriesResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Data          []*CategoryDTO         `protobuf:"bytes,1,rep,name=data,proto3" json:"data,omitempty"`
+	Data          []*CategoryMessage     `protobuf:"bytes,1,rep,name=data,proto3" json:"data,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CatIdsResp) Reset() {
-	*x = CatIdsResp{}
+func (x *GetCategoriesResponse) Reset() {
+	*x = GetCategoriesResponse{}
 	mi := &file_proto_buffer_category_category_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CatIdsResp) String() string {
+func (x *GetCategoriesResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CatIdsResp) ProtoMessage() {}
+func (*GetCategoriesResponse) ProtoMessage() {}
 
-func (x *CatIdsResp) ProtoReflect() protoreflect.Message {
+func (x *GetCategoriesResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_buffer_category_category_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -98,41 +98,41 @@ func (x *CatIdsResp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CatIdsResp.ProtoReflect.Descriptor instead.
-func (*CatIdsResp) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetCategoriesResponse.ProtoReflect.Descriptor instead.
+func (*GetCategoriesResponse) Descriptor() ([]byte, []int) {
 	return file_proto_buffer_category_category_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *CatIdsResp) GetData() []*CategoryDTO {
+func (x *GetCategoriesResponse) GetData() []*CategoryMessage {
 	if x != nil {
 		return x.Data
 	}
 	return nil
 }
 
-type CategoryDTO struct {
+type CategoryMessage struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	Status        string                 `protobuf:"bytes,3,opt,name=status,proto3" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CategoryDTO) Reset() {
-	*x = CategoryDTO{}
+func (x *CategoryMessage) Reset() {
+	*x = CategoryMessage{}
 	mi := &file_proto_buffer_category_category_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CategoryDTO) String() string {
+func (x *CategoryMessage) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CategoryDTO) ProtoMessage() {}
+func (*CategoryMessage) ProtoMessage() {}
 
-func (x *CategoryDTO) ProtoReflect() protoreflect.Message {
+func (x *CategoryMessage) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_buffer_category_category_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -144,26 +144,26 @@ func (x *CategoryDTO) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CategoryDTO.ProtoReflect.Descriptor instead.
-func (*CategoryDTO) Descriptor() ([]byte, []int) {
+// Deprecated: Use CategoryMessage.ProtoReflect.Descriptor instead.
+func (*CategoryMessage) Descriptor() ([]byte, []int) {
 	return file_proto_buffer_category_category_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *CategoryDTO) GetId() string {
+func (x *CategoryMessage) GetId() int64 {
 	if x != nil {
 		return x.Id
 	}
-	return ""
+	return 0
 }
 
-func (x *CategoryDTO) GetName() string {
+func (x *CategoryMessage) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *CategoryDTO) GetStatus() string {
+func (x *CategoryMessage) GetStatus() string {
 	if x != nil {
 		return x.Status
 	}
@@ -174,18 +174,17 @@ var File_proto_buffer_category_category_proto protoreflect.FileDescriptor
 
 const file_proto_buffer_category_category_proto_rawDesc = "" +
 	"\n" +
-	"$proto-buffer/category/category.proto\x12\bprotorpc\"$\n" +
-	"\x10GetCatIdsRequest\x12\x10\n" +
-	"\x03ids\x18\x01 \x03(\tR\x03ids\"7\n" +
-	"\n" +
-	"CatIdsResp\x12)\n" +
-	"\x04data\x18\x01 \x03(\v2\x15.protorpc.CategoryDTOR\x04data\"I\n" +
-	"\vCategoryDTO\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"$proto-buffer/category/category.proto\x12\bprotorpc\"(\n" +
+	"\x14GetCategoriesRequest\x12\x10\n" +
+	"\x03ids\x18\x01 \x03(\x03R\x03ids\"F\n" +
+	"\x15GetCategoriesResponse\x12-\n" +
+	"\x04data\x18\x01 \x03(\v2\x19.protorpc.CategoryMessageR\x04data\"M\n" +
+	"\x0fCategoryMessage\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
-	"\x06status\x18\x03 \x01(\tR\x06status2O\n" +
-	"\bCategory\x12C\n" +
-	"\rGetCategories\x12\x1a.protorpc.GetCatIdsRequest\x1a\x14.protorpc.CatIdsResp\"\x00B\x0eZ\f./categorypbb\x06proto3"
+	"\x06status\x18\x03 \x01(\tR\x06status2c\n" +
+	"\bCategory\x12W\n" +
+	"\x12GetCategoriesByIds\x12\x1e.protorpc.GetCategoriesRequest\x1a\x1f.protorpc.GetCategoriesResponse\"\x00B\x0eZ\f./categorypbb\x06proto3"
 
 var (
 	file_proto_buffer_category_category_proto_rawDescOnce sync.Once
@@ -201,14 +200,14 @@ func file_proto_buffer_category_category_proto_rawDescGZIP() []byte {
 
 var file_proto_buffer_category_category_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_proto_buffer_category_category_proto_goTypes = []any{
-	(*GetCatIdsRequest)(nil), // 0: protorpc.GetCatIdsRequest
-	(*CatIdsResp)(nil),       // 1: protorpc.CatIdsResp
-	(*CategoryDTO)(nil),      // 2: protorpc.CategoryDTO
+	(*GetCategoriesRequest)(nil),  // 0: protorpc.GetCategoriesRequest
+	(*GetCategoriesResponse)(nil), // 1: protorpc.GetCategoriesResponse
+	(*CategoryMessage)(nil),       // 2: protorpc.CategoryMessage
 }
 var file_proto_buffer_category_category_proto_depIdxs = []int32{
-	2, // 0: protorpc.CatIdsResp.data:type_name -> protorpc.CategoryDTO
-	0, // 1: protorpc.Category.GetCategories:input_type -> protorpc.GetCatIdsRequest
-	1, // 2: protorpc.Category.GetCategories:output_type -> protorpc.CatIdsResp
+	2, // 0: protorpc.GetCategoriesResponse.data:type_name -> protorpc.CategoryMessage
+	0, // 1: protorpc.Category.GetCategoriesByIds:input_type -> protorpc.GetCategoriesRequest
+	1, // 2: protorpc.Category.GetCategoriesByIds:output_type -> protorpc.GetCategoriesResponse
 	2, // [2:3] is the sub-list for method output_type
 	1, // [1:2] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name

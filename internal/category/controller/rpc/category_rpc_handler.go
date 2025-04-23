@@ -1,4 +1,4 @@
-package rpc_category_handler
+package category_rpc_handler
 
 import (
 	category_dto "Food-Delivery/entity/dto/category"

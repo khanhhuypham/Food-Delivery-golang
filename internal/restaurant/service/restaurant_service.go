@@ -62,7 +62,7 @@ func (service *restaurantService) FindAll(ctx context.Context, paging *common.Pa
 func (service *restaurantService) FindOneById(ctx context.Context, id int) (*model.Restaurant, error) {
 	//there will have business logic before getting specific data with condition
 
-	restaurant, err := service.restaurantRepo.FindDataWithCondition(ctx, map[string]any{"id": id}, "Category", "Orders", "MenuItems")
+	restaurant, err := service.restaurantRepo.FindDataWithCondition(ctx, map[string]any{"id": id}, "Orders", "Items")
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, common.ErrEntityNotFound(restaurant.TableName(), err).WithDebug(err.Error())
