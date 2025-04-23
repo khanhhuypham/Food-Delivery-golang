@@ -1,6 +1,7 @@
 package gorm_mysql
 
 import (
+	"Food-Delivery/entity/constant"
 	restaurant_dto "Food-Delivery/entity/dto/restaurant"
 	"Food-Delivery/entity/model"
 	"Food-Delivery/pkg/common"
@@ -101,11 +102,17 @@ func (repo *restaurantRepository) GetStatistic() (*restaurant_dto.Statistic, err
 		return nil, errors.WithStack(err)
 	}
 
-	if err := db.Where("active = ?", true).Count(&data.TotalActive).Error; err != nil {
+	//RESTAURANT_STATUS_OPEN                 RestaurantStatus = 1 //- The store is currently operating and accepting orders.
+	//RESTAURANT_STATUS_CLOSED               RestaurantStatus = 2 // - The store is not operating (e.g., outside business hours)
+	//RESTAURANT_STATUS_TEMPORARILY_CLOSED   RestaurantStatus = 3 //– Closed due to temporary reasons (e.g., holiday, maintenance).
+	//RESTAURANT_STATUS_LIMITED_AVAILABILITY RestaurantStatus = 4 // -Temporarily not accepting orders due to high load
+	//RESTAURANT_STATUS_SUSPENDED
+
+	if err := db.Where("status = ?", constant.RESTAURANT_STATUS_OPEN).Count(&data.TotalActive).Error; err != nil {
 		return nil, errors.WithStack(err)
 	}
 
-	if err := db.Where("active = ?", false).Count(&data.TotalInActive).Error; err != nil {
+	if err := db.Where("status = ?", constant.RESTAURANT_STATUS_OPEN).Count(&data.TotalInActive).Error; err != nil {
 		return nil, errors.WithStack(err)
 	}
 

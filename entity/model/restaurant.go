@@ -22,7 +22,6 @@ type Restaurant struct {
 	ShippingFeePerKm float64                   `json:"shippingFeePerKm" gorm:"column:shipping_fee_per_km;"`
 	LikeCount        int                       `json:"like_count" gorm:"column:like_count; default:0"`
 	Status           constant.RestaurantStatus `json:"status" gorm:"column:status;"`
-	Active           bool                      `json:"active" gorm:"column:active;default:true"`
 	Description      *string                   `json:"description" gorm:"column:description;"`
 	Items            []Item                    `json:"items" gorm:"foreignKey:RestaurantId;references:Id;"`
 	Orders           []Order                   `json:"orders" gorm:"foreignKey:RestaurantId;references:Id;"`

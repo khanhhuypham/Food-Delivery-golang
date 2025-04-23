@@ -1,0 +1,29 @@
+syntax = "proto3";
+package protorpc;
+
+option go_package = "./mediapb";
+
+
+service Media {
+  rpc UploadImages (UploadImagesRequest) returns (UploadImagesResponse);
+}
+
+message UploadImagesRequest {
+  repeated ImageUpload images = 1;
+}
+
+message ImageUpload {
+  string filename = 1;
+  bytes content = 2;
+  string content_type = 3;
+}
+
+message UploadImagesResponse {
+  repeated MediaMessage data = 1;
+}
+
+message MediaMessage {
+  int64 id = 1;
+  string name = 2;
+  string status = 3;
+}

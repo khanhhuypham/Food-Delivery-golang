@@ -14,6 +14,7 @@ func SetupModel(db *gorm.DB) {
 		&Restaurant{},
 		&User{},
 		&Item{},
+		&Driver{},
 		&Order{},
 		&OrderItem{},
 		&Rating{},
