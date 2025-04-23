@@ -1,6 +1,7 @@
 package restaurant_module
 
 import (
+	"Food-Delivery/internal/restaurant/delivery/grpc-client"
 	restaurant_http "Food-Delivery/internal/restaurant/delivery/http"
 	"Food-Delivery/pkg/app_context"
 
@@ -11,11 +12,13 @@ import (
 
 func Setup(appCtx app_context.AppContext, r *gin.RouterGroup) {
 	db := appCtx.GetDbContext().GetMainConnection()
+	cfg := appCtx.GetConfig()
 	//dependency of place module
 	repo := restaurant_repository.NewRestaurantRepository(db)
 	service := restaurant_service.NewRestaurantService(repo)
-	handler := restaurant_http.NewRestaurantHandler(service)
-
+	// categoryRPCClient := rpcclient.NewCategoryRPCClient(appCtx.GetConfig().CategoryServiceURL)
+	categoryGRPCClient := category_grpc_client.NewCategoryGRPCClient(cfg.Grpc.Url)
+	handler := restaurant_http.NewRestaurantHandler(service, categoryGRPCClient)
 	/*
 	  - Short by:
 	          + Polular: ->  Bảng nào?

@@ -8,6 +8,7 @@ type Config struct {
 	Aws   AwsConfig
 	Redis RedisConfig
 	Nat   NatConfig
+	Grpc  GrpcConfig
 }
 
 type AppConfig struct {
@@ -41,6 +42,10 @@ type RedisConfig struct {
 }
 
 type NatConfig struct {
+	Url string
+}
+
+type GrpcConfig struct {
 	Url string
 }
 

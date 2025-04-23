@@ -82,6 +82,10 @@ func (repo *categoryRepository) FindAllWithCondition(
 func (repo *categoryRepository) FindAllByIds(ctx context.Context, ids []int, keys ...string) ([]model.Category, error) {
 
 	var data []model.Category
+
+	if len(ids) == 0 {
+		return data, nil
+	}
 	// Start with the correct table and entity
 	db := repo.db.Model(&data).Table(repo.tableName)
 
@@ -91,7 +95,7 @@ func (repo *categoryRepository) FindAllByIds(ctx context.Context, ids []int, key
 	}
 
 	// Use correct SQL syntax for "IN" clause
-	if err := db.Where("id IN (?)", ids).Find(&data).Error; err != nil {
+	if err := db.Where("id IN ?", ids).Find(&data).Error; err != nil {
 		return nil, common.ErrDB(err)
 	}
 

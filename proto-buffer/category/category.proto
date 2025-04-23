@@ -5,20 +5,20 @@ option go_package = "./categorypb";
 
 
 service Category{
-  rpc GetCategories(GetCatIdsRequest) returns (CatIdsResp){}
+  rpc GetCategoriesByIds (GetCategoriesRequest) returns (GetCategoriesResponse){}
 }
 
-message GetCatIdsRequest{
-  repeated string ids = 1;
+message GetCategoriesRequest{
+  repeated int64 ids = 1;
 }
 
 //The response message containing the greetings
-message CatIdsResp{
-  repeated CategoryDTO data = 1;
+message GetCategoriesResponse{
+  repeated CategoryMessage data = 1;
 }
 
-message CategoryDTO {
-  string id = 1;
+message CategoryMessage  {
+  int64 id = 1;
   string name = 2;
   string status = 3;
 }

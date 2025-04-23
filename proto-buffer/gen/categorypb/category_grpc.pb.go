@@ -19,14 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Category_GetCategories_FullMethodName = "/protorpc.Category/GetCategories"
+	Category_GetCategoriesByIds_FullMethodName = "/protorpc.Category/GetCategoriesByIds"
 )
 
 // CategoryClient is the client API for Category service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CategoryClient interface {
-	GetCategories(ctx context.Context, in *GetCatIdsRequest, opts ...grpc.CallOption) (*CatIdsResp, error)
+	GetCategoriesByIds(ctx context.Context, in *GetCategoriesRequest, opts ...grpc.CallOption) (*GetCategoriesResponse, error)
 }
 
 type categoryClient struct {
@@ -37,10 +37,10 @@ func NewCategoryClient(cc grpc.ClientConnInterface) CategoryClient {
 	return &categoryClient{cc}
 }
 
-func (c *categoryClient) GetCategories(ctx context.Context, in *GetCatIdsRequest, opts ...grpc.CallOption) (*CatIdsResp, error) {
+func (c *categoryClient) GetCategoriesByIds(ctx context.Context, in *GetCategoriesRequest, opts ...grpc.CallOption) (*GetCategoriesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CatIdsResp)
-	err := c.cc.Invoke(ctx, Category_GetCategories_FullMethodName, in, out, cOpts...)
+	out := new(GetCategoriesResponse)
+	err := c.cc.Invoke(ctx, Category_GetCategoriesByIds_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +51,7 @@ func (c *categoryClient) GetCategories(ctx context.Context, in *GetCatIdsRequest
 // All implementations must embed UnimplementedCategoryServer
 // for forward compatibility.
 type CategoryServer interface {
-	GetCategories(context.Context, *GetCatIdsRequest) (*CatIdsResp, error)
+	GetCategoriesByIds(context.Context, *GetCategoriesRequest) (*GetCategoriesResponse, error)
 	mustEmbedUnimplementedCategoryServer()
 }
 
@@ -62,8 +62,8 @@ type CategoryServer interface {
 // pointer dereference when methods are called.
 type UnimplementedCategoryServer struct{}
 
-func (UnimplementedCategoryServer) GetCategories(context.Context, *GetCatIdsRequest) (*CatIdsResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetCategories not implemented")
+func (UnimplementedCategoryServer) GetCategoriesByIds(context.Context, *GetCategoriesRequest) (*GetCategoriesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCategoriesByIds not implemented")
 }
 func (UnimplementedCategoryServer) mustEmbedUnimplementedCategoryServer() {}
 func (UnimplementedCategoryServer) testEmbeddedByValue()                  {}
@@ -86,20 +86,20 @@ func RegisterCategoryServer(s grpc.ServiceRegistrar, srv CategoryServer) {
 	s.RegisterService(&Category_ServiceDesc, srv)
 }
 
-func _Category_GetCategories_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetCatIdsRequest)
+func _Category_GetCategoriesByIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCategoriesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CategoryServer).GetCategories(ctx, in)
+		return srv.(CategoryServer).GetCategoriesByIds(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Category_GetCategories_FullMethodName,
+		FullMethod: Category_GetCategoriesByIds_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CategoryServer).GetCategories(ctx, req.(*GetCatIdsRequest))
+		return srv.(CategoryServer).GetCategoriesByIds(ctx, req.(*GetCategoriesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -112,8 +112,8 @@ var Category_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*CategoryServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetCategories",
-			Handler:    _Category_GetCategories_Handler,
+			MethodName: "GetCategoriesByIds",
+			Handler:    _Category_GetCategoriesByIds_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
