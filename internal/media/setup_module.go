@@ -3,7 +3,6 @@ package media_module
 import (
 	"Food-Delivery/config"
 	media_grpc_server "Food-Delivery/internal/media/controller/grpc-server"
-	media_http "Food-Delivery/internal/media/controller/http"
 	media_repository "Food-Delivery/internal/media/repository"
 	media_service "Food-Delivery/internal/media/service"
 	"Food-Delivery/pkg/upload"
@@ -23,9 +22,9 @@ func Setup(db *gorm.DB, r *gin.RouterGroup, cfg *config.Config) {
 	//Declare service
 	repo := media_repository.NewMediaRepository(db)
 	service := media_service.NewMediaService(repo, s3Provider)
-	handler := media_http.NewMediaHandler(s3Provider, service)
 
-	r.POST("/media/upload", handler.Upload())
+	//handler := media_http.NewMediaHandler(s3Provider, service)
+	//r.POST("/media/upload", handler.Upload())
 
 	//run grpc-server server
 	go func() {

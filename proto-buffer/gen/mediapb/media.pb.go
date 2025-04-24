@@ -172,8 +172,10 @@ func (x *UploadImagesResponse) GetData() []*MediaMessage {
 type MediaMessage struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Status        string                 `protobuf:"bytes,3,opt,name=status,proto3" json:"status,omitempty"`
+	Url           string                 `protobuf:"bytes,2,opt,name=url,proto3" json:"url,omitempty"`
+	Size          int64                  `protobuf:"varint,3,opt,name=size,proto3" json:"size,omitempty"`
+	Height        *int64                 `protobuf:"varint,4,opt,name=height,proto3,oneof" json:"height,omitempty"`
+	Width         *int64                 `protobuf:"varint,5,opt,name=width,proto3,oneof" json:"width,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -215,18 +217,32 @@ func (x *MediaMessage) GetId() int64 {
 	return 0
 }
 
-func (x *MediaMessage) GetName() string {
+func (x *MediaMessage) GetUrl() string {
 	if x != nil {
-		return x.Name
+		return x.Url
 	}
 	return ""
 }
 
-func (x *MediaMessage) GetStatus() string {
+func (x *MediaMessage) GetSize() int64 {
 	if x != nil {
-		return x.Status
+		return x.Size
 	}
-	return ""
+	return 0
+}
+
+func (x *MediaMessage) GetHeight() int64 {
+	if x != nil && x.Height != nil {
+		return *x.Height
+	}
+	return 0
+}
+
+func (x *MediaMessage) GetWidth() int64 {
+	if x != nil && x.Width != nil {
+		return *x.Width
+	}
+	return 0
 }
 
 var File_proto_buffer_media_media_proto protoreflect.FileDescriptor
@@ -241,11 +257,15 @@ const file_proto_buffer_media_media_proto_rawDesc = "" +
 	"\acontent\x18\x02 \x01(\fR\acontent\x12!\n" +
 	"\fcontent_type\x18\x03 \x01(\tR\vcontentType\"B\n" +
 	"\x14UploadImagesResponse\x12*\n" +
-	"\x04data\x18\x01 \x03(\v2\x16.protorpc.MediaMessageR\x04data\"J\n" +
+	"\x04data\x18\x01 \x03(\v2\x16.protorpc.MediaMessageR\x04data\"\x91\x01\n" +
 	"\fMediaMessage\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
-	"\x06status\x18\x03 \x01(\tR\x06status2V\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x10\n" +
+	"\x03url\x18\x02 \x01(\tR\x03url\x12\x12\n" +
+	"\x04size\x18\x03 \x01(\x03R\x04size\x12\x1b\n" +
+	"\x06height\x18\x04 \x01(\x03H\x00R\x06height\x88\x01\x01\x12\x19\n" +
+	"\x05width\x18\x05 \x01(\x03H\x01R\x05width\x88\x01\x01B\t\n" +
+	"\a_heightB\b\n" +
+	"\x06_width2V\n" +
 	"\x05Media\x12M\n" +
 	"\fUploadImages\x12\x1d.protorpc.UploadImagesRequest\x1a\x1e.protorpc.UploadImagesResponseB\vZ\t./mediapbb\x06proto3"
 
@@ -285,6 +305,7 @@ func file_proto_buffer_media_media_proto_init() {
 	if File_proto_buffer_media_media_proto != nil {
 		return
 	}
+	file_proto_buffer_media_media_proto_msgTypes[3].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

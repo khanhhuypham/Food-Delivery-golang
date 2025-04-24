@@ -69,6 +69,7 @@ func (handler *mediaHandler) Upload() gin.HandlerFunc {
 
 		// Now you can pass images to your gRPC handler if needed
 		result, err := handler.grpc.UploadFiles(ctx, images)
+
 		if err != nil {
 			ctx.JSON(500, common.ErrInternal(err))
 			return

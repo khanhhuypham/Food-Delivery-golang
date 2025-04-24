@@ -12,6 +12,8 @@ const RestaurantEntity = "restaurant"
 type Restaurant struct {
 	common.SQLModel
 	OwnerId          int                       `json:"ownerId" gorm:"column:owner_id;"`
+	Cover            *Media                    `json:"cover" gorm:"column:cover;"`
+	Logo             *Media                    `json:"logo" gorm:"column:logo;"`
 	Name             string                    `json:"name" gorm:"column:name;"`
 	Email            *string                   `json:"email" gorm:"column:email;"`
 	Phone            string                    `json:"phone" gorm:"column:phone;"`

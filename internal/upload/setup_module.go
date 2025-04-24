@@ -24,6 +24,6 @@ func Setup(appCtx app_context.AppContext, r *gin.RouterGroup) {
 	      - Price Range: foods.price?
 	*/
 
-	r.POST("/upload", handler.Upload())
+	r.POST("/media/upload", handler.Upload())
 
 }

@@ -27,15 +27,34 @@ func NewMediaGrpcServer(s3Provider upload.UploadProvider, mediaService MediaServ
 
 func (grpc *mediaGrpcServer) UploadImages(ctx context.Context, request *mediapb.UploadImagesRequest) (*mediapb.UploadImagesResponse, error) {
 
-	img, err := grpc.s3Provider.UploadFiles(ctx, request.Images)
-
+	fileArray, err := grpc.s3Provider.UploadFiles(ctx, request.Images)
+	result := make([]*mediapb.MediaMessage, len(fileArray))
 	if err != nil {
 		panic(common.ErrBadRequest(err))
 	}
 
-	if err := grpc.mediaService.Create(ctx, img); err != nil {
-		panic(err)
+	for i, file := range fileArray {
+
+		if err := grpc.mediaService.Create(ctx, file); err != nil {
+			panic(err)
+		}
+
+		result[i] = &mediapb.MediaMessage{
+			Id:     int64(file.Id),
+			Url:    file.Url,
+			Size:   file.Size,
+			Width:  intToInt64Ptr(file.Width),
+			Height: intToInt64Ptr(file.Height),
+		}
 	}
 
-	return &mediapb.UploadImagesResponse{Data: nil}, nil
+	return &mediapb.UploadImagesResponse{Data: result}, nil
+}
+
+func intToInt64Ptr(v *int) *int64 {
+	if v == nil {
+		return nil
+	}
+	val := int64(*v)
+	return &val
 }

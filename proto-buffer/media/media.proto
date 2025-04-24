@@ -24,6 +24,8 @@ message UploadImagesResponse {
 
 message MediaMessage {
   int64 id = 1;
-  string name = 2;
-  string status = 3;
+  string url = 2;
+  int64 size = 3;
+  optional int64 height = 4;
+  optional int64 width = 5;
 }

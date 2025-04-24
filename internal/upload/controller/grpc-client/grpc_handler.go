@@ -43,9 +43,23 @@ func (grpc *mediaGRPCClient) UploadFiles(ctx context.Context, files []*mediapb.I
 
 	result := make([]model.Media, len(resp.Data))
 
-	for _, image := range resp.Data {
-		log.Println(image)
+	for i, file := range resp.Data {
+		result[i] = model.Media{
+			Id:     int(file.Id),
+			Url:    file.Url,
+			Size:   file.Size,
+			Width:  int64ToIntPtr(file.Width),
+			Height: int64ToIntPtr(file.Height),
+		}
 	}
 
 	return result, nil
+}
+
+func int64ToIntPtr(v *int64) *int {
+	if v == nil {
+		return nil
+	}
+	val := int(*v)
+	return &val
 }
