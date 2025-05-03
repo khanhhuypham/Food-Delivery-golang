@@ -6,12 +6,12 @@ import (
 	"Food-Delivery/entity/model"
 	category_module "Food-Delivery/internal/category"
 	item_module "Food-Delivery/internal/item"
-	upload_module "Food-Delivery/internal/media"
 	"Food-Delivery/internal/middleware"
 	order_module "Food-Delivery/internal/order"
 	order_item_module "Food-Delivery/internal/order_item"
 	rating_module "Food-Delivery/internal/rating"
 	restaurant_module "Food-Delivery/internal/restaurant"
+	upload_module "Food-Delivery/internal/upload"
 	user_module "Food-Delivery/internal/user"
 	user_repository "Food-Delivery/internal/user/repository"
 	"Food-Delivery/pkg/app_context"
@@ -101,7 +101,7 @@ func Setup() {
 	order_item_module.Setup(db, v1)
 	user_module.Setup(db, v1, cfg, hasher, middlewareManager)
 	rating_module.Setup(appCtx, v1)
-	upload_module.Setup(db, v1, cfg)
+	upload_module.Setup(appCtx, v1)
 
 	r.Run(fmt.Sprintf(":%s", cfg.App.Port)) // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }

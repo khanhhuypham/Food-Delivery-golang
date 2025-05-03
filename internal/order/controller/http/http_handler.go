@@ -43,6 +43,24 @@ func (handler *orderHandler) Create() gin.HandlerFunc {
 	}
 }
 
+func (handler *orderHandler) Update() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		var dto order_dto.CreateDTO
+		//error occurs from binding json data into struct data
+		if err := ctx.ShouldBind(&dto); err != nil {
+			panic(common.ErrBadRequest(err))
+		}
+
+		// check error from usecase layer
+		if err := handler.orderService.Create(ctx.Request.Context(), &dto); err != nil {
+			panic(err)
+		}
+
+		ctx.JSON(http.StatusOK, common.Response("ok"))
+	}
+}
+
 func (handler *orderHandler) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		//paging

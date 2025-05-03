@@ -1,27 +1,19 @@
 package model
 
-import (
-	"gorm.io/gorm"
-	"time"
-)
+import "Food-Delivery/pkg/common"
 
 const OrderItemEntity = "order item"
 
 type OrderItem struct {
-	OrderId int `json:"order_id" gorm:"primaryKey;column:order_id;not null"`
-	ItemId  int `json:"item_id" gorm:"primaryKey;column:item_id;not null"`
-
-	// Associations
-	Order *Order `gorm:"foreignKey:OrderId;references:Id"`
-	Item  *Item  `gorm:"foreignKey:ItemId;references:Id"`
-
-	Quantity  int            `json:"quantity" gorm:"column:quantity;not null"`
-	Note      *string        `json:"note" gorm:"column:note"`
-	CreatedAt time.Time      `json:"createdAt" gorm:"column:created_at"`
-	UpdatedAt time.Time      `json:"updatedAt" gorm:"column:updated_at"`
-	DeletedAt gorm.DeletedAt `json:"-" gorm:"column:deleted_at"`
+	common.SQLModel
+	OrderId  int     `json:"order_id" gorm:"column:order_id;not null"`
+	ItemId   int     `json:"item_id" gorm:"column:item_id;not null"`
+	Order    *Order  `gorm:"foreignKey:OrderId;references:Id"`
+	Item     *Item   `gorm:"foreignKey:ItemId;references:Id"`
+	Quantity int     `json:"quantity" gorm:"column:quantity;not null"`
+	Note     *string `json:"note" gorm:"column:note"`
 }
 
-func (orderItem *OrderItem) TableName() string {
+func (orderItem OrderItem) TableName() string {
 	return "order_item"
 }

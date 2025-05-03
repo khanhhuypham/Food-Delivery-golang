@@ -12,6 +12,7 @@ type Order struct {
 	common.SQLModel
 	UserId       int                  `json:"user_id" gorm:"column:user_id;not null"`
 	RestaurantId int                  `json:"restaurant_id" gorm:"column:restaurant_id;not null"`
+	DriverId     int                  `json:"driver_id" gorm:"column:driver_id;not null"`
 	TotalAmount  float64              `json:"total_amount" gorm:"column:total_amount;not null"`
 	Status       constant.OrderStatus `json:"status" gorm:"column:status;not null"`
 	OrderItems   []*OrderItem         `json:"orderItems"  gorm:"foreignKey:OrderId;references:Id"`

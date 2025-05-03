@@ -1,9 +1,8 @@
 package item_dto
 
 type QueryDTO struct {
-	SearchKey *string `json:"search_key" form:"search_key"`
-	//PriceFromLowToHeigh
-	//PriceRange
-	//Rating
-	//
+	SearchKey       *string `form:"search_key"`
+	DescendingPrice *bool   `form:"descending_price"`
+	PriceRange      *bool   `form:"price_range"`
+	DescendingScore *bool   `form:"descending_score"`
 }

@@ -69,20 +69,6 @@ func (repo *itemRepository) Create(ctx context.Context, dto *menu_item_dto.Creat
 	return &newItem, nil
 }
 
-func (repo *itemRepository) FindOneWithCondition(ctx context.Context, condition map[string]any, keys ...string) (*model.Item, error) {
-	var data model.Item
-	db := repo.db.Table(repo.tableName)
-
-	for _, v := range keys {
-		db.Preload(v)
-	}
-
-	if err := db.Where(condition).First(&data).Error; err != nil {
-		return nil, errors.WithStack(err)
-	}
-	return &data, nil
-}
-
 // Delete place by condition
 func (repo *itemRepository) DeleteDataWithCondition(ctx context.Context, condition map[string]any) error {
 
@@ -93,7 +79,7 @@ func (repo *itemRepository) DeleteDataWithCondition(ctx context.Context, conditi
 }
 
 // update place by condition
-func (repo *itemRepository) UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *menu_item_dto.CreateDTO) (*model.Item, error) {
+func (repo *itemRepository) UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *menu_item_dto.UpdateDTO) (*model.Item, error) {
 	var updatedData model.Item
 
 	err := repo.db.WithContext(ctx).

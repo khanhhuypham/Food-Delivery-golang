@@ -10,14 +10,14 @@ import (
 )
 
 type OrderItemRepository interface {
-	Create(ctx context.Context, dto *order_item_dto.CreateDTO) error
+	Create(ctx context.Context, dto *order_item_dto.CreateDTO) (*model.OrderItem, error)
 	FindAllWithCondition(
 		ctx context.Context,
 		paging *common.Paging,
 		query *order_item_dto.QueryDTO,
 		keys ...string) ([]model.OrderItem, error)
 	FindOneWithCondition(ctx context.Context, condition map[string]any, keys ...string) (*model.OrderItem, error)
-	UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *order_item_dto.CreateDTO) error
+	UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *order_item_dto.CreateDTO) (*model.OrderItem, error)
 	DeleteDataWithCondition(ctx context.Context, condition map[string]any) error
 }
 
@@ -29,16 +29,17 @@ func NewOrderItemService(orderItemRepo OrderItemRepository) *orderItemService {
 	return &orderItemService{orderItemRepo}
 }
 
-func (service *orderItemService) Create(ctx context.Context, dto *order_item_dto.CreateDTO) error {
+func (service *orderItemService) Create(ctx context.Context, dto *order_item_dto.CreateDTO) (*model.OrderItem, error) {
 	//------perform business operation such as validate data
 	if err := dto.Validate(); err != nil {
-		return err
+		return nil, err
 	}
 	//------
-	if err := service.orderItemRepo.Create(ctx, dto); err != nil {
-		return common.ErrInternal(err).WithDebug(err.Error())
+	data, err := service.orderItemRepo.Create(ctx, dto)
+	if err != nil {
+		return nil, common.ErrInternal(err).WithDebug(err.Error())
 	}
-	return nil
+	return data, nil
 }
 
 func (service *orderItemService) FindAll(ctx context.Context, paging *common.Paging, query *order_item_dto.QueryDTO) ([]model.OrderItem, error) {
@@ -67,20 +68,22 @@ func (service *orderItemService) FindOneById(ctx context.Context, id int) (*mode
 
 }
 
-func (service *orderItemService) Update(ctx context.Context, id int, dto *order_item_dto.CreateDTO) error {
+func (service *orderItemService) Update(ctx context.Context, id int, dto *order_item_dto.CreateDTO) (*model.OrderItem, error) {
 
 	if err := dto.Validate(); err != nil {
-		return err
+		return nil, err
 	}
 
 	if _, err := service.FindOneById(ctx, id); err != nil {
-		return err
+		return nil, err
 	}
 
-	if err := service.orderItemRepo.UpdateDataWithCondition(ctx, map[string]any{"id": id}, dto); err != nil {
-		return common.ErrInternal(err).WithDebug(err.Error())
+	updatedData, err := service.orderItemRepo.UpdateDataWithCondition(ctx, map[string]any{"id": id}, dto)
+
+	if err != nil {
+		return nil, common.ErrInternal(err).WithDebug(err.Error())
 	}
-	return nil
+	return updatedData, nil
 }
 
 func (service *orderItemService) Delete(ctx context.Context, id int) error {

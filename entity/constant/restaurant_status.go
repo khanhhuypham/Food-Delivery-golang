@@ -1,13 +1,13 @@
 package constant
 
-type RestaurantStatus string
+type RestaurantStatus int
 
 const (
-	RESTAURANT_STATUS_OPEN                 RestaurantStatus = "open"                 //- The store is currently operating and accepting orders.
-	RESTAURANT_STATUS_CLOSED               RestaurantStatus = "closed "              // - The store is not operating (e.g., outside business hours)
-	RESTAURANT_STATUS_TEMPORARILY_CLOSED   RestaurantStatus = "temporarily closed"   //– Closed due to temporary reasons (e.g., holiday, maintenance).
-	RESTAURANT_STATUS_LIMITED_AVAILABILITY RestaurantStatus = "limited availability" // -Temporarily not accepting orders due to high load
-	RESTAURANT_STATUS_SUSPENDED            RestaurantStatus = "suspended"            //→ Admin-disabled due to issues (like payment or policy)
+	RESTAURANT_STATUS_OPEN                 RestaurantStatus = 1 //- The store is currently operating and accepting orders.
+	RESTAURANT_STATUS_CLOSED               RestaurantStatus = 2 // - The store is not operating (e.g., outside business hours)
+	RESTAURANT_STATUS_TEMPORARILY_CLOSED   RestaurantStatus = 3 //– Closed due to temporary reasons (e.g., holiday, maintenance).
+	RESTAURANT_STATUS_LIMITED_AVAILABILITY RestaurantStatus = 4 // -Temporarily not accepting orders due to high load
+	RESTAURANT_STATUS_SUSPENDED            RestaurantStatus = 5 //→ Admin-disabled due to issues (like payment or policy)
 )
 
 func (status RestaurantStatus) IsValid() bool {

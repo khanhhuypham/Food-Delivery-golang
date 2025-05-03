@@ -101,3 +101,17 @@ func (repo *itemRepository) FindTheMostRecommendedItem(ctx context.Context, pagi
 
 	return data, nil
 }
+
+func (repo *itemRepository) FindOneWithCondition(ctx context.Context, condition map[string]any, keys ...string) (*model.Item, error) {
+	var data model.Item
+	db := repo.db.Table(repo.tableName)
+
+	for _, v := range keys {
+		db.Preload(v)
+	}
+
+	if err := db.Where(condition).First(&data).Error; err != nil {
+		return nil, errors.WithStack(err)
+	}
+	return &data, nil
+}

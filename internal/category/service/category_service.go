@@ -16,20 +16,17 @@ type CategoryRepository interface {
 	DeleteDataWithCondition(ctx context.Context, condition map[string]any) error
 }
 
-type MediaService interface {
-	Delete(ctx context.Context, id int)
-}
+//type MediaService interface {
+//	Delete(ctx context.Context, id int)
+//}
 
 type categoryService struct {
-	cateRepo     CategoryRepository
-	mediaService MediaService
+	cateRepo CategoryRepository
+	//mediaService MediaService
 }
 
-func NewCategoryService(cateRepo CategoryRepository, mediaService MediaService) *categoryService {
-	return &categoryService{
-		cateRepo,
-		mediaService,
-	}
+func NewCategoryService(cateRepo CategoryRepository) *categoryService {
+	return &categoryService{cateRepo}
 }
 
 func (service *categoryService) Create(ctx context.Context, cate *category_dto.CreateDto) error {
@@ -57,7 +54,7 @@ func (service *categoryService) FindAllByIds(ctx context.Context, ids []int) ([]
 
 func (service *categoryService) FindAll(ctx context.Context, paging *common.Paging, filter *category_dto.QueryDTO) ([]model.Category, error) {
 	//there will have business logic before getting data list with condition
-	categories, err := service.cateRepo.FindAllWithCondition(ctx, paging, filter, "Items")
+	categories, err := service.cateRepo.FindAllWithCondition(ctx, paging, filter)
 
 	if err != nil {
 		return nil, common.ErrInternal(err).WithDebug(err.Error())
@@ -86,9 +83,9 @@ func (service *categoryService) Update(ctx context.Context, id int, dto *categor
 		return err
 	}
 
-	if dto.Image != nil {
-		service.mediaService.Delete(ctx, dto.Image.Id)
-	}
+	//if dto.Image != nil {
+	//	service.mediaService.Delete(ctx, dto.Image.Id)
+	//}
 
 	if err := service.cateRepo.UpdateDataWithCondition(ctx, map[string]any{"id": id}, dto); err != nil {
 		return common.ErrInternal(err).WithDebug(err.Error())

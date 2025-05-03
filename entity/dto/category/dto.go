@@ -2,7 +2,6 @@ package category_dto
 
 import (
 	"Food-Delivery/entity/constant"
-	"Food-Delivery/entity/model"
 	"Food-Delivery/pkg/common"
 	"errors"
 	"strings"
@@ -21,7 +20,7 @@ type RPCRequestDTO struct {
 // ======================================= create dto ========================================
 type CreateDto struct {
 	Name        *string                  `json:"name" gorm:"column:name;not null;"`
-	Image       *model.Media             `json:"image" gorm:"column:image;"`
+	Image       *common.Image            `json:"image" gorm:"column:image;"`
 	Description *string                  `json:"description" gorm:"column:name;not null;"`
 	Status      *constant.CategoryStatus `json:"status"`
 }
