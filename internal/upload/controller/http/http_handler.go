@@ -1,7 +1,6 @@
 package upload_http_handler
 
 import (
-	"Food-Delivery/entity/model"
 	"Food-Delivery/pkg/common"
 	"Food-Delivery/proto-buffer/gen/mediapb"
 	"context"
@@ -12,7 +11,7 @@ import (
 )
 
 type MediaGRPC interface {
-	UploadFiles(ctx context.Context, files []*mediapb.ImageUpload) ([]model.Media, error)
+	UploadFiles(ctx context.Context, files []*mediapb.ImageUpload) ([]common.Image, error)
 }
 
 type mediaHandler struct {
@@ -22,6 +21,7 @@ type mediaHandler struct {
 func NewUploadHandler(grpc MediaGRPC) *mediaHandler {
 	return &mediaHandler{grpc: grpc}
 }
+
 func (handler *mediaHandler) Upload() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 

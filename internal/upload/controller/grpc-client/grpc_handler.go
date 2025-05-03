@@ -1,7 +1,7 @@
 package media_grpc_client
 
 import (
-	"Food-Delivery/entity/model"
+	"Food-Delivery/pkg/common"
 	"Food-Delivery/proto-buffer/gen/mediapb"
 	"context"
 	"google.golang.org/grpc"
@@ -33,7 +33,7 @@ func NewMediaGRPCClient(mediaGRPCServerURL string) *mediaGRPCClient {
 	}
 }
 
-func (grpc *mediaGRPCClient) UploadFiles(ctx context.Context, files []*mediapb.ImageUpload) ([]model.Media, error) {
+func (grpc *mediaGRPCClient) UploadFiles(ctx context.Context, files []*mediapb.ImageUpload) ([]common.Image, error) {
 
 	resp, err := grpc.client.UploadImages(ctx, &mediapb.UploadImagesRequest{Images: files})
 
@@ -41,10 +41,10 @@ func (grpc *mediaGRPCClient) UploadFiles(ctx context.Context, files []*mediapb.I
 		return nil, err
 	}
 
-	result := make([]model.Media, len(resp.Data))
+	result := make([]common.Image, len(resp.Data))
 
 	for i, file := range resp.Data {
-		result[i] = model.Media{
+		result[i] = common.Image{
 			Id:     int(file.Id),
 			Url:    file.Url,
 			Size:   file.Size,

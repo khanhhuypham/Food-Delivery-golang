@@ -12,7 +12,7 @@ import (
 
 type ItemService interface {
 	Create(ctx context.Context, menuItem *item_dto.CreateDTO) (*model.Item, error)
-	Update(ctx context.Context, id int, dto *item_dto.CreateDTO) (*model.Item, error)
+	Update(ctx context.Context, id int, dto *item_dto.UpdateDTO) (*model.Item, error)
 	Delete(ctx context.Context, id int) error
 
 	FindAll(ctx context.Context, paging *common.Paging, query *item_dto.QueryDTO) ([]item_dto.ItemDTO, error)
@@ -58,7 +58,7 @@ func (handler *itemHandler) Update() gin.HandlerFunc {
 			panic(common.ErrBadRequest(err))
 		}
 
-		var dto item_dto.CreateDTO
+		var dto item_dto.UpdateDTO
 		if err := ctx.ShouldBind(&dto); err != nil {
 			panic(common.ErrBadRequest(err))
 		}
@@ -128,7 +128,7 @@ func (handler *itemHandler) FindOneByID() gin.HandlerFunc {
 			panic(err)
 		}
 
-		ctx.JSON(http.StatusOK, common.Response(item))
+		ctx.JSON(http.StatusOK, common.Response(item.ToItemDetailDTO()))
 	}
 }
 

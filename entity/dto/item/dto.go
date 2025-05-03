@@ -7,7 +7,8 @@ type ItemDTO struct {
 	Name         string                `json:"name"`
 	Price        float64               `json:"price"`
 	Description  *string               `json:"description,omitempty"`
+	DeliveryTime int                   `json:"delivery_time" `
 	CategoryId   int                   `json:"category_id"`
-	RestaurantId int                   `json:"restaurant_id"`
+	RestaurantId int                   `json:"restaurant_id,omitempty"`
 	Rating       *rating_dto.RatingDTO `json:"rating,omitempty"`
 }

@@ -8,10 +8,16 @@ import (
 )
 
 type Image struct {
-	Id     int    `json:"id" gorm:"column:id"`
-	Url    string `json:"url" gorm:"column:url"`
-	Width  int    `json:"width" gorm:"column:width"`
-	Height int    `json:"height" gorm:"column:height"`
+	Id        int    `json:"id" gorm:"column:id"`
+	Url       string `json:"url" gorm:"-"`
+	Filename  string `json:"-" gorm:"column:filename;"`
+	Folder    string `json:"-" gorm:"column:folder;"`
+	CloudName string `json:"-" gorm:"column:cloud_name;"`
+	Size      int64  `json:"size" gorm:"column:size;"`
+	Height    *int   `json:"height" gorm:"column:height;"`
+	Width     *int   `json:"width" gorm:"column:width;"`
+	Ext       string `json:"-" gorm:"column:ext;"`
+	Status    string `json:"-" gorm:"column:status;"`
 }
 
 func (Image) TableName() string {

@@ -3,6 +3,7 @@ package order_item_repository
 import (
 	order_item_dto "Food-Delivery/entity/dto/order-item"
 	"Food-Delivery/entity/model"
+	"github.com/jinzhu/copier"
 
 	"Food-Delivery/pkg/common"
 	"context"
@@ -17,27 +18,30 @@ type orderItemRepository struct {
 }
 
 func NewOrderItemRepository(db *gorm.DB) *orderItemRepository {
-	orderItem := model.OrderItem{}
+
 	return &orderItemRepository{
-		tableName: orderItem.TableName(),
+		tableName: model.OrderItem{}.TableName(),
 		db:        db,
 	}
 }
 
 // create place
-func (repo *orderItemRepository) Create(ctx context.Context, dto *order_item_dto.CreateDTO) error {
-	//apply transaction technique
+func (repo *orderItemRepository) Create(ctx context.Context, dto *order_item_dto.CreateDTO) (*model.OrderItem, error) {
+
+	var data model.OrderItem
+	copier.Copy(&data, dto)
+	
 	db := repo.db.Begin()
-	if err := repo.db.Table(repo.tableName).Create(dto).Error; err != nil {
+	if err := repo.db.Create(&data).Error; err != nil {
 		db.Rollback()
-		return errors.WithStack(err)
+		return nil, errors.WithStack(err)
 	}
 	if err := db.Commit().Error; err != nil {
 		db.Rollback()
-		return errors.WithStack(err)
+		return nil, errors.WithStack(err)
 	}
 
-	return nil
+	return &data, nil
 }
 
 // get category
@@ -100,10 +104,11 @@ func (repo *orderItemRepository) DeleteDataWithCondition(ctx context.Context, co
 }
 
 // update place by condition
-func (repo *orderItemRepository) UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *order_item_dto.CreateDTO) error {
+func (repo *orderItemRepository) UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *order_item_dto.CreateDTO) (*model.OrderItem, error) {
+	var updatedData model.OrderItem
 
-	if err := repo.db.Table(repo.tableName).Clauses(clause.Returning{}).Where(condition).Updates(dto).Error; err != nil {
-		return errors.WithStack(err)
+	if err := repo.db.Table(repo.tableName).Clauses(clause.Returning{}).Where(condition).Updates(dto).Scan(&updatedData).Error; err != nil {
+		return nil, errors.WithStack(err)
 	}
-	return nil
+	return &updatedData, nil
 }

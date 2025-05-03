@@ -1,15 +1,15 @@
 package driver_dto
 
 import (
-	"Food-Delivery/entity/model"
+	"Food-Delivery/pkg/common"
 )
 
 type CreateDTO struct {
-	Email     string       `json:"email" gorm:"column:email"`
-	FirstName string       `json:"firstName" gorm:"column:first_name"`
-	LastName  string       `json:"lastName" gorm:"column:last_name"`
-	Phone     string       `json:"phone" gorm:"column:phone"`
-	Avatar    *model.Media `json:"avatar" gorm:"column:avatar"`
+	Email     string        `json:"email" gorm:"column:email"`
+	FirstName string        `json:"firstName" gorm:"column:first_name"`
+	LastName  string        `json:"lastName" gorm:"column:last_name"`
+	Phone     string        `json:"phone" gorm:"column:phone"`
+	Avatar    *common.Image `json:"avatar" gorm:"column:avatar"`
 }
 
 func (dto *CreateDTO) Validate() error {

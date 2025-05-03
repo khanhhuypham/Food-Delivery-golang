@@ -7,10 +7,14 @@ import (
 
 // DTO = Data Transfer Object
 type CreateDTO struct {
-	OrderId    int     `json:"order_id"`
-	MenuItemId int     `json:"menu_item_id"`
-	Quantity   int     `json:"quantity"`
-	Note       *string `json:"note"`
+	OrderId  int     `json:"order_id" gorm:"column:order_id"`
+	ItemId   int     `json:"item_id" gorm:"column:item_id"`
+	Quantity int     `json:"quantity" gorm:"column:quantity"`
+	Note     *string `json:"note" gorm:"column:note"`
+}
+
+func (CreateDTO) TableName() string {
+	return "order_item"
 }
 
 func (dto *CreateDTO) Validate() error {
@@ -23,7 +27,7 @@ func (dto *CreateDTO) Validate() error {
 		return common.ErrBadRequest(errors.New("order not found"))
 	}
 
-	if dto.MenuItemId <= 0 {
+	if dto.ItemId <= 0 {
 		return common.ErrBadRequest(errors.New("menu item not found"))
 	}
 

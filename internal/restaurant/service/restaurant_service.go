@@ -11,6 +11,9 @@ import (
 
 type RestaurantRepository interface {
 	Create(ctx context.Context, dto *restaurant_dto.CreateDTO) error
+	UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *restaurant_dto.CreateDTO) error
+	DeleteDataWithCondition(ctx context.Context, condition map[string]any) error
+
 	ListDataWithCondition(
 		ctx context.Context,
 		paging *common.Paging,
@@ -18,8 +21,8 @@ type RestaurantRepository interface {
 		keys ...string) ([]model.Restaurant, error)
 	GetStatistic() (*restaurant_dto.Statistic, error)
 	FindDataWithCondition(ctx context.Context, condition map[string]any, keys ...string) (*model.Restaurant, error)
-	UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *restaurant_dto.CreateDTO) error
-	DeleteDataWithCondition(ctx context.Context, condition map[string]any) error
+	FindTheMostPopularRestaurant(ctx context.Context, paging *common.Paging, keys ...string) ([]model.Restaurant, error)
+	FindTheMostRecommendedRestaurant(ctx context.Context, paging *common.Paging, keys ...string) ([]model.Restaurant, error)
 }
 
 type restaurantService struct {
@@ -44,7 +47,7 @@ func (service *restaurantService) Create(ctx context.Context, dto *restaurant_dt
 
 func (service *restaurantService) FindAll(ctx context.Context, paging *common.Paging, filter *restaurant_dto.QueryDTO) ([]model.Restaurant, *restaurant_dto.Statistic, error) {
 	//there will have business logic before getting data list with condition
-	restaurants, err := service.restaurantRepo.ListDataWithCondition(ctx, paging, filter)
+	restaurants, err := service.restaurantRepo.ListDataWithCondition(ctx, paging, filter, "Rating")
 
 	if err != nil {
 		return nil, nil, common.ErrInternal(err).WithDebug(err.Error())
@@ -62,7 +65,7 @@ func (service *restaurantService) FindAll(ctx context.Context, paging *common.Pa
 func (service *restaurantService) FindOneById(ctx context.Context, id int) (*model.Restaurant, error) {
 	//there will have business logic before getting specific data with condition
 
-	restaurant, err := service.restaurantRepo.FindDataWithCondition(ctx, map[string]any{"id": id}, "Orders", "Items")
+	restaurant, err := service.restaurantRepo.FindDataWithCondition(ctx, map[string]any{"id": id}, "VendorCategory")
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, common.ErrEntityNotFound(restaurant.TableName(), err).WithDebug(err.Error())
@@ -99,4 +102,26 @@ func (service *restaurantService) Delete(ctx context.Context, id int) error {
 		return common.ErrInternal(err).WithDebug(err.Error())
 	}
 	return nil
+}
+
+func (service *restaurantService) FindTheMostPopularRestaurant(ctx context.Context, paging *common.Paging) ([]model.Restaurant, error) {
+	//there will have business logic before getting data list with condition
+	items, err := service.restaurantRepo.FindTheMostPopularRestaurant(ctx, paging, "Rating")
+
+	if err != nil {
+		return nil, common.ErrInternal(err).WithDebug(err.Error())
+	}
+
+	return items, nil
+}
+
+func (service *restaurantService) FindTheMostRecommendedRestaurant(ctx context.Context, paging *common.Paging) ([]model.Restaurant, error) {
+	//there will have business logic before getting data list with condition
+	items, err := service.restaurantRepo.FindTheMostRecommendedRestaurant(ctx, paging, "Rating")
+
+	if err != nil {
+		return nil, common.ErrInternal(err).WithDebug(err.Error())
+	}
+
+	return items, nil
 }

@@ -11,10 +11,10 @@ import (
 )
 
 type OrderItemService interface {
-	Create(ctx context.Context, dto *order_item_dto.CreateDTO) error
+	Create(ctx context.Context, dto *order_item_dto.CreateDTO) (*model.OrderItem, error)
 	FindAll(ctx context.Context, paging *common.Paging, query *order_item_dto.QueryDTO) ([]model.OrderItem, error)
 	FindOneById(ctx context.Context, id int) (*model.OrderItem, error)
-	Update(ctx context.Context, id int, dto *order_item_dto.CreateDTO) error
+	Update(ctx context.Context, id int, dto *order_item_dto.CreateDTO) (*model.OrderItem, error)
 	Delete(ctx context.Context, id int) error
 }
 
@@ -36,11 +36,11 @@ func (handler *orderItemHandler) Create() gin.HandlerFunc {
 		}
 
 		// check error from usecase layer
-		if err := handler.orderItemService.Create(ctx.Request.Context(), &dto); err != nil {
+		data, err := handler.orderItemService.Create(ctx.Request.Context(), &dto)
+		if err != nil {
 			panic(err)
 		}
-
-		ctx.JSON(http.StatusOK, common.Response("ok"))
+		ctx.JSON(http.StatusOK, common.Response(data))
 	}
 }
 
@@ -91,6 +91,7 @@ func (handler *orderItemHandler) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 		id, err := strconv.Atoi(ctx.Param("id"))
+
 		if err != nil {
 			panic(common.ErrBadRequest(err))
 		}
@@ -100,11 +101,13 @@ func (handler *orderItemHandler) Update() gin.HandlerFunc {
 			panic(common.ErrBadRequest(err))
 		}
 
-		if err := handler.orderItemService.Update(ctx.Request.Context(), id, &dto); err != nil {
+		data, err := handler.orderItemService.Update(ctx.Request.Context(), id, &dto)
+
+		if err != nil {
 			panic(err)
 		}
 
-		ctx.JSON(http.StatusOK, common.Response("ok"))
+		ctx.JSON(http.StatusOK, common.Response(data))
 	}
 }
 

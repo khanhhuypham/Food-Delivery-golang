@@ -6,8 +6,8 @@ import (
 	category_module "Food-Delivery/internal/category"
 	driver_module "Food-Delivery/internal/driver"
 	item_module "Food-Delivery/internal/item"
-	media_module "Food-Delivery/internal/media"
 	upload_module "Food-Delivery/internal/upload"
+	vendor_category_module "Food-Delivery/internal/vendor_category"
 
 	"Food-Delivery/internal/middleware"
 	order_module "Food-Delivery/internal/order"
@@ -77,8 +77,7 @@ func mainSetup() {
 	user_module.Setup(db, v1, cfg, hasher, middlewareManager)
 	rating_module.Setup(appCtx, v1)
 	driver_module.Setup(appCtx, v1)
-	media_module.Setup(db, v1, cfg)
-
+	vendor_category_module.Setup(appCtx, v1)
 	upload_module.Setup(appCtx, v1)
 
 	r.Run(fmt.Sprintf(":%s", cfg.App.Port)) // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")

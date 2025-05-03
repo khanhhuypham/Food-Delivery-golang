@@ -11,7 +11,7 @@ import (
 
 type ItemRepository interface {
 	Create(ctx context.Context, dto *item_dto.CreateDTO) (*model.Item, error)
-	UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *item_dto.CreateDTO) (*model.Item, error)
+	UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *item_dto.UpdateDTO) (*model.Item, error)
 	DeleteDataWithCondition(ctx context.Context, condition map[string]any) error
 
 	FindAllWithCondition(
@@ -46,7 +46,7 @@ func (service *itemService) Create(ctx context.Context, dto *item_dto.CreateDTO)
 	return newItem, nil
 }
 
-func (service *itemService) Update(ctx context.Context, id int, dto *item_dto.CreateDTO) (*model.Item, error) {
+func (service *itemService) Update(ctx context.Context, id int, dto *item_dto.UpdateDTO) (*model.Item, error) {
 	//validate the data first under this usecase layer
 	if err := dto.Validate(); err != nil {
 		return nil, err
@@ -98,7 +98,8 @@ func (service *itemService) FindAll(ctx context.Context, paging *common.Paging, 
 func (service *itemService) FindOneById(ctx context.Context, id int) (*model.Item, error) {
 	//there will have business logic before getting specific data with condition
 
-	item, err := service.itemRepo.FindOneWithCondition(ctx, map[string]any{"id": id}, "Restaurant")
+	item, err := service.itemRepo.FindOneWithCondition(ctx, map[string]any{"id": id}, "Rating")
+
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, common.ErrEntityNotFound(model.ItemEntity, err).WithDebug(err.Error())

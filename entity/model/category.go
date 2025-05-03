@@ -11,7 +11,7 @@ const CategoryEntity = "category"
 
 type Category struct {
 	common.SQLModel
-	Image       *Media                  `json:"image" gorm:"column:image;"`
+	Image       *common.Image           `json:"image" gorm:"column:image;"`
 	Name        string                  `json:"name" gorm:"column:name;not null;unique"`
 	Description *string                 `json:"description" gorm:"column:description;"`
 	Active      bool                    `json:"active" gorm:"column:active;default:true"`

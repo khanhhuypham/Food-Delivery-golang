@@ -6,8 +6,8 @@ import (
 	"strings"
 )
 
-type CreateDTO struct {
-	RestaurantId     int           `json:"restaurant_id" gorm:"column:restaurant_id;"`
+type UpdateDTO struct {
+	Id               int           `json:"id,omitempty" gorm:"column:id"`
 	CategoryId       int           `json:"category_id" gorm:"column:category_id;"`
 	VendorCategoryId int           `json:"vendor_category_id" gorm:"column:vendor_category_id;"`
 	Name             string        `json:"name" gorm:"column:name;"`
@@ -16,7 +16,7 @@ type CreateDTO struct {
 	Description      *string       `json:"description" gorm:"column:description;"`
 }
 
-func (dto *CreateDTO) Validate() error {
+func (dto *UpdateDTO) Validate() error {
 
 	dto.Name = strings.TrimSpace(dto.Name)
 

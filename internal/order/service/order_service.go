@@ -2,6 +2,7 @@ package order_service
 
 import (
 	order_dto "Food-Delivery/entity/dto/order"
+	order_item_dto "Food-Delivery/entity/dto/order-item"
 	"Food-Delivery/entity/model"
 	"Food-Delivery/pkg/common"
 	"context"
@@ -18,6 +19,13 @@ type OrderRepository interface {
 		keys ...string) ([]model.Order, error)
 	FindOneWithCondition(ctx context.Context, condition map[string]any, keys ...string) (*model.Order, error)
 	UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *order_dto.UpdateDTO) (*model.Order, error)
+	//AddItemsToOrder(ctx context.Context, orderId int, items []order_item_dto.CreateDTO) (*model.Order, error)
+}
+
+type OrderItemService interface {
+	Create(ctx context.Context, dto *order_item_dto.CreateDTO) error
+	Update(ctx context.Context, id int, dto *order_item_dto.CreateDTO) error
+	Delete(ctx context.Context, id int) error
 }
 
 type orderService struct {
@@ -34,9 +42,28 @@ func (service *orderService) Create(ctx context.Context, data *order_dto.CreateD
 		return err
 	}
 
-	if err := service.orderRepo.Create(ctx, data); err != nil {
+	err := service.orderRepo.Create(ctx, data)
+
+	if err != nil {
 		return common.ErrInternal(err).WithDebug(err.Error())
 	}
+
+	var items []order_item_dto.CreateDTO
+
+	for _, item := range data.Items {
+		items = append(items, order_item_dto.CreateDTO{
+			OrderId:  1,
+			ItemId:   item.ItemId,
+			Quantity: item.Quantity,
+		})
+	}
+
+	//order, err = service.AddItemToOrder(ctx, order.Id, items)
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 

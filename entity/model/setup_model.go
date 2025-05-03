@@ -12,13 +12,13 @@ func SetupModel(db *gorm.DB) {
 	if err := db.AutoMigrate(
 		&Category{},
 		&Restaurant{},
+		&VendorCategory{},
 		&User{},
 		&Item{},
 		&Driver{},
 		&Order{},
 		&OrderItem{},
 		&Rating{},
-		&Media{},
 	); err != nil {
 		log.Fatalf("could not migrate schema: %v", err)
 	}

@@ -54,7 +54,7 @@ func (service *categoryService) FindAllByIds(ctx context.Context, ids []int) ([]
 
 func (service *categoryService) FindAll(ctx context.Context, paging *common.Paging, filter *category_dto.QueryDTO) ([]model.Category, error) {
 	//there will have business logic before getting data list with condition
-	categories, err := service.cateRepo.FindAllWithCondition(ctx, paging, filter, "Items")
+	categories, err := service.cateRepo.FindAllWithCondition(ctx, paging, filter)
 
 	if err != nil {
 		return nil, common.ErrInternal(err).WithDebug(err.Error())

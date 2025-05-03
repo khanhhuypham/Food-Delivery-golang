@@ -68,7 +68,7 @@ func (handler *categoryHandler) FindAll() gin.HandlerFunc {
 			panic(err)
 		}
 
-		ctx.JSON(http.StatusOK, common.ResponseWithPaging(list, paging))
+		ctx.JSON(http.StatusOK, common.Response(list))
 	}
 }
 

@@ -32,6 +32,8 @@ func Setup(appCtx app_context.AppContext, r *gin.RouterGroup) {
 
 	r.POST("/restaurant", handler.Create())
 	r.GET("/restaurant", handler.GetAll())
+	r.GET("/restaurant/the-most-popular", handler.FindTheMostPopularRestaurant())
+	r.GET("/restaurant/the-most-recommended", handler.FindTheMostRecommendedRestaurant())
 	r.GET("/restaurant/:id", handler.GetOneByID())
 	r.PUT("/restaurant/:id", handler.Update())
 	r.PATCH("/restaurant/:id", handler.Update())
