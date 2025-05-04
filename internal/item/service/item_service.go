@@ -11,6 +11,7 @@ import (
 
 type ItemRepository interface {
 	Create(ctx context.Context, dto *item_dto.CreateDTO) (*model.Item, error)
+	BatchCreate(ctx context.Context, dtos []item_dto.CreateDTO) error
 	UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *item_dto.UpdateDTO) (*model.Item, error)
 	DeleteDataWithCondition(ctx context.Context, condition map[string]any) error
 
@@ -44,6 +45,21 @@ func (service *itemService) Create(ctx context.Context, dto *item_dto.CreateDTO)
 		return nil, common.ErrInternal(err).WithDebug(err.Error())
 	}
 	return newItem, nil
+}
+
+func (service *itemService) BatchCreate(ctx context.Context, dtos []item_dto.CreateDTO) error {
+
+	for _, dto := range dtos {
+		if err := dto.Validate(); err != nil {
+			return common.ErrBadRequest(err)
+		}
+	}
+
+	if err := service.itemRepo.BatchCreate(ctx, dtos); err != nil {
+		return common.ErrInternal(err).WithDebug(err.Error())
+	}
+
+	return nil
 }
 
 func (service *itemService) Update(ctx context.Context, id int, dto *item_dto.UpdateDTO) (*model.Item, error) {

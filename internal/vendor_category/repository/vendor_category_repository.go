@@ -73,30 +73,6 @@ func (repo *vendorCategoryRepository) Create(ctx context.Context, dto *vendor_ca
 	return &data, nil
 }
 
-func (repo *vendorCategoryRepository) BatchCreate(ctx context.Context, dtos []*vendor_category_dto.CreateDTO) ([]model.VendorCategory, error) {
-	var data []model.VendorCategory
-
-	for _, dto := range dtos {
-		var item model.VendorCategory
-		if err := copier.Copy(&item, dto); err != nil {
-			return nil, errors.WithStack(err)
-		}
-		data = append(data, item)
-	}
-
-	db := repo.db.WithContext(ctx).Begin()
-	if err := db.CreateInBatches(&data, 100).Error; err != nil { // 100 is an example batch size
-		db.Rollback()
-		return nil, errors.WithStack(err)
-	}
-
-	if err := db.Commit().Error; err != nil {
-		return nil, errors.WithStack(err)
-	}
-
-	return data, nil
-}
-
 // update place by condition
 func (repo *vendorCategoryRepository) UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *vendor_category_dto.UpdateDTO) (*model.VendorCategory, error) {
 	var updatedData model.VendorCategory

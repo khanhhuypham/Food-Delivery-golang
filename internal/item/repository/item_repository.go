@@ -6,6 +6,7 @@ import (
 	"Food-Delivery/pkg/common"
 	"context"
 	"github.com/go-sql-driver/mysql"
+	"github.com/jinzhu/copier"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -67,6 +68,31 @@ func (repo *itemRepository) Create(ctx context.Context, dto *menu_item_dto.Creat
 
 	// Return the created menu item
 	return &newItem, nil
+}
+
+// create place
+func (repo *itemRepository) BatchCreate(ctx context.Context, dtos []menu_item_dto.CreateDTO) error {
+	var data []model.Item
+
+	for _, dto := range dtos {
+		var item model.Item
+		if err := copier.Copy(&item, dto); err != nil {
+			return errors.WithStack(err)
+		}
+		data = append(data, item)
+	}
+
+	db := repo.db.WithContext(ctx).Begin()
+	if err := db.CreateInBatches(&data, 100).Error; err != nil { // 100 is an example batch size
+		db.Rollback()
+		return errors.WithStack(err)
+	}
+
+	if err := db.Commit().Error; err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
 }
 
 // Delete place by condition

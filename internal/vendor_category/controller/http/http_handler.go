@@ -15,7 +15,6 @@ type VendorCategoryService interface {
 	FindAll(ctx context.Context, restaurantId int) ([]model.VendorCategory, error)
 	FindOneById(ctx context.Context, id int) (*model.VendorCategory, error)
 	Create(ctx context.Context, dto *vendor_category_dto.CreateDTO) (*model.VendorCategory, error)
-	BatchCreate(ctx context.Context, dtos []*vendor_category_dto.CreateDTO) ([]model.VendorCategory, error)
 	Update(ctx context.Context, id int, dto *vendor_category_dto.UpdateDTO) (*model.VendorCategory, error)
 	Delete(ctx context.Context, id int) error
 }
