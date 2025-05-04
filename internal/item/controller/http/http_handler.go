@@ -12,6 +12,7 @@ import (
 
 type ItemService interface {
 	Create(ctx context.Context, menuItem *item_dto.CreateDTO) (*model.Item, error)
+	BatchCreate(ctx context.Context, dtos []item_dto.CreateDTO) error
 	Update(ctx context.Context, id int, dto *item_dto.UpdateDTO) (*model.Item, error)
 	Delete(ctx context.Context, id int) error
 

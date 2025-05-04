@@ -13,7 +13,6 @@ type VendorCategoryRepository interface {
 	FindAllByRestaurantId(ctx context.Context, restaurantId int, keys ...string) ([]model.VendorCategory, error)
 	FindOneWithCondition(ctx context.Context, condition map[string]any, keys ...string) (*model.VendorCategory, error)
 	Create(ctx context.Context, dto *vendor_category_dto.CreateDTO) (*model.VendorCategory, error)
-	BatchCreate(ctx context.Context, dtos []*vendor_category_dto.CreateDTO) ([]model.VendorCategory, error)
 	UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *vendor_category_dto.UpdateDTO) (*model.VendorCategory, error)
 	DeleteDataWithCondition(ctx context.Context, condition map[string]any) error
 }
@@ -57,22 +56,6 @@ func (service *vendorCategoryService) Create(ctx context.Context, dto *vendor_ca
 	}
 	//------
 	data, err := service.vendorCategoryRepo.Create(ctx, dto)
-	if err != nil {
-		return nil, common.ErrInternal(err).WithDebug(err.Error())
-	}
-	return data, nil
-}
-
-func (service *vendorCategoryService) BatchCreate(ctx context.Context, dtos []*vendor_category_dto.CreateDTO) ([]model.VendorCategory, error) {
-
-	for _, dto := range dtos {
-		if err := dto.Validate(); err != nil {
-			return nil, common.ErrBadRequest(err)
-		}
-	}
-
-	//------
-	data, err := service.vendorCategoryRepo.BatchCreate(ctx, dtos)
 	if err != nil {
 		return nil, common.ErrInternal(err).WithDebug(err.Error())
 	}

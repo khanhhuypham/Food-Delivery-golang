@@ -16,6 +16,7 @@ func Setup(db *gorm.DB, r *gin.RouterGroup) {
 	http_handler := menu_item_http_handler.NewRestaurantHandler(service)
 
 	r.POST("/item", http_handler.Create())
+	r.POST("/item/upload-file", http_handler.Upload())
 	r.PUT("/item/:id", http_handler.Update())
 	r.PATCH("/item/:id", http_handler.Update())
 	r.DELETE("/item/:id", http_handler.Delete())
