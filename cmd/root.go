@@ -4,6 +4,7 @@ import (
 	"Food-Delivery/config"
 	"Food-Delivery/entity/model"
 	category_module "Food-Delivery/internal/category"
+	children_item_module "Food-Delivery/internal/children_item"
 	driver_module "Food-Delivery/internal/driver"
 	item_module "Food-Delivery/internal/item"
 	upload_module "Food-Delivery/internal/upload"
@@ -72,6 +73,7 @@ func mainSetup() {
 	category_module.Setup(appCtx, v1)
 	restaurant_module.Setup(appCtx, v1)
 	item_module.Setup(db, v1)
+	children_item_module.Setup(appCtx, v1)
 	order_module.Setup(db, v1)
 	order_item_module.Setup(db, v1)
 	user_module.Setup(db, v1, cfg, hasher, middlewareManager)

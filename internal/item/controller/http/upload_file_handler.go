@@ -82,6 +82,7 @@ func (handler *itemHandler) Upload() gin.HandlerFunc {
 			dtos = append(dtos, item_dto.CreateDTO{
 				RestaurantId:     restaurantId,
 				VendorCategoryId: vendorCategoryId,
+				CategoryId:       1,
 				Name:             row[nameIdx], // assuming name is in first column
 				Price:            float32(priceFloat),
 				Description:      &row[descriptionIdx],
@@ -90,8 +91,11 @@ func (handler *itemHandler) Upload() gin.HandlerFunc {
 		}
 
 		// Call service (uncomment this when ready)
-		// handler.itemService.BatchCreate(ctx, dtos)
-		ctx.JSON(http.StatusOK, common.Response(dtos))
+		if err := handler.itemService.BatchCreate(ctx, dtos); err != nil {
+			panic(err)
+		}
+
+		ctx.JSON(http.StatusOK, common.Response("ok"))
 	}
 }
 

@@ -7,7 +7,6 @@ import (
 
 const OrderEntity = "menu item"
 
-// ;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;
 type Order struct {
 	common.SQLModel
 	UserId       int                  `json:"user_id" gorm:"column:user_id;not null"`

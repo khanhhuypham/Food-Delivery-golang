@@ -12,15 +12,17 @@ type Item struct {
 	common.SQLModel
 	Image            *common.Image `json:"image" gorm:"column:image;"`
 	RestaurantId     int           `json:"restaurant_id" gorm:"column:restaurant_id;not null"`
-	Name             string        `json:"name" gorm:"column:name;type:varchar(255);not null;uniqueIndex:idx_item_name"`
+	Name             string        `json:"name" gorm:"column:name;not null"`
 	Description      *string       `json:"description" gorm:"column:description;"`
 	Price            float64       `json:"price" gorm:"column:price;not null"`
 	DeliveryTime     int           `json:"delivery_time" gorm:"column:delivery_time;not null;default:0"`
 	Rating           *Rating       `json:"rating" gorm:"foreignKey:ItemId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
-	OrderItems       []*OrderItem  `json:"orderItems" gorm:"foreignKey:ItemId;references:Id"`
+	Optionals        []Optional    `json:"optionals" gorm:"foreignKey:ItemId;references:Id"`
 	CategoryId       int           `json:"category_id" gorm:"column:category_id;not null"`
 	VendorCategoryId int           `json:"vendor_category_id" gorm:"column:vendor_category_id;not null"`
-	//ServingQuantity int          `json:"serving_quantity" gorm:"column:serving_quantity"`
+
+	//OrderItems       []OrderItem           `json:"order_items" gorm:"foreignKey:ItemId;references:Id"`
+	//ChildrenItems    []ItemOnChildrenItems `json:"children_items" gorm:"foreignKey:ItemId;references:Id"`
 }
 
 func (item Item) TableName() string {

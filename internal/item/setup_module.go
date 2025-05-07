@@ -18,7 +18,6 @@ func Setup(db *gorm.DB, r *gin.RouterGroup) {
 	r.POST("/item", http_handler.Create())
 	r.POST("/item/upload-file", http_handler.Upload())
 	r.PUT("/item/:id", http_handler.Update())
-	r.PATCH("/item/:id", http_handler.Update())
 	r.DELETE("/item/:id", http_handler.Delete())
 
 	/*
