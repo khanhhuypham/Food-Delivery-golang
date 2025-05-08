@@ -6,7 +6,7 @@ import (
 	"Food-Delivery/pkg/common"
 )
 
-const ItemEntity = "menu item"
+const ItemEntity = "item"
 
 type Item struct {
 	common.SQLModel

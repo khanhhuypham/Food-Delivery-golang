@@ -1,6 +1,10 @@
 package model
 
-import "Food-Delivery/pkg/common"
+import (
+	"Food-Delivery/pkg/common"
+)
+
+const ItemOptionalEntity = "item optional"
 
 type Optional struct {
 	common.SQLModel

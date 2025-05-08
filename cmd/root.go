@@ -7,6 +7,7 @@ import (
 	children_item_module "Food-Delivery/internal/children_item"
 	driver_module "Food-Delivery/internal/driver"
 	item_module "Food-Delivery/internal/item"
+	item_optional_module "Food-Delivery/internal/optional"
 	upload_module "Food-Delivery/internal/upload"
 	vendor_category_module "Food-Delivery/internal/vendor_category"
 
@@ -73,6 +74,7 @@ func mainSetup() {
 	category_module.Setup(appCtx, v1)
 	restaurant_module.Setup(appCtx, v1)
 	item_module.Setup(db, v1)
+	item_optional_module.Setup(appCtx, v1)
 	children_item_module.Setup(appCtx, v1)
 	order_module.Setup(db, v1)
 	order_item_module.Setup(db, v1)

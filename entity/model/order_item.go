@@ -1,6 +1,8 @@
 package model
 
-import "Food-Delivery/pkg/common"
+import (
+	"Food-Delivery/pkg/common"
+)
 
 const OrderItemEntity = "order item"
 
