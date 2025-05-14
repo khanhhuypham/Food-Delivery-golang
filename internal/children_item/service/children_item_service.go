@@ -9,7 +9,6 @@ import (
 
 type childrenItemRepository interface {
 	FindAllWithCondition(ctx context.Context, query *children_item_dto.QueryDTO, keys ...string) ([]model.ChildrenItem, error)
-	FindAllByIds(ctx context.Context, ids []int) ([]model.ChildrenItem, error)
 	FindOneWithCondition(ctx context.Context, condition map[string]any, keys ...string) (*model.ChildrenItem, error)
 	Create(ctx context.Context, dto *children_item_dto.CreateDTO) (*model.ChildrenItem, error)
 	UpdateDataWithCondition(ctx context.Context, condition map[string]any, dto *children_item_dto.CreateDTO) (*model.ChildrenItem, error)
@@ -90,41 +89,38 @@ func (service *childrenItemService) Delete(ctx context.Context, id int) error {
 	}
 	return nil
 }
-func (service *childrenItemService) AddChildrenItemToOptional(ctx context.Context, optionalId int, childrenItemId []int) error {
 
-	// 1️⃣ Check if the children items exist in the database
-	childrenItems, err := service.childrenItemRepo.FindAllByIds(ctx, childrenItemId)
-	if err != nil {
-		return err
-	}
-
-	// 2️⃣ If no children items found, return early
-	if len(childrenItems) == 0 {
-		return nil // Nothing to add
-	}
-
-	// 3️⃣ Check if the optional ID exists in the database
-	if _, err := service.FindOneById(ctx, optionalId); err != nil {
-		return err
-	}
-
-	// 4️⃣ Loop through the children items and create DTO objects
-	for _, item := range childrenItems {
-		dto := children_item_dto.CreateDTO{
-			Name:        item.Name,
-			OptionalId:  &optionalId,
-			Image:       item.Image,
-			Price:       item.Price,
-			Description: item.Description,
-		}
-
-		// 5️⃣ Call the update method
-		if _, err := service.childrenItemRepo.UpdateDataWithCondition(ctx, map[string]any{"id": optionalId}, &dto); err != nil {
-			return err
-		}
-
-	}
-
-	// 🎉 If everything goes well, return nil (no errors)
-	return nil
-}
+//
+//func (service *childrenItemService) AddChildrenItemToOptional(ctx context.Context, optionalId int, childrenItemId []int) error {
+//
+//	// 1️⃣ Check if the children items exist in the database
+//	childrenItems, err := service.childrenItemRepo.FindAllByIds(ctx, childrenItemId)
+//	if err != nil {
+//		return err
+//	}
+//
+//	// 2️⃣ If no children items found, return early
+//	if len(childrenItems) == 0 {
+//		return nil // Nothing to add
+//	}
+//
+//	// 4️⃣ Loop through the children items and create DTO objects
+//	for _, item := range childrenItems {
+//		dto := children_item_dto.CreateDTO{
+//			Name:        item.Name,
+//			OptionalId:  &optionalId,
+//			Image:       item.Image,
+//			Price:       item.Price,
+//			Description: item.Description,
+//		}
+//
+//		// 5️⃣ Call the update method
+//		if _, err := service.childrenItemRepo.UpdateDataWithCondition(ctx, map[string]any{"id": optionalId}, &dto); err != nil {
+//			return err
+//		}
+//
+//	}
+//
+//	// 🎉 If everything goes well, return nil (no errors)
+//	return nil
+//}

@@ -1,8 +1,6 @@
 package item_optional_module
 
 import (
-	children_item_repository "Food-Delivery/internal/children_item/repository"
-	children_item_service "Food-Delivery/internal/children_item/service"
 	item_optional_http "Food-Delivery/internal/optional/controller/http"
 	item_optional_repository "Food-Delivery/internal/optional/repository"
 	item_optional_service "Food-Delivery/internal/optional/service"
@@ -13,12 +11,9 @@ import (
 func Setup(appCtx app_context.AppContext, r *gin.RouterGroup) {
 	db := appCtx.GetDbContext().GetMainConnection()
 
-	childrenItem_repo := children_item_repository.NewChildrenItemRepository(db)
-	childrenItem_service := children_item_service.NewChildrenItemService(childrenItem_repo)
-
 	//dependency of place module
 	repo := item_optional_repository.NewItemOptionalRepository(db)
-	service := item_optional_service.NewItemOptionalService(repo, childrenItem_service)
+	service := item_optional_service.NewItemOptionalService(repo)
 	http_handler := item_optional_http.NewItemOptionalHandler(service)
 
 	r.GET("/item-optional", http_handler.FindAll())

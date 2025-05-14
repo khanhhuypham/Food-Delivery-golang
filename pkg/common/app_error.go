@@ -54,6 +54,13 @@ func ErrInternal(cause error) *AppError {
 	return &AppError{Causes: cause, Status: http.StatusInternalServerError, Message: "Internal server error"}
 }
 
+func ErrCopyData(toStruct string, fromStruct string, cause error) *AppError {
+	return &AppError{
+		Causes:  cause,
+		Status:  http.StatusBadRequest,
+		Message: fmt.Sprintf("error occur when copy from object (%s) to object (%s)", fromStruct, toStruct)}
+}
+
 func ErrEntityNotFound(entity string, cause error) *AppError {
 	return &AppError{Causes: cause, Status: http.StatusBadRequest, Message: fmt.Sprintf("can't find %s", entity)}
 }

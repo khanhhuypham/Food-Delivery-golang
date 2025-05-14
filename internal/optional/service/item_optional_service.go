@@ -15,22 +15,19 @@ type itemOptionalRepository interface {
 	DeleteDataWithCondition(ctx context.Context, condition map[string]any) error
 	FindAllWithCondition(ctx context.Context, restaurantId int, keys ...string) ([]model.Optional, error)
 	FindOneWithCondition(ctx context.Context, condition map[string]any, keys ...string) (*model.Optional, error)
-}
 
-type ChildrenItemService interface {
-	AddChildrenItemToOptional(ctx context.Context, optionalId int, childrenItemId []int) error
+	//========================================Children item=================
+	FindChildrenItemByIds(ctx context.Context, ids []int) ([]model.ChildrenItem, error)
+	RemoveChildrenItemFromOptional(ctx context.Context, optional *model.Optional) (*model.Optional, error)
+	AddChildrenItemToOptional(ctx context.Context, optionalId int, childrenItemIds []int) (*model.Optional, error)
 }
 
 type itemOptionalService struct {
-	repo                itemOptionalRepository
-	childrenItemService ChildrenItemService
+	repo itemOptionalRepository
 }
 
-func NewItemOptionalService(repo itemOptionalRepository, childrenItemService ChildrenItemService) *itemOptionalService {
-	return &itemOptionalService{
-		repo,
-		childrenItemService,
-	}
+func NewItemOptionalService(repo itemOptionalRepository) *itemOptionalService {
+	return &itemOptionalService{repo}
 }
 
 func (service *itemOptionalService) Create(ctx context.Context, dto *item_optional_dto.CreateDTO) (*model.Optional, error) {
@@ -45,12 +42,17 @@ func (service *itemOptionalService) Create(ctx context.Context, dto *item_option
 		return nil, common.ErrInternal(err).WithDebug(err.Error())
 	}
 
-	if len(dto.ChildrenItemId) > 0 {
-		if err := service.childrenItemService.AddChildrenItemToOptional(ctx, newItem.Id, dto.ChildrenItemId); err != nil {
-			return nil, err
-		}
+	if _, err := service.AddChildrenItemToOptional(ctx, newItem.Id, dto.ChildrenItemId); err != nil {
+		return nil, err
 	}
-	
+
+	//Find UpdateItem again after updated and add children Item
+	newItem, err = service.repo.FindOneWithCondition(ctx, map[string]any{"id": newItem.Id}, "ChildrenItems")
+
+	if err != nil {
+		return nil, err
+	}
+
 	return newItem, nil
 }
 
@@ -66,14 +68,19 @@ func (service *itemOptionalService) Update(ctx context.Context, id int, dto *ite
 
 	updatedItem, err := service.repo.UpdateDataWithCondition(ctx, map[string]any{"id": id}, dto)
 
-	if len(dto.ChildrenItemId) > 0 {
-		if err := service.childrenItemService.AddChildrenItemToOptional(ctx, dto.ItemId, dto.ChildrenItemId); err != nil {
-			return nil, err
-		}
+	if _, err := service.AddChildrenItemToOptional(ctx, id, dto.ChildrenItemId); err != nil {
+		return nil, err
 	}
 
 	if err != nil {
 		return nil, common.ErrInternal(err).WithDebug(err.Error())
+	}
+
+	//Find UpdateItem again after updated and add children Item
+	updatedItem, err = service.repo.FindOneWithCondition(ctx, map[string]any{"id": id}, "ChildrenItems")
+
+	if err != nil {
+		return nil, err
 	}
 
 	return updatedItem, nil

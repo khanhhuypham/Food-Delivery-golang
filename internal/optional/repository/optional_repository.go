@@ -12,15 +12,17 @@ import (
 )
 
 type itemOptionalRepository struct {
-	db        *gorm.DB
-	tableName string
+	db                    *gorm.DB
+	tableName             string
+	ChildrenItemTableName string
 }
 
 func NewItemOptionalRepository(db *gorm.DB) *itemOptionalRepository {
 
 	return &itemOptionalRepository{
-		db:        db,
-		tableName: model.Optional{}.TableName(),
+		db:                    db,
+		tableName:             model.Optional{}.TableName(),
+		ChildrenItemTableName: model.ChildrenItem{}.TableName(),
 	}
 
 }

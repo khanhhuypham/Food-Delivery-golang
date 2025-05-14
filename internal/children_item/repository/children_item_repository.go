@@ -73,23 +73,6 @@ func (repo *childrenItemRepository) FindAllWithCondition(
 	return data, nil
 }
 
-func (repo *childrenItemRepository) FindAllByIds(ctx context.Context, ids []int) ([]model.ChildrenItem, error) {
-	if len(ids) == 0 {
-		return []model.ChildrenItem{}, nil
-	}
-
-	var data []model.ChildrenItem
-
-	// Use the correct column name
-	db := repo.db.Model(&data).Table(repo.tableName).Where("id IN (?)", ids)
-
-	if err := db.Find(&data).Error; err != nil {
-		return nil, common.ErrDB(err)
-	}
-
-	return data, nil
-}
-
 func (repo *childrenItemRepository) FindOneWithCondition(ctx context.Context, condition map[string]any, keys ...string) (*model.ChildrenItem, error) {
 	var data model.ChildrenItem
 	db := repo.db.Table(repo.tableName)
