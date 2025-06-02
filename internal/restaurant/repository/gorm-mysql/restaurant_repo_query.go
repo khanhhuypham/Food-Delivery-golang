@@ -21,13 +21,13 @@ func (repo *restaurantRepository) ListDataWithCondition(
 	db := repo.db.Table(repo.tableName).Model(&model.Restaurant{})
 
 	// Check if Status pointer is not nil and points to a non-empty string
-	if query.Status != nil && *query.Status != "" {
+	if query.Status != nil && query.Status.IsValid() {
 		db = db.Where("status = ?", *query.Status)
 	}
-
-	if query.Active != nil {
-		db = db.Where("active = ?", *query.Active)
-	}
+	//
+	//if query.Active != nil {
+	//	db = db.Where("active = ?", *query.Active)
+	//}
 
 	if query.SearchKey != nil && *query.SearchKey != "" {
 		db = db.Debug().Where("name LIKE ?", "%"+*query.SearchKey+"%")
@@ -70,17 +70,23 @@ func (repo *restaurantRepository) GetStatistic() (*restaurant_dto.Statistic, err
 		return nil, errors.WithStack(err)
 	}
 
-	//RESTAURANT_STATUS_OPEN                 RestaurantStatus = 1 //- The store is currently operating and accepting orders.
-	//RESTAURANT_STATUS_CLOSED               RestaurantStatus = 2 // - The store is not operating (e.g., outside business hours)
-	//RESTAURANT_STATUS_TEMPORARILY_CLOSED   RestaurantStatus = 3 //– Closed due to temporary reasons (e.g., holiday, maintenance).
-	//RESTAURANT_STATUS_LIMITED_AVAILABILITY RestaurantStatus = 4 // -Temporarily not accepting orders due to high load
-	//RESTAURANT_STATUS_SUSPENDED
-
-	if err := db.Where("status = ?", constant.RESTAURANT_STATUS_OPEN).Count(&data.TotalActive).Error; err != nil {
+	if err := db.Where("status = ?", constant.RESTAURANT_STATUS_OPEN).Count(&data.TotalOpen).Error; err != nil {
 		return nil, errors.WithStack(err)
 	}
 
-	if err := db.Where("status = ?", constant.RESTAURANT_STATUS_OPEN).Count(&data.TotalInActive).Error; err != nil {
+	if err := db.Where("status = ?", constant.RESTAURANT_STATUS_CLOSED).Count(&data.TotalClosed).Error; err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	if err := db.Where("status = ?", constant.RESTAURANT_STATUS_TEMPORARILY_CLOSED).Count(&data.TotalTemporarilyClosed).Error; err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	if err := db.Where("status = ?", constant.RESTAURANT_STATUS_LIMITED_AVAILABILITY).Count(&data.TotalLimitedAvailability).Error; err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	if err := db.Where("status = ?", constant.RESTAURANT_STATUS_SUSPENDED).Count(&data.TotalSuspended).Error; err != nil {
 		return nil, errors.WithStack(err)
 	}
 

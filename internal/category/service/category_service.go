@@ -66,7 +66,7 @@ func (service *categoryService) FindAll(ctx context.Context, paging *common.Pagi
 func (service *categoryService) FindOneById(ctx context.Context, id int) (*model.Category, error) {
 	//there will have business logic before getting specific data with condition
 
-	category, err := service.cateRepo.FindOneWithCondition(ctx, map[string]any{"id": id})
+	category, err := service.cateRepo.FindOneWithCondition(ctx, map[string]any{"id": id}, "Items")
 	if err != nil {
 		return nil, common.ErrInternal(err).WithDebug(err.Error())
 	}

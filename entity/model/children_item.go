@@ -17,27 +17,3 @@ type ChildrenItem struct {
 func (ChildrenItem) TableName() string {
 	return "children_item"
 }
-
-//
-//type ChildrenItemStatus int
-//
-//const (
-//	RESTAURANT_STATUS_OPEN                 ChildrenItemStatus = 1
-//	RESTAURANT_STATUS_CLOSED               ChildrenItemStatus = 2
-//	RESTAURANT_STATUS_TEMPORARILY_CLOSED   ChildrenItemStatus = 3
-//	RESTAURANT_STATUS_LIMITED_AVAILABILITY ChildrenItemStatus = 4
-//	RESTAURANT_STATUS_SUSPENDED            ChildrenItemStatus = 5
-//)
-//
-//func (status ChildrenItemStatus) IsValid() bool {
-//	switch status {
-//	case
-//		RESTAURANT_STATUS_OPEN,
-//		RESTAURANT_STATUS_CLOSED,
-//		RESTAURANT_STATUS_TEMPORARILY_CLOSED,
-//		RESTAURANT_STATUS_LIMITED_AVAILABILITY,
-//		RESTAURANT_STATUS_SUSPENDED:
-//		return true
-//	}
-//	return false
-//}

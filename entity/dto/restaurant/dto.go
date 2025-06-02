@@ -24,6 +24,4 @@ type RestaurantDetailDTO struct {
 	Status      constant.RestaurantStatus `json:"status"`
 	Address     string                    `json:"address"`
 	Rating      *rating_dto.RatingDTO     `json:"rating,omitempty"`
-
-	//Items       []Item                `json:"items"`
 }

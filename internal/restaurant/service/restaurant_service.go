@@ -46,6 +46,11 @@ func (service *restaurantService) Create(ctx context.Context, dto *restaurant_dt
 }
 
 func (service *restaurantService) FindAll(ctx context.Context, paging *common.Paging, filter *restaurant_dto.QueryDTO) ([]model.Restaurant, *restaurant_dto.Statistic, error) {
+
+	if filter.Status != nil && !filter.Status.IsValid() {
+		return nil, nil, common.ErrBadRequest(errors.New("status is invalid"))
+	}
+
 	//there will have business logic before getting data list with condition
 	restaurants, err := service.restaurantRepo.ListDataWithCondition(ctx, paging, filter, "Rating")
 

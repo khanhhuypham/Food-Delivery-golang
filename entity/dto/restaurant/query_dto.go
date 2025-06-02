@@ -1,7 +1,8 @@
 package restaurant_dto
 
+import "Food-Delivery/entity/constant"
+
 type QueryDTO struct {
-	Active    *bool   `form:"active"`
-	Status    *string `form:"status"`
-	SearchKey *string `form:"search_key"`
+	Status    *constant.RestaurantStatus `form:"status"`
+	SearchKey *string                    `form:"search_key"`
 }
