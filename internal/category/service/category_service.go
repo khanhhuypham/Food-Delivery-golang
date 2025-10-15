@@ -16,13 +16,8 @@ type CategoryRepository interface {
 	DeleteDataWithCondition(ctx context.Context, condition map[string]any) error
 }
 
-//type MediaService interface {
-//	Delete(ctx context.Context, id int)
-//}
-
 type categoryService struct {
 	cateRepo CategoryRepository
-	//mediaService MediaService
 }
 
 func NewCategoryService(cateRepo CategoryRepository) *categoryService {

@@ -18,10 +18,10 @@ func Setup(appCtx app_context.AppContext, r *gin.RouterGroup) {
 	http_handler := vendor_category_http_handler.NewVendorCategoryHandler(service)
 
 	r.GET("/vendor-category", http_handler.FindAll())
+	r.GET("/vendor-categories", http_handler.FindAllByRestaurantId())
 	r.GET("/vendor-category/:id", http_handler.FindOneByID())
 	r.POST("/vendor-category", http_handler.Create())
 	r.PUT("/vendor-category/:id", http_handler.Update())
 	r.POST("/vendor-category/:id", http_handler.Update())
 	r.DELETE("/vendor-category/:id", http_handler.Delete())
-
 }

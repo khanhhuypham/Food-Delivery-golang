@@ -71,6 +71,7 @@ func (handler *itemHandler) Update() gin.HandlerFunc {
 		}
 
 		ctx.JSON(http.StatusOK, common.Response(updatedItem))
+
 	}
 }
 
@@ -128,8 +129,8 @@ func (handler *itemHandler) FindOneByID() gin.HandlerFunc {
 		if err != nil {
 			panic(err)
 		}
-
-		ctx.JSON(http.StatusOK, common.Response(item.ToItemDetailDTO()))
+		ctx.JSON(http.StatusOK, common.Response(item))
+	
 	}
 }
 

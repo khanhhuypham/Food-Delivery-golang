@@ -128,5 +128,6 @@ func (repo *itemRepository) UpdateDataWithCondition(ctx context.Context, conditi
 		}
 		return nil, errors.WithStack(err)
 	}
+
 	return &updatedData, nil
 }

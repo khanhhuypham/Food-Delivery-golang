@@ -67,7 +67,7 @@ func (service *itemService) Update(ctx context.Context, id int, dto *item_dto.Up
 	if err := dto.Validate(); err != nil {
 		return nil, err
 	}
-	//check the eixstence of data in database
+	//check the existence of data in database
 	if _, err := service.itemRepo.FindOneWithCondition(ctx, map[string]any{"id": id}); err != nil {
 		return nil, err
 	}
@@ -114,7 +114,7 @@ func (service *itemService) FindAll(ctx context.Context, paging *common.Paging, 
 func (service *itemService) FindOneById(ctx context.Context, id int) (*model.Item, error) {
 	//there will have business logic before getting specific data with condition
 
-	item, err := service.itemRepo.FindOneWithCondition(ctx, map[string]any{"id": id}, "Rating")
+	item, err := service.itemRepo.FindOneWithCondition(ctx, map[string]any{"id": id}, "Rating", "Optionals")
 
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {

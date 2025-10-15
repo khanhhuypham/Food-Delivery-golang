@@ -60,6 +60,29 @@ func (handler *vendorCategoryHandler) FindAll() gin.HandlerFunc {
 	}
 }
 
+func (handler *vendorCategoryHandler) FindAllByRestaurantId() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		type queryDTO struct {
+			RestaurantId int `form:"restaurant_id"`
+		}
+
+		var query queryDTO
+
+		if err := ctx.ShouldBindQuery(&query); err != nil {
+			panic(common.ErrBadRequest(err))
+		}
+
+		// check error from usecase layer
+		vendorCategories, err := handler.vendorCategoryService.FindAll(ctx.Request.Context(), query.RestaurantId)
+		if err != nil {
+			panic(err)
+		}
+
+		ctx.JSON(http.StatusOK, common.Response(vendorCategories))
+	}
+}
+
 func (handler *vendorCategoryHandler) FindOneByID() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id, err := strconv.Atoi(ctx.Param("id"))

@@ -12,6 +12,7 @@ type Optional struct {
 	Name          string         `json:"name" gorm:"column:name;not null"`
 	Description   *string        `json:"description" gorm:"column:description;"`
 	ItemId        *int           `json:"item_id" gorm:"column:item_id"`
+	Item          []Item         `json:"-" gorm:"many2many:item_on_optional;"`
 	ChildrenItems []ChildrenItem `json:"children_items" gorm:"foreignKey:OptionalId;references:Id"`
 }
 

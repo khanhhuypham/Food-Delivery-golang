@@ -10,6 +10,7 @@ type UpdateDTO struct {
 	Id               int           `json:"id,omitempty" gorm:"column:id"`
 	CategoryId       int           `json:"category_id" gorm:"column:category_id;"`
 	VendorCategoryId int           `json:"vendor_category_id" gorm:"column:vendor_category_id;"`
+	OptionalIds      *[]int        `json:"optional_ids" gorm:"-"`
 	Name             string        `json:"name" gorm:"column:name;"`
 	Image            *common.Image `json:"image" gorm:"column:image;"`
 	Price            float32       `json:"price" gorm:"column:price;"`

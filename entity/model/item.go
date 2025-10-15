@@ -17,12 +17,11 @@ type Item struct {
 	Price            float64       `json:"price" gorm:"column:price;not null"`
 	DeliveryTime     int           `json:"delivery_time" gorm:"column:delivery_time;not null;default:0"`
 	Rating           *Rating       `json:"rating" gorm:"foreignKey:ItemId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
-	Optionals        []Optional    `json:"optionals" gorm:"foreignKey:ItemId;references:Id"`
+	Optionals        []Optional    `json:"optionals" gorm:"many2many:item_on_optional;"`
 	CategoryId       int           `json:"category_id" gorm:"column:category_id;not null"`
 	VendorCategoryId int           `json:"vendor_category_id" gorm:"column:vendor_category_id;not null"`
 
 	//OrderItems       []OrderItem           `json:"order_items" gorm:"foreignKey:ItemId;references:Id"`
-	//ChildrenItems    []ItemOnChildrenItems `json:"children_items" gorm:"foreignKey:ItemId;references:Id"`
 }
 
 func (item Item) TableName() string {
