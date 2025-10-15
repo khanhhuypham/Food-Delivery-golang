@@ -19,5 +19,4 @@ func Setup(db *gorm.DB, r *gin.RouterGroup) {
 	r.GET("/order", handler.GetAll())
 	r.GET("/order/:id", handler.GetOneByID())
 	r.GET("/order/change-status/:id", handler.ChangeStatus())
-
 }
